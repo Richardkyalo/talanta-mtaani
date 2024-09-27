@@ -3,6 +3,7 @@ import { FaFacebook,  FaInstagram } from 'react-icons/fa';
 import { RiTwitterXFill } from 'react-icons/ri';
 const Footer = () => {
     return (
+        
         <footer className="bg-blue-600 text-white py-8">
             <div className="container mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 px-4">
                 {/* About Tournament Column */}
