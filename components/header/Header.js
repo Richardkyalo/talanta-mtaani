@@ -15,12 +15,12 @@ const Header = () => {
                 {open ? (
                     <div className="hidden transform transition-transform duration-1000 p-4">
                         <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
-                        <h1 className="text-xsm font-bold ml-2">Kuza Talanta Mtaani</h1>
+                        <h1 className="text-xl  text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
                     </div>
                 ) : (
                     <div className="flex items-center">
                         <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
-                        <h1 className="text-xl font-bold ml-2">Kuza Talanta Mtaani</h1>
+                        <h1 className="text-xl text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
                     </div>
                 )}
 

@@ -49,7 +49,7 @@ const TestimonialsSection = () => {
                 frameBorder="0"
                 allowFullScreen
               ></iframe>
-              <h3 className="text-sm  mt-4">{testimonial.name}</h3>
+              <h3 className="text-sm  text-black mt-4">{testimonial.name}</h3>
               <p className="text-gray-600 text-xs">{testimonial.description}</p>
             </div>
           ))}

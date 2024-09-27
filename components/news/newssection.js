@@ -53,7 +53,7 @@ const NewsSection = () => {
                                     More
                                 </button>
                             </div>
-                            <h3 className="text-xs font-bold mt-4">{article.title}</h3>
+                            <h3 className="text-xs text-black font-bold mt-4">{article.title}</h3>
                             <p className="text-gray-600 max-w-48 truncate text-ellipsis text-xs">{article.description}</p>
 
                         </div>
