@@ -11,9 +11,13 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        'custom-scrollbar-thumb': '#117dbe', 
+        'custom-scrollbar-track': '#F1F1F1', 
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
 };
 export default config;
