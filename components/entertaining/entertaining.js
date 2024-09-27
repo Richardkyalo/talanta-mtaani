@@ -23,21 +23,21 @@ const EntertainmentSection = () => {
           </div>
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md">
             <FaFutbol className="text-4xl text-black mb-2 animate-spin" />
-            <h3 className="text-xl font-semibold">Live Commentary</h3>
+            <h3 className="text-xl text-black font-semibold">Live Commentary</h3>
             <p className="text-xs text-gray-600">
               Enjoy live commentary and analysis from top sports analysts throughout the matches.
             </p>
           </div>
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md">
             <FaFutbol className="text-4xl text-black  mb-2 animate-spin" />
-            <h3 className="text-xl font-semibold">Football Challenges</h3>
+            <h3 className="text-xl text-black font-semibold">Football Challenges</h3>
             <p className="text-xs text-gray-600">
               Participate in fun football challenges and win exciting prizes!
             </p>
           </div>
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md">
             <FaFutbol className="text-4xl text-black mb-2 animate-spin" />
-            <h3 className="text-xl font-semibold">Football Challenges</h3>
+            <h3 className="text-xl text-black font-semibold">Football Challenges</h3>
             <p className="text-xs text-gray-600">
               Participate in fun football challenges and win exciting prizes!
             </p>
