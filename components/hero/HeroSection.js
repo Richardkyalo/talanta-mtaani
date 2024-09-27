@@ -15,10 +15,10 @@ const HeroSection = () => {
                             Get Started
                         </button>
                     </div>
-                    <div className="w-full md:w-1/2 md:h-3/4 items-center justify-center border-b-4 border-blue-600 bg-black opacity-70 pt-24 rounded-2xl md:animate-bounce">
+                    <div className="w-full sm:mb-8 md:mb-4 md:w-1/2 md:h-3/4 items-center justify-center border-b-4 border-blue-600 bg-black opacity-70 pt-24 rounded-2xl md:animate-bounce">
                         <h1 className="text-xl">Coming Soon</h1>
                         <p className="text-sm mt-4">Kuza Talanta Mtaani <span className="text-red-600">2024 Edition</span></p>
-                        <button className="bg-blue-600 sm:mb-8 md:mb-4 hover:bg-red-700 text-white animate-pulse text-xs py-2 px-6 rounded-full mt-6">
+                        <button className="bg-blue-600  hover:bg-red-700 text-white animate-pulse text-xs py-2 px-6 rounded-full mt-6">
                             Welcome All
                         </button>
                     </div>
