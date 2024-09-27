@@ -70,7 +70,7 @@ const Header = () => {
                 <div className="flex justify-end items-center p-4 border-b">
                     <div className="flex items-center">
                         <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
-                        <h1 className="text-xl font-bold ml-2">Kuza Talanta Mtaani</h1>
+                        <h1 className="text-xl text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
                     </div>
                     <button onClick={toggle} className="text-black">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
