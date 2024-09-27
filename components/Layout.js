@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
         <title>Kuza Talanta Mtaani</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header> {/* Add Header Component */}
+      <header className='sticky top-0'> {/* Add Header Component */}
         <Header/>
         <Navigation/>
          </header>
