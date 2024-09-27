@@ -15,28 +15,28 @@ const EntertainmentSection = () => {
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6  ">
           <div className="bg-white border-b border-t border-red-500 flex flex-col justify-center items-center p-4 rounded-lg shadow-md">
-            <FaFutbol className="text-4xl  mb-2 animate-spin" />
+            <FaFutbol className="text-4xl text-black mb-2 animate-spin" />
             <h3 className="text-xl font-semibold">Celebrity Matches</h3>
             <p className="text-xs text-gray-600">
               Watch your favorite celebrities compete in friendly matches during the tournament.
             </p>
           </div>
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md">
-            <FaFutbol className="text-4xl mb-2 animate-spin" />
+            <FaFutbol className="text-4xl text-black mb-2 animate-spin" />
             <h3 className="text-xl font-semibold">Live Commentary</h3>
             <p className="text-xs text-gray-600">
               Enjoy live commentary and analysis from top sports analysts throughout the matches.
             </p>
           </div>
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md">
-            <FaFutbol className="text-4xl  mb-2 animate-spin" />
+            <FaFutbol className="text-4xl text-black  mb-2 animate-spin" />
             <h3 className="text-xl font-semibold">Football Challenges</h3>
             <p className="text-xs text-gray-600">
               Participate in fun football challenges and win exciting prizes!
             </p>
           </div>
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md">
-            <FaFutbol className="text-4xl  mb-2 animate-spin" />
+            <FaFutbol className="text-4xl text-black mb-2 animate-spin" />
             <h3 className="text-xl font-semibold">Football Challenges</h3>
             <p className="text-xs text-gray-600">
               Participate in fun football challenges and win exciting prizes!

@@ -10,7 +10,7 @@ const FootballTournamentSearch = () => {
           <div className="absolute inset-0 rounded-t-2xl bg-white"></div>
           <div className="absolute inset-0 flex -mt-12 justify-center">
             <div className="rounded-full bg-white">
-              <IoMdFootball className="text-6xl animate-spin" />
+              <IoMdFootball className="text-6xl text-black animate-spin" />
             </div>
           </div>
           <div className="relative text-gray-800 flex items-center justify-center h-full">
