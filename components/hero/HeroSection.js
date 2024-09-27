@@ -7,7 +7,7 @@ const HeroSection = () => {
             }}>
             <div className="absolute inset-0 bg-black bg-opacity-10"></div>
             <div className="container flex flex-col justify-center h-full relative text-center text-white">
-                <div className="flex flex-col mt-48 md:mt-12 md:flex-row justify-center items-center gap-12 h-full">
+                <div className="flex flex-col mt-8 md:mt-12 md:flex-row justify-center items-center gap-12 h-full">
                     <div className="sm:w-1/2 md:w-1/2 m-6 md:h-1/2 items-center justify-center border-t-4 border-red-600 bg-black opacity-70 p-4 rounded-2xl">
                         <h1 className="text-xl">Kuza Talanta Mtaani</h1>
                         <p className="text-sm mt-4">Join the excitement of the Kuza Talanta Tournament and witness the greatest teams battle it out for the championship title</p>
