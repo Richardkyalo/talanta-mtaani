@@ -6,7 +6,7 @@ import { FaFutbol } from 'react-icons/fa'; // Importing a football icon
 const EntertainmentSection = () => {
   return (
     <div className="bg-gray-100 py-10">
-      <div className="container mx-auto">
+      <div className="container text-center mx-auto">
         <h2 className="text-xl text-blue-500 mb-4">
           Annual Football Tournament Entertainment
         </h2>

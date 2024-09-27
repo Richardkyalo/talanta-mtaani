@@ -34,7 +34,7 @@ const newsArticles = [
 const NewsSection = () => {
     return (
         <div className="bg-gray-50 py-10">
-            <div className="container mx-auto">
+            <div className="container text-center mx-auto">
                 <h2 className="text-xl text-blue-500 mb-6">Latest News</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {newsArticles.map((article) => (
