@@ -27,7 +27,7 @@ const Header = () => {
 
                 {/* Desktop Menu */}
                 <nav className="hidden md:flex space-x-4">
-                    <a href="#" className="text-gray-700 hover:text-blue-500">Teams</a>
+                    <a href="/Teams" className="text-gray-700 hover:text-blue-500">Teams</a>
                     <a href="#" className="text-gray-700 hover:text-blue-500">Fixtures</a>
                     <a href="#" className="text-gray-700 hover:text-blue-500">Results</a>
                     <a href="#" className="text-gray-700 hover:text-blue-500">League Table</a>
@@ -80,7 +80,7 @@ const Header = () => {
                 </div>
                 <nav className="flex flex-col bg-white space-y-4 p-4">
                 <a href="/" className="text-gray-700 hover:text-blue-500">Home</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">Teams</a>
+                    <a href="/Teams" className="text-gray-700 hover:text-blue-500">Teams</a>
                     <a href="#" className="text-gray-700 hover:text-blue-500">Fixtures</a>
                     <a href="#" className="text-gray-700 hover:text-blue-500">Results</a>
                     <a href="#" className="text-gray-700 hover:text-blue-500">League Table</a>

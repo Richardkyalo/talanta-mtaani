@@ -1,8 +1,8 @@
 // components/Layout.js
 import Head from 'next/head';
-import Navigation from './header/navigation/Navigation.js';
-import Header from './header/Header';
-import Footer from '../components/footer/footer.js'
+import Navigation from './Layout/header/navigation/Navigation.js';
+import Header from './Layout/header/Header.js';
+import Footer from './Layout/footer/footer.js'
 const Layout = ({ children }) => {
   return (
     <div>
