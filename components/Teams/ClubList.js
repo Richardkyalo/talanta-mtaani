@@ -43,7 +43,7 @@ const ClubList = () => {
                 <div className="relative max-w-lg mx-auto">
                     <input
                         type="text"
-                        className="w-full p-4 sm:rounded-sm md:rounded-full text-black"
+                        className="w-full p-4 sm:rounded-xl md:rounded-full text-black"
                         placeholder="Search Clubs"
                         value={searchTerm}
                         onChange={handleSearch}
