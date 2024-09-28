@@ -36,14 +36,14 @@ const ClubList = () => {
     );
 
     return (
-        <section className="container mx-auto px-4 py-8">
+        <section className="container bg-gray-100 mx-auto px-4 py-8">
             {/* Header */}
             <div className="text-center py-8 bg-gradient-to-r from-blue-400 to-purple-600 text-white rounded-lg mb-6">
                 <h1 className="text-5xl font-bold mb-4">Clubs</h1>
                 <div className="relative max-w-lg mx-auto">
                     <input
                         type="text"
-                        className="w-full p-4 rounded-full text-black"
+                        className="w-full p-4 sm:rounded-sm md:rounded-full text-black"
                         placeholder="Search Clubs"
                         value={searchTerm}
                         onChange={handleSearch}
