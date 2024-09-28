@@ -29,8 +29,8 @@ const Header = () => {
                 <nav className="hidden md:flex space-x-4">
                     <a href="/Teams" className="text-gray-700 hover:text-blue-500">Teams</a>
                     <a href="/Fixtures" className="text-gray-700 hover:text-blue-500">Fixtures</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">Results</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">League Table</a>
+                    <a href="/Results" className="text-gray-700 hover:text-blue-500">Results</a>
+                    <a href="/Table" className="text-gray-700 hover:text-blue-500">League Table</a>
                 </nav>
 
                 {/* Right Section (Search and Language) */}
@@ -82,11 +82,11 @@ const Header = () => {
                 <a href="/" className="text-gray-700 hover:text-blue-500">Home</a>
                     <a href="/Teams" className="text-gray-700 hover:text-blue-500">Teams</a>
                     <a href="/Fixtures" className="text-gray-700 hover:text-blue-500">Fixtures</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">Results</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">League Table</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">Live Score</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">Player Stats</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">Team Registration</a>
+                    <a href="/Results" className="text-gray-700 hover:text-blue-500">Results</a>
+                    <a href="/Table" className="text-gray-700 hover:text-blue-500">League Table</a>
+                    <a href="/LiveScore" className="text-gray-700 hover:text-blue-500">Live Score</a>
+                    <a href="/PlayerStats" className="text-gray-700 hover:text-blue-500">Player Stats</a>
+                    <a href="/TeamReg" className="text-gray-700 hover:text-blue-500">Team Registration</a>
                     <a href="#" className="text-gray-700 hover:text-blue-500">Fan Zone</a>
                     <div className='flex flex-col space-y-4 p-8'>
                         <button className="border border-blue-500 text-blue-500 px-4 py-2 rounded-full">Search</button>
