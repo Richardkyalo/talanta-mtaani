@@ -13,7 +13,6 @@ const Fixtures = () => {
                 // Add more men's fixtures
             ]
         }
-        // Add more date blocks if needed
     ];
 
     const womenFixtures = [
@@ -32,7 +31,7 @@ const Fixtures = () => {
     const displayedFixtures = isMen ? menFixtures : womenFixtures;
 
     return (
-        <section className="container mx-auto px-4 py-8">
+        <section className="bg-gray-100 mx-auto px-4 py-8">
             {/* Header Section */}
             <div className="py-8 bg-gradient-to-r from-blue-400 to-purple-600 text-white rounded-lg mb-6">
                 <h1 className="text-5xl mx-4 font-bold mb-4">Fixtures</h1>
@@ -58,7 +57,7 @@ const Fixtures = () => {
                 </div>
             </div>
 
-            {/* Fixtures Display */}
+            {/* Fixtures Table Display */}
             <div className="bg-white shadow-lg rounded-lg p-6">
                 {displayedFixtures.map((fixtureGroup, index) => (
                     <div key={index} className="mb-8">
@@ -66,37 +65,49 @@ const Fixtures = () => {
                         <h2 className="text-xl font-bold text-gray-800 mb-4">
                             {fixtureGroup.date}
                         </h2>
-                        <div className="space-y-4">
-                            {fixtureGroup.matches.map((match, idx) => (
-                                <div key={idx} className="grid grid-cols-4 items-center gap-4 py-4 border-b">
-                                    {/* Home Team */}
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            src={match.homeLogo}
-                                            alt={match.home}
-                                            className="w-8 h-8 rounded-full"
-                                        />
-                                        <span className="text-lg font-medium">{match.home}</span>
-                                    </div>
-                                    {/* Time */}
-                                    <div className="text-center text-lg text-gray-700">
-                                        {match.time}
-                                    </div>
-                                    {/* Away Team */}
-                                    <div className="flex items-center justify-end gap-2">
-                                        <span className="text-lg font-medium">{match.away}</span>
-                                        <img
-                                            src={match.awayLogo}
-                                            alt={match.away}
-                                            className="w-8 h-8 rounded-full"
-                                        />
-                                    </div>
-                                    {/* Location */}
-                                    <div className="text-right text-sm text-gray-500">
-                                        {match.location}
-                                    </div>
-                                </div>
-                            ))}
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr className="bg-gray-50">
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team A</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Team B</th>
+                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {fixtureGroup.matches.map((match, idx) => (
+                                        <tr key={idx}>
+                                            {/* Home Team */}
+                                            <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
+                                                <img
+                                                    src={match.homeLogo}
+                                                    alt={match.home}
+                                                    className="w-8 h-8 rounded-full"
+                                                />
+                                                <span className="text-sm font-medium text-gray-900">{match.home}</span>
+                                            </td>
+                                            {/* Time */}
+                                            <td className="px-6 py-4 text-center text-sm text-gray-500">
+                                                {match.time}
+                                            </td>
+                                            {/* Away Team */}
+                                            <td className="px-6 py-4 whitespace-nowrap text-right flex justify-end items-center gap-2">
+                                                <span className="text-sm font-medium text-gray-900">{match.away}</span>
+                                                <img
+                                                    src={match.awayLogo}
+                                                    alt={match.away}
+                                                    className="w-8 h-8 rounded-full"
+                                                />
+                                            </td>
+                                            {/* Location */}
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                                {match.location}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 ))}
