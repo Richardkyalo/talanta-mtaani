@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
     <div>
       <Head>
         <title>Kuza Talanta Mtaani</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/image/1.jpg" />
       </Head>
       <header > {/* Add Header Component */}
         <Header/>

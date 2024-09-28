@@ -1,6 +1,3 @@
-// pages/index.js
-// import Layout from '../components/Layout';
-// import Header from '../components/header/Header';
 import HeroSection from '../components/Home/hero/HeroSection.js';
 import FootballTournamentSearch from '../components/Home/search/Search.js'
 import '../styles/globals.css';
