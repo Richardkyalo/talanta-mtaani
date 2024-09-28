@@ -71,7 +71,7 @@ const PlayerStats = () => {
                     </thead>
                     <tbody>
                         {playerData.recentMatches.map((match, index) => (
-                            <tr key={index} className="hover:bg-gray-100">
+                            <tr key={index} className="hover:bg-gray-100 text-black">
                                 <td className="py-2 px-4 border-b">{match.date}</td>
                                 <td className="py-2 px-4 border-b">{match.opponent}</td>
                                 <td className="py-2 px-4 border-b text-center">{match.goals}</td>
