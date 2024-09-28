@@ -12,6 +12,14 @@ const ClubList = () => {
         { name: "Salama Fc", logo: "/image/tourn4.jpg" },
         // Add more clubs here
     ];
+    const clubsWomen = [
+        { name: "Kamulamba Women FC", logo: "/image/tourn4.jpg" },
+        { name: "Yikisaaya Women FC", logo: "/image/tourn4.jpg" },
+        { name: "Yindundu Women Fc", logo: "/image/tourn4.jpg" },
+        { name: "Misuuni Women Fc", logo: "/image/tourn4.jpg" },
+        { name: "Salama Women Fc", logo: "/image/tourn4.jpg" },
+        // Add more clubs here
+    ];
 
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -20,6 +28,10 @@ const ClubList = () => {
     };
 
     const filteredClubs = clubs.filter((club) =>
+        club.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const filteredClubsWomen = clubsWomen.filter((club) =>
         club.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -41,15 +53,40 @@ const ClubList = () => {
             </div>
 
             {/* Filter Section */}
-            {/* <div className="flex justify-between items-center mb-8">
-                <button className="bg-gray-200 text-gray-700 py-2 px-6 rounded-md shadow-md">
-                    Filter
+            <div className="flex justify-between items-center mb-8">
+                <button className="bg-gray-400 text-gray-700 py-2 px-6 rounded-md shadow-md">
+                    Men
                 </button>
-            </div> */}
+            </div>
 
             {/* Club Cards */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {filteredClubs.map((club, index) => (
+                    <div key={index} className="bg-white border-b border-red-500 shadow-lg rounded-lg p-6 flex flex-col items-center">
+                        <img
+                            src={club.logo}
+                            alt={club.name}
+                            className="object-contain mb-4 rounded rounded-t-lg"
+                        />
+                        <div className='flex flex-row items-center justify-between gap-8'>
+                        <h2 className="text-xl font-bold text-gray-800">{club.name}</h2>
+                        <span className="text-red-600 text-sm">
+                        <FaArrowRight />
+                        </span>
+                        </div>
+
+                    </div>
+                ))}
+            </div>
+
+            <div className="flex justify-between items-center mt-8 mb-8">
+                <button className="bg-gray-400 text-gray-700 py-2 px-6 rounded-md shadow-md">
+                    Women
+                </button>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {filteredClubsWomen.map((club, index) => (
                     <div key={index} className="bg-white border-b border-red-500 shadow-lg rounded-lg p-6 flex flex-col items-center">
                         <img
                             src={club.logo}
