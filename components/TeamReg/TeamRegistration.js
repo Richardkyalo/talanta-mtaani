@@ -96,8 +96,8 @@ const TeamRegistrationForm = () => {
                         required
                     >
                         <option value="">Select a category</option>
-                        <option value="men">Men's Team</option>
-                        <option value="women">Women's Team</option>
+                        <option value="men">Men&apos;sTeam</option>
+                        <option value="women">Women&apos;s Team</option>
                     </select>
                 </div>
 
