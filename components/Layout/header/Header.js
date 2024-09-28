@@ -9,7 +9,7 @@ const Header = () => {
     };
 
     return (
-        <header className={`${open ? 'absolute inset-0 bg-black bg-opacity-40' : 'bg-white'} font-bold shadow-md p-4`}>
+        <header className={`${open ? 'absolute inset-0' : 'bg-white'} font-bold shadow-md p-4`}>
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
                 {open ? (
