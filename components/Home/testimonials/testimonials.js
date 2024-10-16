@@ -5,25 +5,25 @@ import React from 'react';
 const testimonials = [
   {
     id: 1,
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Replace with actual video URLs
+    videoUrl: 'https://www.youtube.com/embed/NrsiQzDTxeA?si=aC8gggeOm8FJeAfZ', // Replace with actual video URLs
     name: 'John Doe',
     description: 'The football tournament was an unforgettable experience! The atmosphere was electric, and the entertainment was top-notch.',
   },
   {
     id: 2,
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Replace with actual video URLs
+    videoUrl: 'https://www.youtube.com/embed/NrsiQzDTxeA?si=aC8gggeOm8FJeAfZ', // Replace with actual video URLs
     name: 'Jane Smith',
     description: 'I loved every moment! The matches were thrilling, and the entertainment kept everyone engaged.',
   },
   {
     id: 3,
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Replace with actual video URLs
+    videoUrl: 'https://www.youtube.com/embed/NrsiQzDTxeA?si=aC8gggeOm8FJeAfZ', // Replace with actual video URLs
     name: 'Emily Johnson',
     description: 'A fantastic event for the whole family! We had a blast with the activities and the matches.',
   },
   {
     id: 4,
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Replace with actual video URLs
+    videoUrl: 'https://www.youtube.com/embed/NrsiQzDTxeA?si=aC8gggeOm8FJeAfZ', // Replace with actual video URLs
     name: 'Emily Johnson',
     description: 'A fantastic event for the whole family! We had a blast with the activities and the matches.',
   },
