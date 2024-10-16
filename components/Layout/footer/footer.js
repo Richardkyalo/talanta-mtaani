@@ -90,6 +90,7 @@ const Footer = () => {
             {/* Footer Bottom */}
             <div className="container  mx-auto mt-8 px-4 text-center text-sm">
                 <p>&copy; 2024 Kuza Talanta Mtaani Football Tournament. All Rights Reserved.</p>
+                <h6>Powered by RK Technologies</h6>
             </div>
         </footer>
     );
