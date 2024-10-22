@@ -1,36 +1,34 @@
 "use client";
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const Header = () => {
     const [open, setOpen] = useState(false);
+    const pathname = usePathname(); // Get the current path
 
     const toggle = () => {
         setOpen(!open);
     };
 
+    const isActiveLink = (href) => {
+        return pathname === href ? 'text-red-500' : 'text-gray-700 hover:text-blue-500';
+    }
+
     return (
         <header className={`${open ? 'absolute inset-0' : 'bg-white'} font-bold shadow-md p-4`}>
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
-                {open ? (
-                    <div className="hidden transform transition-transform duration-1000 p-4">
-                        <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
-                        <h1 className="text-xl  text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
-                    </div>
-                ) : (
-                    <div className="flex items-center">
-                        <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
-                        <h1 className="text-xl text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
-                    </div>
-                )}
-
+                <div className="flex items-center">
+                    <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
+                    <h1 className="text-xl text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
+                </div>
 
                 {/* Desktop Menu */}
                 <nav className="hidden md:flex space-x-4">
-                    <a href="/Teams" className="text-gray-700 hover:text-blue-500">Teams</a>
-                    <a href="/Fixtures" className="text-gray-700 hover:text-blue-500">Fixtures</a>
-                    <a href="/Results" className="text-gray-700 hover:text-blue-500">Results</a>
-                    <a href="/Table" className="text-gray-700 hover:text-blue-500">League Table</a>
+                    <a href="/Teams" className={isActiveLink('/Teams')}>Teams</a>
+                    <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
+                    <a href="/Results" className={isActiveLink('/Results')}>Results</a>
+                    <a href="/Table" className={isActiveLink('/Table')}>League Table</a>
                 </nav>
 
                 {/* Right Section (Search and Language) */}
@@ -47,12 +45,10 @@ const Header = () => {
                     >
                         {open ? (
                             <div className='hidden'>
-
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </div>
-
                         ) : (
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -64,7 +60,7 @@ const Header = () => {
 
             {/* Mobile Menu */}
             <div
-                className={`fixed top-0 z-30 right-0 h-full w-64 bg-white  shadow-lg transform transition-transform duration-1000 ${open ? 'translate-x-0' : 'translate-x-full'
+                className={`fixed top-0 z-30 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-1000 ${open ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >
                 <div className="flex justify-end items-center p-4 border-b">
@@ -79,21 +75,20 @@ const Header = () => {
                     </button>
                 </div>
                 <nav className="flex flex-col bg-white space-y-4 p-4">
-                <a href="/" className="text-gray-700 hover:text-blue-500">Home</a>
-                    <a href="/Teams" className="text-gray-700 hover:text-blue-500">Teams</a>
-                    <a href="/Fixtures" className="text-gray-700 hover:text-blue-500">Fixtures</a>
-                    <a href="/Results" className="text-gray-700 hover:text-blue-500">Results</a>
-                    <a href="/Table" className="text-gray-700 hover:text-blue-500">League Table</a>
-                    <a href="/LiveScore" className="text-gray-700 hover:text-blue-500">Live Score</a>
-                    <a href="/PlayerStats" className="text-gray-700 hover:text-blue-500">Player Stats</a>
-                    <a href="/TeamReg" className="text-gray-700 hover:text-blue-500">Team Registration</a>
-                    <a href="#" className="text-gray-700 hover:text-blue-500">Fan Zone</a>
+                    <a href="/" className={`text-gray-700 hover:text-blue-500 ${pathname === '/' ? 'text-red-500' : ''}`}>Home</a>
+                    <a href="/Teams" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Teams' ? 'text-red-500' : ''}`}>Teams</a>
+                    <a href="/Fixtures" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Fixtures' ? 'text-red-500' : ''}`}>Fixtures</a>
+                    <a href="/Results" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Results' ? 'text-red-500' : ''}`}>Results</a>
+                    <a href="/Table" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Table' ? 'text-red-500' : ''}`}>League Table</a>
+                    <a href="/LiveScore" className={`text-gray-700 hover:text-blue-500 ${pathname === '/LiveScore' ? 'text-red-500' : ''}`}>Live Score</a>
+                    <a href="/PlayerStats" className={`text-gray-700 hover:text-blue-500 ${pathname === '/PlayerStats' ? 'text-red-500' : ''}`}>Player Stats</a>
+                    <a href="/TeamReg" className={`text-gray-700 hover:text-blue-500 ${pathname === '/TeamReg' ? 'text-red-500' : ''}`}>Team Registration</a>
+                    <a href="#" className={`text-gray-700 hover:text-blue-500 ${pathname === '/FanZone' ? 'text-red-500' : ''}`}>Fan Zone</a>
                     <div className='flex flex-col space-y-4 p-8'>
                         <button className="border border-blue-500 text-blue-500 px-4 py-2 rounded-full">Search</button>
                         <button className="text-gray-700">🌍</button>
                     </div>
                 </nav>
-
             </div>
         </header>
     );
