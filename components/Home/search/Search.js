@@ -15,7 +15,7 @@ const FootballTournamentSearch = () => {
             </div>
           </div>
           <div className="relative text-gray-800 flex justify-center h-full">
-            <h1 className="text-3xl mt-24 font-bold">Come all and experience the excitement of the Kuza Talanta Mtaani</h1>
+            <h1 className="text-3xl mt-24 font-bold">Come all and experience the excitement of Football Clashes</h1>
           </div>
         </div>
 
