@@ -5,38 +5,41 @@ import React from 'react';
 const testimonials = [
   {
     id: 1,
-    videoUrl: 'https://www.youtube.com/embed/NrsiQzDTxeA?si=aC8gggeOm8FJeAfZ', // Replace with actual video URLs
+    videoUrl: '/image/video1.mp4', // Replace with actual video URLs
     name: 'John Doe',
     description: 'The football tournament was an unforgettable experience! The atmosphere was electric, and the entertainment was top-notch.',
   },
   {
     id: 2,
-    videoUrl: 'https://www.youtube.com/embed/NrsiQzDTxeA?si=aC8gggeOm8FJeAfZ', // Replace with actual video URLs
+    videoUrl: '/image/video2.mp4', // Replace with actual video URLs
     name: 'Jane Smith',
     description: 'I loved every moment! The matches were thrilling, and the entertainment kept everyone engaged.',
   },
   {
     id: 3,
-    videoUrl: 'https://www.youtube.com/embed/NrsiQzDTxeA?si=aC8gggeOm8FJeAfZ', // Replace with actual video URLs
+    videoUrl: '/image/video3.mp4', // Replace with actual video URLs
     name: 'Emily Johnson',
     description: 'A fantastic event for the whole family! We had a blast with the activities and the matches.',
   },
   {
     id: 4,
-    videoUrl: 'https://www.youtube.com/embed/NrsiQzDTxeA?si=aC8gggeOm8FJeAfZ', // Replace with actual video URLs
-    name: 'Emily Johnson',
+    videoUrl: '/image/video4.mp4', // Replace with actual video URLs
+    name: 'Michael Brown',
     description: 'A fantastic event for the whole family! We had a blast with the activities and the matches.',
   },
 ];
 
 const TestimonialsSection = () => {
   return (
-    <div className="bg-gray-50 py-10">
-      <div className="container text-center mx-auto">
+    <div className="relative h-screen bg-cover bg-center py-10" style={{ backgroundImage: "url('/image/eighth.jpeg')" }}>
+      {/* Overlay for better text visibility */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      
+      <div className="relative container text-center mx-auto z-10">
         <h2 className="text-xl text-blue-500 mb-6">
           What People Are Saying
         </h2>
-        <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {testimonials.map((testimonial) => (
             <div 
               key={testimonial.id} 
@@ -46,10 +49,11 @@ const TestimonialsSection = () => {
                 className="w-full h-56 rounded-lg"
                 src={testimonial.videoUrl}
                 title={`Testimonial from ${testimonial.name}`}
+                controls 
                 frameBorder="0"
                 allowFullScreen
               ></iframe>
-              <h3 className="text-sm  text-black mt-4">{testimonial.name}</h3>
+              <h3 className="text-sm text-black mt-4">{testimonial.name}</h3>
               <p className="text-gray-600 text-xs">{testimonial.description}</p>
             </div>
           ))}
