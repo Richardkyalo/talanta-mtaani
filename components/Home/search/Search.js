@@ -4,7 +4,7 @@ import { IoMdFootball } from "react-icons/io";
 const FootballTournamentSearch = () => {
   return (
     <section className="bg-gray-100 -mt-6 md:-mt-24 py-8">
-      <div className="container mx-auto px-4 text-center">
+      <div className="mx-auto text-center">
         {/* Hero Section */}
         <div className="relative z-10 bg-cover bg-center h-48">
           <div className="absolute inset-0 rounded-t-2xl bg-white"></div>
@@ -14,7 +14,7 @@ const FootballTournamentSearch = () => {
             </div>
           </div>
           <div className="relative text-gray-800 flex justify-center h-full">
-            <h1 className="text-3xl font-bold">Come all and experience the excitement of the Kuza Talanta Mtaani</h1>
+            <h1 className="text-3xl mt-24 font-bold">Come all and experience the excitement of the Kuza Talanta Mtaani</h1>
           </div>
         </div>
 
