@@ -29,7 +29,7 @@ const FootballTournamentSearch = () => {
               </div>
               <div className="p-4 w-full md:w-1/2 flex flex-col items-start">
                 <h4 className="text-xl font-semibold mb-4 text-red-500">The Group Stages</h4>
-                <p className="text-gray-700 text-left">
+                <p className="text-gray-700 text-xs text-left">
                   The Group Stages kick off the tournament with excitement and anticipation. Teams are divided into groups, where they
                   battle against each other to secure a top spot and advance to the knockout rounds. This stage is full of energy, as each team brings their best
                   strategies to the field, showcasing skill and teamwork to survive the early rounds.
@@ -44,7 +44,7 @@ const FootballTournamentSearch = () => {
               </div>
               <div className="p-4 w-full md:w-1/2 flex flex-col items-end">
                 <h4 className="text-xl font-semibold mb-4 text-red-500">The Knockout Rounds</h4>
-                <p className="text-gray-700 text-right">
+                <p className="text-gray-700 text-xs text-right">
                   The Knockout rounds are a thrilling part of the tournament where every match is do-or-die.
                   Teams that have advanced from the Group Stages compete head-to-head in high-stakes games.
                   With no second chances, each match tests the players&apos; endurance and tactics,
@@ -60,7 +60,7 @@ const FootballTournamentSearch = () => {
               </div>
               <div className="p-4 w-full md:w-1/2 flex flex-col items-start">
                 <h4 className="text-xl font-semibold mb-4 text-red-500">The Finals</h4>
-                <p className="text-gray-700 text-left">
+                <p className="text-gray-700 text-xs text-left">
                   The Finals represent the pinnacle of the tournament, where the top teams compete
                   for the ultimate glory. This climactic stage is a showcase of exceptional talent,
                   determination, and sportsmanship. Fans gather with anticipation as
@@ -77,7 +77,7 @@ const FootballTournamentSearch = () => {
               </div>
               <div className="p-4 w-full md:w-1/2 flex flex-col items-end">
                 <h4 className="text-xl font-semibold mb-4 text-red-500">The Top Scorers</h4>
-                <p className="text-gray-700 text-right">
+                <p className="text-gray-700 text-xs text-right">
                   Celebrating the Top Scorers, we recognize players whose skill and precision have
                   led to the highest goals scored throughout the tournament. These players have displayed
                   exceptional accuracy, agility, and an eye for opportunities that have placed them above
