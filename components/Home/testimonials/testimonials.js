@@ -1,6 +1,8 @@
 // components/TestimonialsSection.js
+
 'use client';
 import React, { useRef } from 'react';
+
 const testimonials = [
   {
     id: 1,
@@ -26,22 +28,24 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <div className="relative h-screen bg-cover bg-center py-10" style={{ backgroundImage: "url('/image/eighth.jpeg')" }}>
+    <div className="relative h-full bg-cover bg-center py-10" style={{ backgroundImage: "url('/image/eighth.jpeg')" }}>
       {/* Overlay for better text visibility */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
       
-      <div className="relative container text-center mx-auto z-10">
-        <h2 className="text-xl text-white mb-6">
+      <div className="relative container mx-auto px-4 text-center z-10">
+        <h2 className="text-2xl md:text-3xl lg:text-4xl text-white font-bold mb-6">
           Some of Last Year Highlights
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 px-4">
           {testimonials.map((testimonial) => (
             <TestimonialCard key={testimonial.id} testimonial={testimonial} />
           ))}
         </div>
       </div>
-      <div className='relative mt-10 flex justify-center'>
-        <button className="bg-red-500 hover:bg-blue-500 btn-sm text-white py-2 px-4 rounded-lg">View More</button>
+      <div className="relative mt-10 flex justify-center">
+        <button className="bg-red-500 hover:bg-blue-500 text-white py-2 px-4 rounded-lg">
+          View More
+        </button>
       </div>
     </div>
   );
@@ -64,14 +68,13 @@ const TestimonialCard = ({ testimonial }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden relative cursor-pointer">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden relative cursor-pointer transition-transform duration-300 hover:scale-105">
       {/* Video with play button overlay */}
       <div className="relative">
         <video
           ref={videoRef}
-          className="w-full h-56 object-cover"
+          className="w-full h-48 sm:h-56 object-cover"
           src={testimonial.videoUrl}
-          // title={`Testimonial from ${testimonial.name}`}
           onEnded={() => setVideoPlay(false)} // Reset state when video ends
           onClick={handlePlayPauseVideo} // Allow clicking on video to toggle play/pause
         >
@@ -93,10 +96,9 @@ const TestimonialCard = ({ testimonial }) => {
         )}
       </div>
 
-      {/* Name and Description below video */}
+      {/* Description below video */}
       <div className="p-4">
-        <h3 className="text-sm font-semibold text-gray-800">{testimonial.name}</h3>
-        <p className="text-gray-600 text-xs mt-2">{testimonial.description}</p>
+        <p className="text-gray-800 text-sm mt-2">{testimonial.description}</p>
       </div>
     </div>
   );
