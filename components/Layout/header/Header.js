@@ -18,10 +18,14 @@ const Header = () => {
         <header className={`${open ? 'absolute inset-0' : 'bg-white'} font-bold shadow-md p-4`}>
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
-                <div className="flex items-center">
-                    <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
-                    <h1 className="text-xl text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
-                </div>
+
+                {!open &&
+                    <div className="flex items-center">
+                        <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
+                        <h1 className="text-xl text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
+                    </div>
+                }
+
 
                 {/* Desktop Menu */}
                 <nav className="hidden md:flex space-x-4">
@@ -92,7 +96,7 @@ const Header = () => {
                     </div>
                 </nav>
             </div>
-        </header>
+        </header >
     );
 };
 
