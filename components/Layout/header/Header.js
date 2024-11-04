@@ -25,6 +25,7 @@ const Header = () => {
 
                 {/* Desktop Menu */}
                 <nav className="hidden md:flex space-x-4">
+                    <a href="/" className={isActiveLink('/AboutUs')}>About Us</a>
                     <a href="/Teams" className={isActiveLink('/Teams')}>Teams</a>
                     <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
@@ -76,6 +77,7 @@ const Header = () => {
                 </div>
                 <nav className="flex flex-col bg-white space-y-4 p-4">
                     <a href="/" className={`text-gray-700 hover:text-blue-500 ${pathname === '/' ? 'text-red-500' : ''}`}>Home</a>
+                    <a href="/AboutUs" className={`text-gray-700 hover:text-blue-500 ${pathname === '/AboutUs' ? 'text-red-500' : ''}`}>About Us</a>
                     <a href="/Teams" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Teams' ? 'text-red-500' : ''}`}>Teams</a>
                     <a href="/Fixtures" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Fixtures' ? 'text-red-500' : ''}`}>Fixtures</a>
                     <a href="/Results" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Results' ? 'text-red-500' : ''}`}>Results</a>

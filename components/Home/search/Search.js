@@ -14,51 +14,72 @@ const FootballTournamentSearch = () => {
             </div>
           </div>
           <div className="relative text-gray-800 flex items-center justify-center h-full">
-            <h1 className="text-3xl font-bold">Search for Matches, Teams, or Services</h1>
+            <h1 className="text-3xl font-bold">Come all and experience the excitement of the Kuza Talanta Mtaani</h1>
           </div>
         </div>
 
         {/* Search Section */}
-        <div className="bg-white shadow-lg border-b borde-4 border-blue-500 rounded-b-2xl px-8">
-          <div className="relative">
+        <div className="bg-white shadow-lg  border-b-4 border-blue-500 rounded-b-2xl px-8">
+          {/* <div className="relative">
             <input
               type="text"
               className="w-full p-4 rounded-full border border-gray-300 focus:outline-none"
               placeholder="Search for a team, match, or service..."
             />
-          </div>
+          </div> */}
+
 
           {/* Categories */}
-          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex flex-col items-center">
-              <div className="p-4 bg-red-100 rounded-full">
-                {/* Replace icon with a football-related one */}
-                <img src="/image/tourn2.jpg" alt="Group Stages" className="w-8 h-8 rounded full" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Row 1: Image on the left, text on the right */}
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="p-4 w-full md:w-1/2">
+                <img src="/image/first.jpeg" alt="Group Stages" className="image-fluid rounded-tl-3xl rounded-br-3xl" />
               </div>
-              <p className="mt-2 text-gray-700 mb-8 ">Group Stages</p>
+              <div className="p-4 w-full md:w-1/2 flex items-center">
+                <p className="text-gray-700">
+                  The Group Stages feature exciting matches where teams compete to advance to the next round.
+                </p>
+              </div>
             </div>
 
-            <div className="flex flex-col items-center">
-              <div className="p-4 bg-red-100 rounded-full">
-                <img src="/image/tourn3.jpg" alt="Knockouts" className="w-8 h-8 rounded full" />
+            {/* Row 2: Text on the left, image on the right */}
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="p-4 w-full md:w-1/2">
+                <img src="/image/second.jpeg" alt="Knockouts" className="image-fluid rounded-tl-3xl rounded-br-3xl" />
               </div>
-              <p className="mt-2 text-gray-700 mb-8 ">Knockouts</p>
+              <div className="p-4 w-full md:w-1/2 flex items-center">
+                <p className="text-gray-700">
+                  The Knockout rounds are intense, with each team vying for a spot in the finals.
+                </p>
+              </div>
             </div>
 
-            <div className="flex flex-col items-center">
-              <div className="p-4 bg-red-100 rounded-full">
-                <img src="/image/2.jpg" alt="Finals" className="w-8 h-8 rounded full" />
+            {/* Row 3: Image on the left, text on the right */}
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="p-4 w-full md:w-1/2">
+                <img src="/image/third.jpeg" alt="Finals" className="image-fluid rounded-tl-3xl rounded-br-3xl" />
               </div>
-              <p className="mt-2 text-gray-700 mb-8 ">Finals</p>
+              <div className="p-4 w-full md:w-1/2 flex items-center">
+                <p className="text-gray-700">
+                  The Finals are the culmination of the tournament, where the best teams face off for the championship.
+                </p>
+              </div>
             </div>
 
-            <div className="flex flex-col items-center">
-              <div className="p-4 bg-red-100 rounded-full">
-                <img src="/image/1.jpg" alt="Top Scorers" className="w-8 h-8 rounded full" />
+            {/* Row 4: Text on the left, image on the right */}
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="p-4 w-full md:w-1/2">
+                <img src="/image/fourth.jpeg" alt="Top Scorers" className="image-fluid rounded-tl-3xl rounded-br-3xl" />
               </div>
-              <p className="mt-2 text-gray-700 mb-8 ">Top Scorers</p>
+              <div className="p-4 w-full md:w-1/2 flex items-center">
+                <p className="text-gray-700">
+                  Recognizing the Top Scorers who made outstanding contributions throughout the tournament.
+                </p>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>

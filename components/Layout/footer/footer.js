@@ -71,10 +71,10 @@ const Footer = () => {
             <div className="container mx-auto mt-8 px-4 flex flex-col md:flex-row justify-between items-center">
                 {/* App Download Links */}
                 <div className="flex space-x-4">
-                    <a href="#" className="bg-black p-2 rounded-full text-white">
-                        <img src="/image/2.jpg" alt="App Store" className="h-12 w-12 rounded-full" />
+                    <a href="#" className="bg-black  rounded-full text-white">
+                        <img src="/image/logo.png" alt="App Store" className="h-12 w-12 rounded-full" />
                     </a>
-                    <a href="#" className="bg-black p-2 rounded-full text-white">
+                    <a href="#" className="bg-black  rounded-full text-white">
                         <img src="/image/1.jpg" alt="Google Play Store" className="w-12 h-12 rounded-full" />
                     </a>
                 </div>
@@ -86,11 +86,11 @@ const Footer = () => {
                     <FaInstagram />
                 </div>
             </div>
-            <div className='container mx-4 border-t border-gray-500 mt-4'></div>
+            <div className='container mx-4 border-t border-black mt-4'></div>
             {/* Footer Bottom */}
             <div className="container  mx-auto mt-8 px-4 text-center text-sm">
                 <p>&copy; 2024 Kuza Talanta Mtaani Football Tournament. All Rights Reserved.</p>
-                <h6>Powered by RK Technologies</h6>
+                <h6>Designed by Richard Kyalo</h6>
             </div>
         </footer>
     );
