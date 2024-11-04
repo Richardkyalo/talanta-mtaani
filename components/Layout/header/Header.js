@@ -29,7 +29,7 @@ const Header = () => {
 
                 {/* Desktop Menu */}
                 <nav className="hidden md:flex space-x-4">
-                    <a href="/" className={isActiveLink('/AboutUs')}>About Us</a>
+                    <a href="/AboutUs" className={isActiveLink('/AboutUs')}>About Us</a>
                     <a href="/Teams" className={isActiveLink('/Teams')}>Teams</a>
                     <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
@@ -38,8 +38,7 @@ const Header = () => {
 
                 {/* Right Section (Search and Language) */}
                 <div className="hidden md:flex items-center space-x-4">
-                    <button className="border border-blue-500 text-blue-500 px-4 py-2 rounded-full">Search</button>
-                    <button className="text-gray-700">🌍</button>
+                    <a href='' className="btn btn-sm border border-blue-500 text-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white rounded-full">Login</a>
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -90,9 +89,10 @@ const Header = () => {
                     <a href="/PlayerStats" className={`text-gray-700 hover:text-blue-500 ${pathname === '/PlayerStats' ? 'text-red-500' : ''}`}>Player Stats</a>
                     <a href="/TeamReg" className={`text-gray-700 hover:text-blue-500 ${pathname === '/TeamReg' ? 'text-red-500' : ''}`}>Team Registration</a>
                     <a href="#" className={`text-gray-700 hover:text-blue-500 ${pathname === '/FanZone' ? 'text-red-500' : ''}`}>Fan Zone</a>
-                    <div className='flex flex-col space-y-4 p-8'>
-                        <button className="border border-blue-500 text-blue-500 px-4 py-2 rounded-full">Search</button>
-                        <button className="text-gray-700">🌍</button>
+                    <a href="/Blog" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Blog' ? 'text-red-500' : ''}`}>Blog</a>
+                    <a href="/ContactUs" className={`text-gray-700 hover:text-blue-500 ${pathname === '/ContactUs' ? 'text-red-500' : ''}`}>Contact Us</a>
+                    <div className='flex flex-col space-y-4 p-8 w-full text-center'>
+                        <a href='' className="btn btn-sm w-full border border-blue-500 text-blue-500 px-4 py-2 rounded-full hover:bg-blue-500 hover:text-white">Login</a>
                     </div>
                 </nav>
             </div>

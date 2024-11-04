@@ -17,6 +17,8 @@ const Navigation = () => {
                     <a href="/PlayerStats" className={`text-white ${isActive('/PlayerStats')}`}>PLAYER STATS</a>
                     <a href="/TeamReg" className={`text-white ${isActive('/TeamReg')}`}>TEAM REGISTRATION</a>
                     <a href="#" className={`text-white ${isActive('/FanZone')}`}>FAN ZONE</a>
+                    <a href="/Blog" className={`text-white ${isActive('/Blog')}`}>BLOG</a>
+                    <a href="/ContactUs" className={`text-white ${isActive('/ContactUs')}`}>CONTACT US</a>
                 </div>
             </nav>
         </>
