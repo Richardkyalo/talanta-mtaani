@@ -32,7 +32,7 @@ const TestimonialsSection = () => {
       
       <div className="relative container text-center mx-auto z-10">
         <h2 className="text-xl text-white mb-6">
-          Some of Last Year&apos;s Highlights
+          Some of Last Year Highlights
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {testimonials.map((testimonial) => (
