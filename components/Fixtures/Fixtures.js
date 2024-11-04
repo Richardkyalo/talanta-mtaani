@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 
 const Fixtures = () => {
     // Fixtures data for both men and women
@@ -80,8 +81,10 @@ const Fixtures = () => {
                                         <tr key={idx}>
                                             {/* Home Team */}
                                             <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
-                                                <img
+                                                <Image
                                                     src={match.homeLogo}
+                                                    width={32}
+                                                    height={32}
                                                     alt={match.home}
                                                     className="w-8 h-8 rounded-full"
                                                 />
@@ -94,9 +97,11 @@ const Fixtures = () => {
                                             {/* Away Team */}
                                             <td className="px-6 py-4 whitespace-nowrap text-right flex justify-end items-center gap-2">
                                                 <span className="text-sm font-medium text-gray-900">{match.away}</span>
-                                                <img
+                                                <Image
                                                     src={match.awayLogo}
                                                     alt={match.away}
+                                                    width={32}
+                                                    height={32}
                                                     className="w-8 h-8 rounded-full"
                                                 />
                                             </td>

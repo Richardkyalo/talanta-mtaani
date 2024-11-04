@@ -1,5 +1,5 @@
 // components/EntertainmentSection.js
-
+import Image from 'next/image';
 import React from 'react';
 import { FaFutbol } from 'react-icons/fa';
 
@@ -17,7 +17,7 @@ const EntertainmentSection = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {/* Card 1: Celebrity Matches */}
           <div className="bg-white border-b border-t border-red-500 flex flex-col justify-center items-center p-4 rounded-lg shadow-md relative">
-            <img src="/image/celeb.jpeg" alt="Celebrity Match" className="w-full h-40 object-cover rounded-lg" />
+            <Image src="/image/celeb.jpeg" alt="Celebrity Match" width={400} height={300} className="w-full h-40 object-cover rounded-lg" />
             <FaFutbol className="absolute top-2 right-2 text-4xl text-black animate-spin" />
             <div className="text-center mt-4">
               <h3 className="text-xl text-black font-semibold">Celebrity Matches</h3>
@@ -29,7 +29,7 @@ const EntertainmentSection = () => {
 
           {/* Card 2: Football Challenges */}
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md relative">
-            <img src="/image/fifth.jpeg" alt="Football Challenges" className="w-full h-40 object-cover rounded-lg" />
+            <Image src="/image/fifth.jpeg" alt="Football Challenges" width={400} height={300} className="w-full h-40 object-cover rounded-lg" />
             <FaFutbol className="absolute top-2 right-2 text-4xl text-black animate-spin" />
             <div className="text-center mt-4">
               <h3 className="text-xl text-black font-semibold">Football Challenges</h3>
@@ -41,7 +41,7 @@ const EntertainmentSection = () => {
 
           {/* Card 3: Football Activities */}
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md relative">
-            <img src="/image/nine.jpeg" alt="Football Activities" className="w-full h-40 object-cover rounded-lg" />
+            <Image src="/image/nine.jpeg" alt="Football Activities" width={400} height={300} className="w-full h-40 object-cover rounded-lg" />
             <FaFutbol className="absolute top-2 right-2 text-4xl text-black animate-spin" />
             <div className="text-center mt-4">
               <h3 className="text-xl text-black font-semibold">Football Activities</h3>
@@ -53,7 +53,7 @@ const EntertainmentSection = () => {
 
           {/* Card 4: Fun Games */}
           <div className="bg-white border-b border-t border-red-500 p-4 flex flex-col justify-center items-center rounded-lg shadow-md relative">
-            <img src="/image/seventh.jpeg" alt="Fun Games" className="w-full h-40 object-cover rounded-lg" />
+            <Image src="/image/seventh.jpeg" width={400} height={300} alt="Fun Games" className="w-full h-40 object-cover rounded-lg" />
             <FaFutbol className="absolute top-2 right-2 text-4xl text-black animate-spin" />
             <div className="text-center mt-4">
               <h3 className="text-xl text-black font-semibold">Fun Games</h3>
