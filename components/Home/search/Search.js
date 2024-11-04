@@ -27,13 +27,14 @@ const FootballTournamentSearch = () => {
               <div className="p-4 w-full md:w-1/2">
                 <Image src="/image/first.jpeg" alt="Group Stages" width={800} height={600} className="image-fluid rounded-tr-3xl rounded-bl-3xl" />
               </div>
-              <div className="p-4 w-full md:w-1/2 flex flex-col items-start">
+              <div className="p-4 space-y-8 w-full md:w-1/2 flex flex-col items-start">
                 <h4 className="text-xl font-semibold mb-4 text-red-500">The Group Stages</h4>
                 <p className="text-gray-700 text-xs text-left">
                   The Group Stages kick off the tournament with excitement and anticipation. Teams are divided into groups, where they
                   battle against each other to secure a top spot and advance to the knockout rounds. This stage is full of energy, as each team brings their best
                   strategies to the field, showcasing skill and teamwork to survive the early rounds.
                 </p>
+                <a href="#" className="btn btn-lg text-sm border border-red-500 rounded-full px-4 text-red-500 hover:bg-red-500 hover:text-white">Learn More</a>
               </div>
             </div>
 
@@ -42,7 +43,7 @@ const FootballTournamentSearch = () => {
               <div className="p-4 w-full md:w-1/2">
                 <Image src="/image/second.jpeg" alt="Knockouts" width={800} height={600} className="image-fluid rounded-tl-3xl rounded-br-3xl" />
               </div>
-              <div className="p-4 w-full md:w-1/2 flex flex-col items-end">
+              <div className="p-4  space-y-8 w-full md:w-1/2 flex flex-col items-end">
                 <h4 className="text-xl font-semibold mb-4 text-red-500">The Knockout Rounds</h4>
                 <p className="text-gray-700 text-xs text-right">
                   The Knockout rounds are a thrilling part of the tournament where every match is do-or-die.
@@ -50,6 +51,7 @@ const FootballTournamentSearch = () => {
                   With no second chances, each match tests the players&apos; endurance and tactics,
                   leading to intense moments and unforgettable upsets as only the strongest survive.
                 </p>
+                <a href="#" className="btn btn-lg text-sm border border-red-500 rounded-full px-4 text-red-500 hover:bg-red-500 hover:text-white">Learn More</a>
               </div>
             </div>
 
@@ -58,7 +60,7 @@ const FootballTournamentSearch = () => {
               <div className="p-4 w-full md:w-1/2">
                 <Image src="/image/third.jpeg" alt="Finals" width={800} height={600} className="image-fluid rounded-tr-3xl rounded-bl-3xl" />
               </div>
-              <div className="p-4 w-full md:w-1/2 flex flex-col items-start">
+              <div className="p-4  space-y-8 w-full md:w-1/2 flex flex-col items-start">
                 <h4 className="text-xl font-semibold mb-4 text-red-500">The Finals</h4>
                 <p className="text-gray-700 text-xs text-left">
                   The Finals represent the pinnacle of the tournament, where the top teams compete
@@ -67,6 +69,8 @@ const FootballTournamentSearch = () => {
                   the two best teams face off, knowing that only one will emerge as the champion.
                   The Finals are filled with memorable moments that define legends and leave lasting legacies.
                 </p>
+                <a href="#" className="btn btn-lg text-sm border border-red-500 rounded-full px-4 text-red-500 hover:bg-red-500 hover:text-white">Learn More</a>
+
               </div>
             </div>
 
@@ -75,7 +79,7 @@ const FootballTournamentSearch = () => {
               <div className="p-4 w-full md:w-1/2">
                 <Image src="/image/fourth.jpeg" alt="Top Scorers" width={800} height={600} className="image-fluid rounded-tl-3xl rounded-br-3xl" />
               </div>
-              <div className="p-4 w-full md:w-1/2 flex flex-col items-end">
+              <div className="p-4 space-y-8  w-full md:w-1/2 flex flex-col items-end">
                 <h4 className="text-xl font-semibold mb-4 text-red-500">The Top Scorers</h4>
                 <p className="text-gray-700 text-xs text-right">
                   Celebrating the Top Scorers, we recognize players whose skill and precision have
@@ -84,6 +88,8 @@ const FootballTournamentSearch = () => {
                   the rest. Their contribution not only energizes their teams but also thrills fans, making
                   them true icons of the tournament.
                 </p>
+                <a href="#" className="btn btn-lg text-sm border border-red-500 rounded-full px-4 text-red-500 hover:bg-red-500 hover:text-white">Learn More</a>
+
               </div>
             </div>
           </div>
