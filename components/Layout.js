@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
   const pathname = usePathname(); // Use usePathname to get the current path
 
   // Define routes without header and footer (e.g., login page)
-  const noLayoutRoutes = ['/Login', '/Register', '/Forgot-password'];
+  const noLayoutRoutes = ['/Login', '/Register', '/ForgotPassword'];
   const isNoLayoutPage = noLayoutRoutes.includes(pathname);
 
   return (

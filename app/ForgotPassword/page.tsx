@@ -1,10 +1,10 @@
 import React from 'react';
-import Register from '../../components/Register/Register'
+import ForgotPassword from '../../components/ForgotPassword/ForgotPassword'
 import "../../styles/globals.css"
 export default function Teams() {
     return (
     <div>
-        <Register />
+        <ForgotPassword />
     </div>
 );
 }
