@@ -14,7 +14,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleLogin = (e: any) => {
+    const handleLogin = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         // Implement login functionality here
     };
