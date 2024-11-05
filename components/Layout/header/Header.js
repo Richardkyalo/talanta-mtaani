@@ -38,7 +38,7 @@ const Header = () => {
 
                 {/* Right Section (Search and Language) */}
                 <div className="hidden md:flex items-center space-x-4">
-                    <a href='' className="btn btn-sm border border-blue-500 text-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white rounded-full">Login</a>
+                    <a href='/Login' className="btn btn-sm border border-blue-500 text-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white rounded-full">Login</a>
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -92,7 +92,7 @@ const Header = () => {
                     <a href="/Blog" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Blog' ? 'text-red-500' : ''}`}>Blog</a>
                     <a href="/ContactUs" className={`text-gray-700 hover:text-blue-500 ${pathname === '/ContactUs' ? 'text-red-500' : ''}`}>Contact Us</a>
                     <div className='flex flex-col space-y-4 p-8 w-full text-center'>
-                        <a href='' className="btn btn-sm w-full border border-blue-500 text-blue-500 px-4 py-2 rounded-full hover:bg-blue-500 hover:text-white">Login</a>
+                        <a href='/Login' className="btn btn-sm w-full border border-blue-500 text-blue-500 px-4 py-2 rounded-full hover:bg-blue-500 hover:text-white">Login</a>
                     </div>
                 </nav>
             </div>
