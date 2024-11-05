@@ -29,7 +29,7 @@ const LoginPage = () => {
     };
 
     return (
-        <section className="flex items-center justify-center min-h-screen bg-gray-100">
+        <section className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-700">
             <div className="bg-white rounded-lg shadow-md w-full max-w-sm p-6">
                 {/* Logo */}
                 <div className="flex justify-center mb-6">
