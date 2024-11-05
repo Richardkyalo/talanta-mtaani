@@ -91,6 +91,7 @@ const Footer = () => {
             <div className="container  mx-auto mt-8 px-4 text-center text-sm">
                 <p>&copy; 2024 Kuza Talanta Mtaani Football Tournament. All Rights Reserved.</p>
                 <h6>Designed by Richard Kyalo</h6>
+                <p>+254 728 674 821 | richardkyalo57@gmail.com</p>
             </div>
         </footer>
     );
