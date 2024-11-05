@@ -118,18 +118,12 @@ const LoginPage = () => {
                     and
                     <Link href="/privacy-notice" className="text-blue-500 hover:underline"> Privacy Notice</Link>.
                 </div>
-
-                {/* Additional Help */}
-                <div className="mt-4 text-center">
-                    <Link href="/help" className="text-xs text-blue-500 hover:underline">Need help?</Link>
-                </div>
-
                 {/* Divider */}
-                <hr className="my-4" />
+                <hr className="my-4 border border-red-500" />
 
                 {/* Create Account Section */}
                 <div className="text-center">
-                    <p className="text-xs text-gray-500">New to our site?</p>
+                    <p className="text-xs text-gray-500">New to Kuza Talanta?</p>
                     <Link href="/register">
                         <button
                             type="button"
