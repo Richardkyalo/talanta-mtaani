@@ -29,8 +29,8 @@ const LoginPage = () => {
     };
 
     return (
-        <section className="flex items-center justify-center bg-gray-100">
-            <div className="bg-white rounded-lg shadow-md w-full max-w-sm p-6 mt-2 mb-56">
+        <section className="flex items-center justify-center ">
+            <div className="bg-gray-100 rounded-lg shadow-md w-full max-w-sm p-6 mt-2 mb-56">
                 {/* Logo */}
                 <div className="flex justify-center mb-6">
                     <Image src="/image/1.jpg" alt="Site Logo" width={100} height={100} className="rounded-3xl" />
@@ -129,7 +129,7 @@ const LoginPage = () => {
                             type="button"
                             className="w-full mt-2 border border-blue-500 text-gray-700 py-2 rounded font-semibold hover:bg-gray-100 transition duration-300"
                         >
-                            Create your account
+                            Create your account Here
                         </button>
                     </Link>
                 </div>
