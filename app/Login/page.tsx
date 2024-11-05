@@ -1,109 +1,143 @@
 'use client';
 import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FcGoogle, } from "react-icons/fc";
-import { FiFacebook } from "react-icons/fi";
-import { RiTwitterXFill } from "react-icons/ri";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
-
+import { IoIosArrowRoundBack, IoIosLogIn } from 'react-icons/io';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordText, setShowPasswordText] = useState(false); // Toggle for password text visibility
+
+    const handleContinue = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        setShowPassword(true); // Show password field after clicking continue
+    };
+    const handleBack = () => {
+        setShowPassword(false); // Hide password field after clicking back
+    };
 
     const handleLogin = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         // Implement login functionality here
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPasswordText((prev) => !prev);
+    };
+
     return (
-        <section className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-700 px-4">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-8">
-                {/* Logo Section */}
-                <div className="flex justify-center mb-8">
-                    <Image src="/image/1.jpg" alt="Site Logo" width={100} height={100} className="w-20 h-20 rounded-2xl" />
+        <section className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="bg-white rounded-lg shadow-md w-full max-w-sm p-6">
+                {/* Logo */}
+                <div className="flex justify-center mb-6">
+                    <Image src="/image/1.jpg" alt="Site Logo" width={100} height={100} className="rounded-3xl" />
                 </div>
-                <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">Welcome Back</h2>
 
-                <form onSubmit={handleLogin} className="space-y-6">
-                    {/* Email Input */}
+                {/* Title */}
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Welcome Back</h2>
+
+                <form onSubmit={showPassword ? handleLogin : handleContinue} className="space-y-4">
+                    {/* Conditional Input Field */}
+                    {showPassword ? (
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                            <div className="relative">
+                                <input
+                                    type={showPasswordText ? "text" : "password"}
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full  text-black px-3 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    placeholder="Enter your password"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={togglePasswordVisibility}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                                >
+                                    {showPasswordText ? <FaEyeSlash /> : <FaEye />}
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email or mobile phone number</label>
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full text-black px-3 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                placeholder="Enter your email"
+                                required
+                            />
+                        </div>
+                    )}
+
+                    {/* Button */}
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email Address</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Enter your email"
-                            required
-                        />
+                        {!showPassword ? (
+                            <button
+                                type="submit"
+                                className="w-full px-4 bg-white border border-blue-500 hover:bg-blue-600 text-black hover:text-white font-semibold py-1 rounded transition duration-300"
+                                > Continue
+                            </button>
+                        ) :
+                            (
+                                <div className='flex flex-row justify-between space-x-2'>
+                                <button
+                                    type='button'
+                                    onClick={handleBack}
+                                    className="w-full px-4 bg-white border border-blue-500 hover:bg-blue-600 text-black hover:text-white font-semibold py-1 rounded transition duration-300"
+                                >
+                                    <IoIosArrowRoundBack className="inline-block mr-2" /> Back
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="w-full px-4 bg-white border border-blue-500 hover:bg-blue-600 text-black hover:text-white font-semibold py-1 rounded transition duration-300"
+                                >
+                                    <IoIosLogIn className="inline-block mr-2" /> Login
+                                </button>
+                            </div>
+
+
+                            )}
+
                     </div>
 
-                    {/* Password Input */}
-                    <div className="relative">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-600">Password</label>
-                        <input
-                            type={showPassword ? 'text' : 'password'}
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full text-black px-4 py-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Enter your password"
-                            required
-                        />
-                        <button
-                            type="button"
-                            className="absolute inset-y-0 right-0 flex items-center mt-6 pr-3 text-gray-500"
-                            onClick={() => setShowPassword(!showPassword)}
-                        >
-                            {showPassword ? 
-                            <FaEyeSlash />
-                             : 
-                            <FaEye />
-                            }
-                        </button>
-                    </div>
-
-                    {/* Login Button */}
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"
-                    >
-                        Log In
-                    </button>
                 </form>
 
-                {/* Additional Links */}
-                <div className="text-center mt-6">
-                    <Link href="/forgot-password" className="text-sm text-blue-500 hover:underline">
-                        Forgot your password?
-                    </Link>
-                    <p className="mt-4 text-gray-600">
-                        Don’t have an account?{' '}
-                        <Link href="/register" className="text-blue-500 hover:underline">
-                            Sign Up
-                        </Link>
-                    </p>
+                {/* Links */}
+                <div className="mt-4 text-xs text-gray-500 text-center">
+                    By continuing, you agree to our
+                    <Link href="/conditions-of-use" className="text-blue-500 hover:underline"> Conditions of Use</Link>
+                    and
+                    <Link href="/privacy-notice" className="text-blue-500 hover:underline"> Privacy Notice</Link>.
                 </div>
 
-                {/* Social Media Logins */}
-                <div className="flex items-center justify-center mt-8">
-                    <span className="text-gray-500">Or sign in with</span>
-                    <div className="flex gap-4 ml-4">
-                        <button className="p-2 border border-gray-300 rounded-full hover:bg-gray-100 transition duration-200">
-                            <FcGoogle />
+                {/* Additional Help */}
+                <div className="mt-4 text-center">
+                    <Link href="/help" className="text-xs text-blue-500 hover:underline">Need help?</Link>
+                </div>
+
+                {/* Divider */}
+                <hr className="my-4" />
+
+                {/* Create Account Section */}
+                <div className="text-center">
+                    <p className="text-xs text-gray-500">New to our site?</p>
+                    <Link href="/register">
+                        <button
+                            type="button"
+                            className="w-full mt-2 border border-blue-500 text-gray-700 py-2 rounded font-semibold hover:bg-gray-100 transition duration-300"
+                        >
+                            Create your account
                         </button>
-                        <button className="p-2 border border-gray-30 text-blue-500 rounded-full hover:bg-gray-100 transition duration-200">
-                            <FiFacebook />
-                        </button>
-                        <button className="p-2 border border-gray-300 rounded-full text-black hover:bg-gray-100 transition duration-200">
-                            <RiTwitterXFill />
-                        </button>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </section>

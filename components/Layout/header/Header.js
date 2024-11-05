@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { IoIosLogIn } from "react-icons/io";
 
 const Header = () => {
     const [open, setOpen] = useState(false);
@@ -34,11 +35,16 @@ const Header = () => {
                     <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
                     <a href="/Table" className={isActiveLink('/Table')}>League Table</a>
+                    <a href="/Highlights" className={isActiveLink('/LiveScore')}>Highlights</a>
                 </nav>
 
                 {/* Right Section (Search and Language) */}
                 <div className="hidden md:flex items-center space-x-4">
-                    <a href='/Login' className="btn btn-sm border border-blue-500 text-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white rounded-full">Login</a>
+
+                    <a href='/Login' className="flex flex-row items-center  btn btn-sm border border-blue-500 text-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white rounded-full">
+                        <IoIosLogIn className='mr-2' />
+                        Login
+                    </a>
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -89,6 +95,7 @@ const Header = () => {
                     <a href="/PlayerStats" className={`text-gray-700 hover:text-blue-500 ${pathname === '/PlayerStats' ? 'text-red-500' : ''}`}>Player Stats</a>
                     <a href="/TeamReg" className={`text-gray-700 hover:text-blue-500 ${pathname === '/TeamReg' ? 'text-red-500' : ''}`}>Team Registration</a>
                     <a href="#" className={`text-gray-700 hover:text-blue-500 ${pathname === '/FanZone' ? 'text-red-500' : ''}`}>Fan Zone</a>
+                    <a href="/Highlights" className={`text-gray-700 hover:text-blue-500 ${pathname === '/FanZone' ? 'text-red-500' : ''}`}>Highlights</a>
                     <a href="/Blog" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Blog' ? 'text-red-500' : ''}`}>Blog</a>
                     <a href="/ContactUs" className={`text-gray-700 hover:text-blue-500 ${pathname === '/ContactUs' ? 'text-red-500' : ''}`}>Contact Us</a>
                     <div className='flex flex-col space-y-4 p-8 w-full text-center'>
