@@ -39,7 +39,7 @@ const RegistrationPage = () => {
             </div>
 
             {/* Right Side Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center bg-white p-8 rounded-r-lg shadow-md">
+            <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-300 p-8 rounded-r-lg shadow-md">
                 <form onSubmit={handleRegister} className="space-y-6 w-full max-w-sm">
                     <div className="flex justify-center mb-6">
                         <Image src="/image/1.jpg" alt="Site Logo" width={100} height={100} className="rounded-3xl" />

@@ -32,7 +32,7 @@ const LoginPage = () => {
     return (
         <section className="flex min-h-screen">
             {/* Left Side Image */}
-            <div className="w-1/2 relative hidden lg:block">
+            <div className="w-1/2 relative hidden md:block">
                 <Image
                     src="/image/login.jpeg" // Replace with your image path
                     alt="Login Image"
@@ -43,7 +43,7 @@ const LoginPage = () => {
             </div>
 
             {/* Right Side Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center bg-white p-8 rounded-r-lg shadow-md">
+            <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-300 p-8 rounded-r-lg shadow-md">
                 <div className="w-full max-w-sm">
                     {/* Title */}
                     <div className="flex justify-center mb-6">
