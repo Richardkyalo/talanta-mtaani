@@ -30,7 +30,7 @@ const RegistrationPage = () => {
             {/* Left Side Image */}
             <div className="w-1/2 relative hidden lg:block">
                 <Image
-                    src="/image/reg.jpeg" // Replace with your image path
+                    src="/image/REGISTRATION.jpeg" // Replace with your image path
                     alt="Registration Image"
                     layout="fill"
                     objectFit="cover"
