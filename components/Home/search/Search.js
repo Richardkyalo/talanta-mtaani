@@ -44,13 +44,11 @@ const FootballTournamentSearch = () => {
                 <Image src="/image/second.jpeg" alt="Knockouts" width={800} height={600} className="image-fluid rounded-tl-3xl rounded-br-3xl" />
               </div>
               <div className="p-4  space-y-16 w-full md:w-1/2 flex flex-col items-end">
-                <h4 className="text-xl font-semibold mb-4 text-red-500">The Knockout Rounds</h4>
+                <h4 className="text-xl font-semibold mb-4 text-red-500">Community Volunteers – The Heart of the Tournament
+                </h4>
                 <p className="text-gray-700 text-xs text-right">
-                  The Knockout rounds are a thrilling part of the tournament where every match is do-or-die.
-                  Teams that have advanced from the Group Stages compete head-to-head in high-stakes games.
-                  With no second chances, each match tests the players&apos; endurance and tactics,
-                  leading to intense moments and unforgettable upsets as only the strongest survive.
-                </p>
+                Behind the scenes, dozens of volunteers make this event possible. From setting up tents and managing concessions to organizing activities for children and ensuring safety, these volunteers work tirelessly to bring the tournament to life. This year, we celebrate their contributions and share stories from a few dedicated individuals who have become the backbone of the event.
+                 </p>
                 <a href="#" className="btn btn-lg text-sm border border-red-500 rounded-full px-4 text-red-500 hover:bg-red-500 hover:text-white">Learn More</a>
               </div>
             </div>
