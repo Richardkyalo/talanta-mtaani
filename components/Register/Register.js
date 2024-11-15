@@ -2,15 +2,42 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { userService } from '../../app/api/userService/userService';
+import { registerUser } from '../../app/api/register/registerRoute'
 
+const checkIfEmailExists = async (email) => {
+    try {
+        const  isExisting  = await userService.checkIfUserExists(email);
+        if(isExisting){
+            return true;
+        }
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+    return passwordRegex.test(password);
+}
+
+const comparePasswords = (password, confirmPassword) => {
+    if (password !== confirmPassword) {
+        return false;
+    }
+    return true;
+}
 const RegistrationPage = () => {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [phone, setPhone] = useState('');
+    const [username, setUsername] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
     const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
+    const [errorMessage, setErrorMessage] = useState('');
 
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
@@ -20,9 +47,27 @@ const RegistrationPage = () => {
         setShowConfirmPassword((prev) => !prev);
     };
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
-        // Implement registration functionality here
+        // const isEmailExists = checkIfEmailExists(email);
+        // if (isEmailExists) {
+        //     setErrorMessage('Email already exists');
+        //     return;
+        // }
+        if (!validatePassword(password)) {
+            setErrorMessage('Password does not meet the requirements');
+            return;
+        }
+        if (!comparePasswords(password, confirmPassword)) {
+            setErrorMessage('Passwords do not match');
+            return;
+        }
+        const response = await registerUser({ data: { username, email, password, } });
+        if (response) {
+            localStorage.setItem('user', JSON.stringify(response)); 
+            router.push('/');
+        }
+
     };
 
     return (
@@ -46,6 +91,11 @@ const RegistrationPage = () => {
                     </div>
                     <h2 className="text-2xl font-semibold text-gray-800 text-center">Create an Account</h2>
 
+                    {errorMessage && (
+                        <div className="text-red-500 text-sm text-center">
+                            {errorMessage}
+                        </div>
+                    )}
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                         <input
@@ -55,19 +105,19 @@ const RegistrationPage = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full text-black px-4 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                             placeholder="Enter your email"
-                            required
+
                         />
                     </div>
                     <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
                         <input
-                            type="phone"
-                            id="phone"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            type="username"
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             className="w-full text-black px-4 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            placeholder="Enter your phone number"
-                            required
+                            placeholder="Enter your username"
+
                         />
                     </div>
 
@@ -81,7 +131,7 @@ const RegistrationPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full text-black px-4 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 placeholder="Enter your password"
-                                required
+
                             />
                             <button
                                 type="button"
@@ -103,7 +153,7 @@ const RegistrationPage = () => {
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 className="w-full text-black px-4 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 placeholder="Confirm your password"
-                                required
+
                             />
                             <button
                                 type="button"
