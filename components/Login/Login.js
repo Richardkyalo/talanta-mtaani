@@ -3,13 +3,16 @@ import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
+import { signIn } from "next-auth/react";
 import { IoIosArrowRoundBack, IoIosLogIn } from 'react-icons/io';
+import { redirect } from 'next/dist/server/api-utils';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordText, setShowPasswordText] = useState(false); // Toggle for password text visibility
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleContinue = (e) => {
         e.preventDefault();
@@ -20,9 +23,25 @@ const LoginPage = () => {
         setShowPassword(false); // Hide password field after clicking back
     };
 
-    const handleLogin = (e) => {
+
+    const handleLogin = async (e) => {
         e.preventDefault();
+
         // Implement login functionality here
+
+        const response = await signIn('credentials', {
+            redirect: false,
+            email,
+            password,
+        })
+
+        console.log(response);
+        if (response?.error) {
+            setErrorMessage("Invalid email or password");
+        }
+        else {
+            window.location.href = "/";
+        }
     };
 
     const togglePasswordVisibility = () => {
@@ -51,6 +70,9 @@ const LoginPage = () => {
                     </div>
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Welcome Back</h2>
 
+                    {errorMessage && (
+                        <p className="text-red-500 mb-4 text-center">{errorMessage}</p>
+                    )}
                     <form onSubmit={showPassword ? handleLogin : handleContinue} className="space-y-4">
                         {/* Conditional Input Field */}
                         {showPassword ? (
@@ -128,7 +150,7 @@ const LoginPage = () => {
                     </div>
                     <div className="mt-4 text-xs text-center">
                         <a href="/ForgotPassword" className="text-blue-500 hover:underline">Forgot your password?</a>
-                        </div>
+                    </div>
 
                     {/* Divider */}
                     <hr className="my-4 border border-red-500" />
