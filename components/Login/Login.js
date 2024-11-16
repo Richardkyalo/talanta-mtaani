@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { signIn } from "next-auth/react";
 import { IoIosArrowRoundBack, IoIosLogIn } from 'react-icons/io';
 import { redirect } from 'next/dist/server/api-utils';
+ 
+
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -22,6 +24,7 @@ const LoginPage = () => {
     const handleBack = () => {
         setShowPassword(false); // Hide password field after clicking back
     };
+    
 
 
     const handleLogin = async (e) => {
