@@ -10,9 +10,10 @@ import { registerUser } from '../../app/api/register/registerRoute'
 const checkIfEmailExists = async (email) => {
     try {
         const  isExisting  = await userService.checkIfUserExists(email);
-        if(isExisting){
+        if(isExisting?.message==="User retrieved successfully"){
             return true;
         }
+        return false;
     } catch (error) {
         console.error(error);
         return false;
@@ -49,11 +50,11 @@ const RegistrationPage = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        // const isEmailExists = checkIfEmailExists(email);
-        // if (isEmailExists) {
-        //     setErrorMessage('Email already exists');
-        //     return;
-        // }
+        const isEmailExists = await checkIfEmailExists(email);
+        if (isEmailExists) {
+            setErrorMessage('Email already exists');
+            return;
+        }
         if (!validatePassword(password)) {
             setErrorMessage('Password does not meet the requirements');
             return;
