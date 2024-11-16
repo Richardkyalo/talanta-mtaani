@@ -14,20 +14,20 @@ const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        username: { label: "username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         try {
           const { data } = await api.post(authUrl, {
-            email: credentials.email,
+            username: credentials.username,
             password: credentials.password,
           });
 
           if (data && data.data && data.data.authToken) {
             return {
               id: data.data.user.id,
-              email: data.data.user.email,
+              username: data.data.user.username,
               token: data.data.authToken,
             };
           }
@@ -49,14 +49,14 @@ const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.email = user.email;
+        token.username = user.username;
         token.token = user.token;
       }
       return token;
     },
     async session({ session, token }) {
       session.id = token.id;
-      session.email = token.email;
+      session.username = token.username;
       session.token = token.token;
       return session;
     },

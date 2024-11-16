@@ -9,7 +9,7 @@ import { IoIosArrowRoundBack, IoIosLogIn } from 'react-icons/io';
 
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordText, setShowPasswordText] = useState(false); // Toggle for password text visibility
@@ -33,15 +33,15 @@ const LoginPage = () => {
 
         const response = await signIn('credentials', {
             redirect: false,
-            email,
+            username,
             password,
         })
 
         console.log(response);
         if (response?.error) {
-            setErrorMessage("Invalid email or password");
+            setErrorMessage("Invalid username or password");
             setShowPassword(false);
-            setEmail('');
+            setUsername('');
             setPassword('');
         }
         else {
@@ -104,14 +104,14 @@ const LoginPage = () => {
                             </div>
                         ) : (
                             <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email or mobile phone number</label>
+                                <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
                                 <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    type="username"
+                                    id="username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
                                     className="w-full text-black px-3 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                    placeholder="Enter your email"
+                                    placeholder="Enter your username"
                                     required
                                 />
                             </div>

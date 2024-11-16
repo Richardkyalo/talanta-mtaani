@@ -9,8 +9,8 @@ import { registerUser } from '../../app/api/register/registerRoute'
 
 const checkIfEmailExists = async (email) => {
     try {
-        const  isExisting  = await userService.checkIfUserExists(email);
-        if(isExisting?.message==="User retrieved successfully"){
+        const isExisting= await userService.checkIfUserExists(email);
+        if(isExisting?.data !== "User not found") {
             return true;
         }
         return false;
@@ -39,6 +39,7 @@ const RegistrationPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const [phone, setPhone] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
     const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
@@ -55,14 +56,18 @@ const RegistrationPage = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         const isEmailExists = await checkIfEmailExists(email);
-        if (!checkIfIsEmailValid(email)) {
-            setErrorMessage('Invalid email format');
-            return;
+        if (email.length > 0) {
+            if (!checkIfIsEmailValid(email)) {
+                setErrorMessage('Invalid email format');
+                return;
+            }
+
+            if (isEmailExists) {
+                setErrorMessage('Email already exists');
+                return;
+            }
         }
-        if (isEmailExists) {
-            setErrorMessage('Email already exists');
-            return;
-        }
+
         if (!validatePassword(password)) {
             setErrorMessage('Password does not meet the requirements');
             return;
@@ -71,9 +76,9 @@ const RegistrationPage = () => {
             setErrorMessage('Passwords do not match');
             return;
         }
-        const response = await registerUser({ data: { username, email, password, } });
+        const response = await registerUser({ data: { username, email, password, phone } });
         if (response) {
-            localStorage.setItem('user', JSON.stringify(response)); 
+            localStorage.setItem('user', JSON.stringify(response));
             router.push('/');
         }
 
@@ -99,7 +104,7 @@ const RegistrationPage = () => {
                         <Image src="/image/1.jpg" alt="Site Logo" width={100} height={100} className="rounded-3xl" />
                     </div>
                     <h2 className="text-2xl font-semibold text-gray-800 text-center">Create an Account</h2>
-
+                    <p className="text-sm text-gray-600 text-center"><span className="text-red-500">*</span> Indicates required fields</p>
                     {errorMessage && (
                         <div className="text-red-500 text-sm text-center">
                             {errorMessage}
@@ -118,7 +123,7 @@ const RegistrationPage = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username <span className="text-red-500">*</span></label>
                         <input
                             type="username"
                             id="username"
@@ -129,9 +134,20 @@ const RegistrationPage = () => {
 
                         />
                     </div>
+                    <div>
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input
+                            type="phone"
+                            id="phone"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full text-black px-4 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            placeholder="Enter your phone number"
+                        />
+                    </div>
 
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -153,7 +169,7 @@ const RegistrationPage = () => {
                     </div>
 
                     <div>
-                        <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                        <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">Confirm Password <span className="text-red-500">*</span></label>
                         <div className="relative">
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
