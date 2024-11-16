@@ -9,7 +9,7 @@ const api = axios.create({
 const authUrl = "/api/v1/user/login";
 
 // NextAuth options
-export const authOptions = {
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -19,7 +19,7 @@ export const authOptions = {
       },
       async authorize(credentials) {
         try {
-          const { data } = await api.post(`${authUrl}`, {
+          const { data } = await api.post(authUrl, {
             email: credentials.email,
             password: credentials.password,
           });
@@ -64,21 +64,6 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-// Handler for GET and POST requests
-export async function GET(req, res) {
-  try {
-    // Handling GET request to /api/auth/providers
-    return NextAuth(req, res, authOptions);
-  } catch (error) {
-    return new Response("Failed to handle GET", { status: 500 });
-  }
-}
-
-export async function POST(req, res) {
-  try {
-    // Handling POST request (sign-in, login)
-    return NextAuth(req, res, authOptions);
-  } catch (error) {
-    return new Response("Failed to handle POST", { status: 500 });
-  }
-}
+// Default export for route.js (Handler)
+const handler = (req, res) => NextAuth(req, res, authOptions);
+export { handler as GET, handler as POST };

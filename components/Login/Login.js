@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { signIn } from "next-auth/react";
 import { IoIosArrowRoundBack, IoIosLogIn } from 'react-icons/io';
-import { redirect } from 'next/dist/server/api-utils';
  
 
 
