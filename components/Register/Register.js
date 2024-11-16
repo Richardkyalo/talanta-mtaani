@@ -19,6 +19,10 @@ const checkIfEmailExists = async (email) => {
         return false;
     }
 }
+const checkIfIsEmailValid = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
 const validatePassword = (password) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     return passwordRegex.test(password);
@@ -51,6 +55,10 @@ const RegistrationPage = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         const isEmailExists = await checkIfEmailExists(email);
+        if (!checkIfIsEmailValid(email)) {
+            setErrorMessage('Invalid email format');
+            return;
+        }
         if (isEmailExists) {
             setErrorMessage('Email already exists');
             return;
