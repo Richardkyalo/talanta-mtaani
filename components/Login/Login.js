@@ -41,6 +41,9 @@ const LoginPage = () => {
         console.log(response);
         if (response?.error) {
             setErrorMessage("Invalid email or password");
+            setShowPassword(false);
+            setEmail('');
+            setPassword('');
         }
         else {
             window.location.href = "/";

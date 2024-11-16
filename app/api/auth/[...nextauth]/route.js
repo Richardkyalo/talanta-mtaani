@@ -24,7 +24,6 @@ export const authOptions = {
             password: credentials.password,
           });
 
-          console.log("Login response:", data);
           if (data && data.data && data.data.authToken) {
             return {
               id: data.data.user.id,
