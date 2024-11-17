@@ -1,5 +1,6 @@
 // components/Layout.js
 'use client';
+import { SessionProvider } from 'next-auth/react';
 import Head from 'next/head';
 import { usePathname } from 'next/navigation'; // Updated import
 import Navigation from './Layout/header/navigation/Navigation.js';
@@ -14,12 +15,13 @@ const Layout = ({ children }) => {
   const isNoLayoutPage = noLayoutRoutes.includes(pathname);
 
   return (
+    <SessionProvider>
     <div>
       <Head>
         <title>Kuza Talanta Mtaani</title>
         <link rel="icon" href="/image/1.jpg" />
       </Head>
-      
+
       {/* Conditionally render Header and Navigation */}
       {!isNoLayoutPage && (
         <header>
@@ -27,13 +29,17 @@ const Layout = ({ children }) => {
           <Navigation />
         </header>
       )}
-      
+
       {/* Main content */}
-      <main>{children}</main>
-      
+      <main>
+          {children}
+      </main>
+
       {/* Conditionally render Footer */}
       {!isNoLayoutPage && <footer><Footer /></footer>}
     </div>
+    </SessionProvider>
+
   );
 };
 

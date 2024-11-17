@@ -2,8 +2,11 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { IoIosLogIn } from "react-icons/io";
+import { useSession, signOut } from 'next-auth/react';
+import { CiLogout } from "react-icons/ci";
 
 const Header = () => {
+    const { data: session, status } = useSession();
     const [open, setOpen] = useState(false);
     const pathname = usePathname(); // Get the current path
 
@@ -39,13 +42,27 @@ const Header = () => {
                 </nav>
 
                 {/* Right Section (Search and Language) */}
-                <div className="hidden md:flex items-center space-x-4">
 
-                    <a href='/Login' className="flex flex-row items-center  btn btn-sm border border-blue-500 text-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white rounded-full">
-                        <IoIosLogIn className='mr-2' />
-                        Login
-                    </a>
-                </div>
+                {session ? (
+                    <div className="hidden md:flex items-center space-x-4">
+                        <div className="flex items-center">
+                            {/* <img src="/image/1.jpg" alt="Profile Picture" className="h-8 rounded-full" /> */}
+                            <span className="ml-2 text-black font-bold">{session.username}</span>
+                        </div>
+                        <button onClick={() => signOut()} className="flex flex-row items-center  btn btn-sm border border-red-500 text-blue-500 px-4 py-2 hover:bg-red-500 hover:text-white rounded-full">
+                            <CiLogout className='mr-2' />
+                            Logout
+                        </button>
+                    </div>
+                ) :
+                    <div className="hidden md:flex items-center space-x-4">
+                        <a href='/Login' className="flex flex-row items-center  btn btn-sm border border-blue-500 text-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white rounded-full">
+                            <IoIosLogIn className='mr-2' />
+                            Login
+                        </a>
+                    </div>
+                }
+
 
                 {/* Mobile Menu Button */}
                 <div className="flex md:hidden justify-end items-center">
@@ -98,9 +115,20 @@ const Header = () => {
                     <a href="/Highlights" className={`text-gray-700 hover:text-blue-500 ${pathname === '/FanZone' ? 'text-red-500' : ''}`}>Highlights</a>
                     <a href="/Blog" className={`text-gray-700 hover:text-blue-500 ${pathname === '/Blog' ? 'text-red-500' : ''}`}>Blog</a>
                     <a href="/ContactUs" className={`text-gray-700 hover:text-blue-500 ${pathname === '/ContactUs' ? 'text-red-500' : ''}`}>Contact Us</a>
-                    <div className='flex flex-col space-y-4 p-8 w-full text-center'>
-                        <a href='/Login' className="btn btn-sm w-full border border-blue-500 text-blue-500 px-4 py-2 rounded-full hover:bg-blue-500 hover:text-white">Login</a>
-                    </div>
+                    {session ? (
+                        <>
+                            <div>
+                                <a href="/Profile" className={`text-gray-700 hover:text-blue-500 ${pathname === '/ContactUs' ? 'text-red-500' : ''}`}>{session.username}</a>
+                            </div>
+                            <div className='flex flex-col space-y-4 p-8 w-full text-center'>
+                                <button onClick={()=>signOut()} className="w-full border border-red-500 text-blue-500 px-4 py-2 rounded-full hover:bg-red-500 hover:text-white">Logout</button>
+                            </div>
+                        </>
+                    ) :
+                        <div className='flex flex-col space-y-4 p-8 w-full text-center'>
+                            <a href='/Login' className="btn btn-sm w-full border border-blue-500 text-blue-500 px-4 py-2 rounded-full hover:bg-blue-500 hover:text-white">Login</a>
+                        </div>
+                    }
                 </nav>
             </div>
         </header >

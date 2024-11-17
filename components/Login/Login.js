@@ -37,7 +37,6 @@ const LoginPage = () => {
             password,
         })
 
-        console.log(response);
         if (response?.error) {
             setErrorMessage("Invalid username or password");
             setShowPassword(false);
