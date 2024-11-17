@@ -6,7 +6,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { CiLogout } from "react-icons/ci";
 
 const Header = () => {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const [open, setOpen] = useState(false);
     const pathname = usePathname(); // Get the current path
 
