@@ -17,6 +17,15 @@ class UserService {
             throw error; 
             }
     }
+    async getAllUsers(page, limit) {
+        try {
+            const response = await api.get(`${this.userApi}/get-all?page=${page}&limit=${limit}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in getAllUsers:", error);
+            throw error;
+        }
+    }
 }
 
 export const userService = new UserService();

@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { IoIosLogIn } from "react-icons/io";
 import { useSession, signOut } from 'next-auth/react';
 import { CiLogout } from "react-icons/ci";
+import { TbLoader } from "react-icons/tb";
 
 const Header = () => {
     const { data: session } = useSession();
@@ -26,7 +27,8 @@ const Header = () => {
                 {!open &&
                     <div className="flex items-center">
                         <img src="/image/1.jpg" alt="Logo" className="h-8 rounded-full" />
-                        <h1 className="text-xl text-black font-bold ml-2">Kuza Talanta Mtaani</h1>
+                        <h1 className="text-xl text-black font-bold ml-2">Kuza Talanta Mtaani
+                        </h1>
                     </div>
                 }
 
@@ -38,7 +40,7 @@ const Header = () => {
                     <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
                     <a href="/Table" className={isActiveLink('/Table')}>League Table</a>
-                    <a href="/Highlights" className={isActiveLink('/LiveScore')}>Highlights</a>
+                    <a href="/Highlights" className={isActiveLink('/Highlights')}>Highlights</a>
                 </nav>
 
                 {/* Right Section (Search and Language) */}
@@ -121,7 +123,7 @@ const Header = () => {
                                 <a href="/Profile" className={`text-gray-700 hover:text-blue-500 ${pathname === '/ContactUs' ? 'text-red-500' : ''}`}>{session.username}</a>
                             </div>
                             <div className='flex flex-col space-y-4 p-8 w-full text-center'>
-                                <button onClick={()=>signOut()} className="w-full border border-red-500 text-blue-500 px-4 py-2 rounded-full hover:bg-red-500 hover:text-white">Logout</button>
+                                <button onClick={() => signOut()} className="w-full border border-red-500 text-blue-500 px-4 py-2 rounded-full hover:bg-red-500 hover:text-white">Logout</button>
                             </div>
                         </>
                     ) :
