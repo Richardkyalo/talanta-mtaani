@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import QueryProvider from "@/components/QueryProvider";// Import the client component
 import Layout from "@/components/Layout";
 
 const geistSans = localFont({
@@ -16,23 +17,23 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Kuza Talanta Mtaani",
-  description: "Kuza Talanta Football Tournament is a premier youth football competition in Yindundu/Canaan- Mtito-Adei Ward, showcasing emerging talent in both men's and women's football"
-
+  description:
+    "Kuza Talanta Football Tournament is a premier youth football competition in Yindundu/Canaan- Mtito-Adei Ward, showcasing emerging talent in both men's and women's football",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      <Layout>
-        {children}
-      </Layout>
+        <QueryProvider>
+          <Layout>{children}</Layout>
+        </QueryProvider>
       </body>
     </html>
   );
