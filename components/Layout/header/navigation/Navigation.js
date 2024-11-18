@@ -1,11 +1,9 @@
 'use client';
-import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 
 const Navigation = () => {
-    const { data: session } = useSession();
     const pathname = usePathname(); // Get the current path
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
