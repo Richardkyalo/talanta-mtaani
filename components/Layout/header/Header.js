@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import { IoIosLogIn } from "react-icons/io";
 import { useSession, signOut } from 'next-auth/react';
 import { CiLogout } from "react-icons/ci";
-import { TbLoader } from "react-icons/tb";
 
 const Header = () => {
     const { data: session } = useSession();
