@@ -2,26 +2,67 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { CiEdit, CiSearch } from 'react-icons/ci';
-import { MdDeleteForever } from 'react-icons/md';
 import { FaDownload } from 'react-icons/fa';
 import { userService } from '@/app/api/userService/userService';
+import { userRoleService } from "../../app/api/rbac/userRoleCreate";
 
 const fetchUsers = async (page, limit) => {
   try {
     const response = await userService.getAllUsers(page, limit);
-    return response?.data?.users ?? []; // Ensure correct nesting
+    return response?.data?.users ?? [];
   } catch (error) {
     console.error('Error fetching users:', error);
     return [];
   }
 };
 
+const getAllRoles = async () => { 
+  try {
+    const response = await userRoleService.getAllRoles();
+    return response?.data ?? [];
+  } catch (error) {
+    console.error('Error fetching roles:', error);
+    return [];
+  }
+};
+
 const EditRoleModal = ({ isOpen, onClose, user, onSubmit }) => {
   const [role, setRole] = useState(user?.role || '');
+  const [roles, setRoles] = useState([]);
+  const [filteredRoles, setFilteredRoles] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      const rolesData = await getAllRoles();
+      setRoles(rolesData);
+    };
+    fetchRoles();
+  }, []);
 
   useEffect(() => {
     if (user) setRole(user.role || '');
   }, [user]);
+
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    setRole(inputValue);
+
+    if (inputValue.trim()) {
+      const filtered = roles.filter((r) =>
+        r.name.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      setFilteredRoles(filtered);
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleSelectRole = (selectedRole) => {
+    setRole(selectedRole.name);
+    setShowDropdown(false);
+  };
 
   if (!isOpen) return null;
 
@@ -53,15 +94,29 @@ const EditRoleModal = ({ isOpen, onClose, user, onSubmit }) => {
               className="w-full text-black border border-gray-300 rounded-md px-4 py-2 mt-1"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label className="block text-sm font-medium text-gray-700">Role</label>
             <input
               type="text"
               value={role}
-              onChange={(e) => setRole(e.target.value)}
+              onChange={handleInputChange}
+              onFocus={() => setShowDropdown(true)}
               className="w-full text-black border border-gray-300 rounded-md px-4 py-2 mt-1"
-              placeholder="Enter new role"
+              placeholder="Search or select a role"
             />
+            {showDropdown && (
+              <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-40 overflow-y-auto">
+                {filteredRoles.map((r) => (
+                  <li
+                    key={r.id}
+                    onClick={() => handleSelectRole(r)}
+                    className="px-4 py-2 cursor-pointer hover:bg-blue-100"
+                  >
+                    {r.name} ({r.department})
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div className="flex justify-end gap-4">
             <button
@@ -117,17 +172,30 @@ export default function UsersTable() {
     setSelectedUser(null);
   };
 
-  const handleSaveRole = (updatedUser) => {
-    // Simulate updating the role in the users array
-    const updatedUsers = users.map((user) =>
-      user.id === updatedUser.id ? updatedUser : user
-    );
-    setUsers(updatedUsers);
+  const handleSaveRole = async (updatedUser) => {
+    const data = {
+      email: updatedUser.email,
+      id: updatedUser.id,
+      username: updatedUser.username,
+      role: updatedUser.role,
+    };
+    const response = await userRoleService.createRole(data);
+    console.log(response);
+    if (response) {
+      const updatedUsers = users.map((user) => {
+        if (user.id === updatedUser.id) {
+          return updatedUser;
+        }
+        return user;
+      });
+      setUsers(updatedUsers);
+    }
     handleCloseModal();
+
   };
 
 
-  console.log(users);
+ 
   return (
     <div className="p-4">
       <EditRoleModal
@@ -182,15 +250,15 @@ export default function UsersTable() {
                     >
                       <div className="flex items-center md:gap-2">
                         <CiEdit />
-                        <p className='text-sm'>Role</p>
+                        <p className='text-sm'>Edit Role</p>
                       </div>
                     </button>
-                    <button className="hover:bg-red-500 text-red-500 border border-red-500 hover:text-white px-2 py-1 rounded">
+                    {/* <button className="hover:bg-red-500 text-red-500 border border-red-500 hover:text-white px-2 py-1 rounded">
                       <div className="flex items-center gap-2">
                         <MdDeleteForever />
                         <p>Delete</p>
                       </div>
-                    </button>
+                    </button> */}
                   </div>
                 </td>
               </tr>

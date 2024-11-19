@@ -42,7 +42,7 @@ const Header = () => {
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
                     <a href="/Table" className={isActiveLink('/Table')}>League Table</a>
                     <a href="/Highlights" className={isActiveLink('/Highlights')}>Highlights</a>
-                    <a href="/Blog" className={isActiveLink('/Blog')}>Blog</a>
+                    {/* <a href="/Blog" className={isActiveLink('/Blog')}>Blog</a> */}
                     <a href="/ContactUs" className={isActiveLink('/ContactUs')}>Contact Us</a>
                 </nav>
 
@@ -135,8 +135,9 @@ const Header = () => {
                         </button>
                         {adminDropdownOpen && (
                             <div className="ml-4 flex flex-col space-y-2">
-                                <a href="/admin/roles" className="text-gray-700 hover:text-blue-500">Manage Roles</a>
+                                {/* <a href="/admin/roles" className="text-gray-700 hover:text-blue-500">Manage Roles</a> */}
                                 <a href="/admin/users" className="text-gray-700 hover:text-blue-500">Manage Users</a>
+                                <a href="/admin/matches" className="text-gray-700 hover:text-blue-500">Manage Matches</a>
                                 <a href="/admin/teams" className="text-gray-700 hover:text-blue-500">Manage Teams</a>
                                 <a href="/admin/fixtures" className="text-gray-700 hover:text-blue-500">Manage Fixtures</a>
                                 <a href="/admin/results" className="text-gray-700 hover:text-blue-500">Manage Results</a>

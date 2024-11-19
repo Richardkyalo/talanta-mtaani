@@ -46,20 +46,21 @@ const Navigation = () => {
                             {isDropdownOpen && (
                                 <div className="absolute right-0 mt-2 z-50 w-56 bg-blue-700 rounded-lg shadow-lg overflow-hidden">
                                     <ul className="py-2">
-                                        <li>
-                                            <a
-                                                href="/admin/roles"
-                                                className="block px-4 py-2 text-sm font-semibold text-white hover:bg-gray-100 hover:text-gray-900 transition-colors"
-                                            >
-                                                Manage Roles
-                                            </a>
-                                        </li>
+                                        
                                         <li>
                                             <a
                                                 href="/admin/users"
                                                 className="block px-4 py-2 text-sm font-semibold text-white hover:bg-gray-100 hover:text-gray-900 transition-colors"
                                             >
                                                 Manage Users
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="/admin/Matches"
+                                                className="block px-4 py-2 text-sm font-semibold text-white hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                                            >
+                                                Manage Matches
                                             </a>
                                         </li>
                                         <li>
