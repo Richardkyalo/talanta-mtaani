@@ -7,22 +7,22 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { userService } from '../../app/api/userService/userService';
 import { registerUser } from '../../app/api/register/registerRoute'
 
-// const checkUsernameExists = async (username) => {
-//     try {
-//         const isExisting= await userService.getUserByUserName(username);
-//         if(isExisting?.data !== "User not found") {
-//             return true;
-//         }
-//         return false;
-//     } catch (error) {
-//         console.error(error);
-//         return false;
-//     }
-// }
+const checkUsernameExists = async (username) => {
+    try {
+        const isExisting = await userService.getUserByUserName(username);
+        if (isExisting?.data !== "User not found") {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
 const checkIfEmailExists = async (email) => {
     try {
-        const isExisting= await userService.checkIfUserExists(email);
-        if(isExisting?.data !== "User not found") {
+        const isExisting = await userService.checkIfUserExists(email);
+        if (isExisting?.data !== "User not found") {
             return true;
         }
         return false;
@@ -68,6 +68,8 @@ const RegistrationPage = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         const isEmailExists = await checkIfEmailExists(email);
+        const isUsernameExists = await checkUsernameExists(username);
+
         if (email.length > 0) {
             if (!checkIfIsEmailValid(email)) {
                 setErrorMessage('Invalid email format');
@@ -78,6 +80,15 @@ const RegistrationPage = () => {
                 setErrorMessage('Email already exists');
                 return;
             }
+        }
+        if (username.length === 0) {
+            setErrorMessage('Please enter a username');
+            return;
+        }
+
+        if (isUsernameExists) {
+            setErrorMessage('Username already Taken please try another one');
+            return;
         }
 
         if (!validatePassword(password)) {
