@@ -15,7 +15,7 @@ const Navigation = () => {
 
     return (
         <>
-            <nav className="bg-gradient-to-r from-blue-600 to-indigo-700 md:h-20 hidden md:flex font-semibold py-4 shadow-lg">
+            <nav className="bg-indigo-500 md:h-20 hidden md:flex font-semibold py-4 shadow-lg">
                 <div className="container mx-auto flex items-center justify-between space-x-6">
                     {/* Logo Section */}
 

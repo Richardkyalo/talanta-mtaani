@@ -9,7 +9,6 @@ import { userService } from '@/app/api/userService/userService';
 const fetchUsers = async (page, limit) => {
   try {
     const response = await userService.getAllUsers(page, limit);
-    console.log(response);
     return response?.data?.users ?? []; // Ensure correct nesting
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -17,29 +16,126 @@ const fetchUsers = async (page, limit) => {
   }
 };
 
+const EditRoleModal = ({ isOpen, onClose, user, onSubmit }) => {
+  const [role, setRole] = useState(user?.role || '');
+
+  useEffect(() => {
+    if (user) setRole(user.role || '');
+  }, [user]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center p-4">
+      <div className="bg-white p-6 rounded-md shadow-md w-full max-w-lg">
+        <h2 className="text-lg text-black font-bold mb-4">Edit Role</h2>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit({ ...user, role });
+          }}
+        >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="text"
+              value={user.email || ''}
+              readOnly
+              className="w-full text-black border border-gray-300 rounded-md px-4 py-2 mt-1"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <input
+              type="text"
+              value={user.username || ''}
+              readOnly
+              className="w-full text-black border border-gray-300 rounded-md px-4 py-2 mt-1"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Role</label>
+            <input
+              type="text"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full text-black border border-gray-300 rounded-md px-4 py-2 mt-1"
+              placeholder="Enter new role"
+            />
+          </div>
+          <div className="flex justify-end gap-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm hover:bg-red-500 hover:text-white text-red-500 border border-red-500 rounded-md"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm hover:bg-blue-500 hover:text-white text-blue-500 border border-blue-500 rounded-md"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+
 export default function UsersTable() {
   const [users, setUsers] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const { data } = useQuery({
     queryKey: ['users'],
     queryFn: () => fetchUsers(1, 10),
     onSuccess: (fetchedUsers) => {
-      setUsers(fetchedUsers); // Set users array directly
+      setUsers(fetchedUsers);
     },
     onError: (error) => {
       console.error('Error fetching users:', error);
     },
   });
 
-
   useEffect(() => {
     if (data) {
       setUsers(data);
     }
-  })
-  console.log(users); // Confirm data in the console
+  });
+
+  const handleEditRole = (user) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleSaveRole = (updatedUser) => {
+    // Simulate updating the role in the users array
+    const updatedUsers = users.map((user) =>
+      user.id === updatedUser.id ? updatedUser : user
+    );
+    setUsers(updatedUsers);
+    handleCloseModal();
+  };
+
+
+  console.log(users);
   return (
     <div className="p-4">
+      <EditRoleModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        user={selectedUser}
+        onSubmit={handleSaveRole}
+      />
       <div className="mb-4 text-center md:text-right flex flex-row justify-between gap-4 items-center">
         <h1 className="text-xl text-gray-600 font-bold">Users</h1>
         <div className="flex flex-row gap-4 items-center">
@@ -77,13 +173,16 @@ export default function UsersTable() {
                 <td className="border border-gray-200 text-black px-4 py-2">{index + 1}</td>
                 <td className="border border-gray-200 text-black px-4 py-2">{user.username}</td>
                 <td className="border border-gray-200 text-black px-4 py-2">{user.email}</td>
-                <td className="border border-gray-200 text-black px-4 py-2">User</td>
+                <td className="border border-gray-200 text-black px-4 py-2">{user.role}</td>
                 <td className="border border-gray-200 px-4 py-2">
                   <div className="flex items-center gap-2">
-                    <button className="hover:bg-blue-500 border border-blue-500 text-blue-500 hover:text-white px-2 py-1 rounded">
-                      <div className="flex items-center gap-2">
+                    <button
+                      className="hover:bg-blue-500 border border-blue-500 text-blue-500 hover:text-white px-2 py-1 rounded"
+                      onClick={() => handleEditRole(user)}
+                    >
+                      <div className="flex items-center md:gap-2">
                         <CiEdit />
-                        <p>Edit Role</p>
+                        <p className='text-sm'>Role</p>
                       </div>
                     </button>
                     <button className="hover:bg-red-500 text-red-500 border border-red-500 hover:text-white px-2 py-1 rounded">
@@ -99,6 +198,7 @@ export default function UsersTable() {
           </tbody>
         </table>
       </div>
+      
     </div>
   );
 }
