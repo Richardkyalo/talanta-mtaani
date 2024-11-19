@@ -7,6 +7,18 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { userService } from '../../app/api/userService/userService';
 import { registerUser } from '../../app/api/register/registerRoute'
 
+// const checkUsernameExists = async (username) => {
+//     try {
+//         const isExisting= await userService.getUserByUserName(username);
+//         if(isExisting?.data !== "User not found") {
+//             return true;
+//         }
+//         return false;
+//     } catch (error) {
+//         console.error(error);
+//         return false;
+//     }
+// }
 const checkIfEmailExists = async (email) => {
     try {
         const isExisting= await userService.checkIfUserExists(email);

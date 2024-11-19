@@ -17,6 +17,15 @@ class UserService {
             throw error; 
             }
     }
+    async getUserByUserName(username) {
+        try {
+            const response = await api.post(`${this.userApi}/get/user/username`, {username});
+            return response.data;
+        } catch (error) {
+            console.error("Error in getUserByUserName:", error);
+            throw error;
+        }
+    }
     async getAllUsers(page, limit) {
         try {
             const response = await api.get(`${this.userApi}/get-all?page=${page}&limit=${limit}`);
