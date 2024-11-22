@@ -9,7 +9,7 @@ import { registerUser } from '../../app/api/register/registerRoute';
 import { userRoleService } from '@/app/api/rbac/userRoleCreate';
 
 
-const defaultRoleName="fan";
+// const defaultRoleName="fan";
 const defaultRoleId="8164fc60-f0c5-4d51-bc38-681d2397507b";
 const checkUsernameExists = async (username) => {
     try {
