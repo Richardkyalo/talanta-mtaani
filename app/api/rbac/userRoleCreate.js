@@ -17,6 +17,16 @@ class UserRoleService {
             throw error;
         }
     }
+    async asignRole(data) {
+        try {
+            const response = await api.post(`${this.rbacEndpoint}/assign/role`, data);
+            console.log(response)
+            return response.data;
+        } catch (error) {
+            console.error("Error in asignRole:", error);
+            throw error;
+        }
+    }
     async getAllRoles() {
         try {
             const response = await api.get(`${this.getroles}`);

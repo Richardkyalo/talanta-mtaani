@@ -123,7 +123,7 @@ export default function UsersTable() {
 
   const { data, refetch } = useQuery({
     queryKey: ['users'],
-    queryFn: () => fetchUsers(1, 10),
+    queryFn: () => fetchUsers(1, 100000),
     onSuccess: (fetchedUsers) => {
       setUsers(fetchedUsers);
     },
@@ -149,14 +149,13 @@ export default function UsersTable() {
   };
 
   const handleSaveRole = async (updatedUser) => {
+    // console.log("catch here", updatedUser);
     const data = {
-      email: updatedUser.email,
-      id: updatedUser.id,
-      username: updatedUser.username,
-      role: updatedUser.role,
+      roleId: updatedUser.role,
+      userId: updatedUser.id
     };
-    const response = await userRoleService.createRole(data);
-    // console.log(response);
+    const response = await userRoleService.asignRole(data);
+    console.log("this is data",data);
     if (response) {
       refetch();
       const updatedUsers = users.map((user) => {
