@@ -5,8 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { userService } from '../../app/api/userService/userService';
-import { registerUser } from '../../app/api/register/registerRoute'
+import { registerUser } from '../../app/api/register/registerRoute';
+import { userRoleService } from '@/app/api/rbac/userRoleCreate';
 
+
+const defaultRoleName="fan";
+const defaultRoleId="8164fc60-f0c5-4d51-bc38-681d2397507b";
 const checkUsernameExists = async (username) => {
     try {
         const isExisting = await userService.getUserByUserName(username);
@@ -101,8 +105,20 @@ const RegistrationPage = () => {
         }
         const response = await registerUser({ data: { username, email, password, phone } });
         if (response) {
-            localStorage.setItem('user', JSON.stringify(response));
-            router.push('/');
+            const dataForRole = {
+                email: email,
+                id: response.id,
+                username: username,
+                role: defaultRoleId,
+                // role_id: defaultRoleId
+            }
+            const responseForRole = await userRoleService.createRole(dataForRole);
+            if(responseForRole?.data?.data){
+                // console.log(response)
+                localStorage.setItem('user', JSON.stringify(response));
+                router.push('/'); 
+            }
+            
         }
 
     };
