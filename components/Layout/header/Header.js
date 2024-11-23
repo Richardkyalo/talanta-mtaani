@@ -4,7 +4,14 @@ import { usePathname } from 'next/navigation';
 import { IoIosLogIn } from "react-icons/io";
 import { useSession, signOut } from 'next-auth/react';
 import { CiLogout } from "react-icons/ci";
+import { userRoleService } from '../../../app/api/rbac/userRoleCreate';
 
+
+
+const getParticularRole = (roleId) => {
+    const role = userRoleService.getRoleById(roleId);
+    return role ? role.data.name : '';
+};
 const Header = () => {
     const { data: session } = useSession();
     const [open, setOpen] = useState(false);
@@ -18,10 +25,17 @@ const Header = () => {
     const toggleAdminDropdown = () => {
         setAdminDropdownOpen(!adminDropdownOpen);
     };
+    const roleIds= session?.role_ids || [];
+
 
     const isActiveLink = (href) => {
         return pathname === href ? 'text-red-500' : 'text-gray-700 hover:text-blue-500';
     };
+    const hasAdminRole = roleIds.some((roleId) => {
+        const roleName = getParticularRole(roleId);
+        return roleName === 'admin';
+    });
+
 
     return (
         <header className={`${open ? 'absolute inset-0' : 'bg-white'} font-bold shadow-md p-4`}>
@@ -123,27 +137,30 @@ const Header = () => {
 
                     {/* Admin Dropdown */}
                     {/* {session?.role === 'admin' && ( */}
-                    <div>
-                        <button
-                            onClick={toggleAdminDropdown}
-                            className={`flex justify-between w-full text-gray-700 hover:text-blue-500 ${adminDropdownOpen ? 'text-red-500' : ''}`}
-                        >
-                            Admin
-                            <svg xmlns="http://www.w3.org/2000/svg" className={`w-4 h-4 transform ${adminDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        {adminDropdownOpen && (
-                            <div className="ml-4 flex flex-col space-y-2">
-                                {/* <a href="/admin/roles" className="text-gray-700 hover:text-blue-500">Manage Roles</a> */}
-                                <a href="/admin/users" className="text-gray-700 hover:text-blue-500">Manage Users</a>
-                                <a href="/admin/Matches" className="text-gray-700 hover:text-blue-500">Manage Matches</a>
-                                <a href="/admin/teams" className="text-gray-700 hover:text-blue-500">Manage Teams</a>
-                                <a href="/admin/fixtures" className="text-gray-700 hover:text-blue-500">Manage Fixtures</a>
-                                <a href="/admin/results" className="text-gray-700 hover:text-blue-500">Manage Results</a>
-                            </div>
-                        )}
-                    </div>
+                    {hasAdminRole && (
+                        <div>
+                            <button
+                                onClick={toggleAdminDropdown}
+                                className={`flex justify-between w-full text-gray-700 hover:text-blue-500 ${adminDropdownOpen ? 'text-red-500' : ''}`}
+                            >
+                                Admin
+                                <svg xmlns="http://www.w3.org/2000/svg" className={`w-4 h-4 transform ${adminDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            {adminDropdownOpen && (
+                                <div className="ml-4 flex flex-col space-y-2">
+                                    {/* <a href="/admin/roles" className="text-gray-700 hover:text-blue-500">Manage Roles</a> */}
+                                    <a href="/admin/users" className="text-gray-700 hover:text-blue-500">Manage Users</a>
+                                    <a href="/admin/Matches" className="text-gray-700 hover:text-blue-500">Manage Matches</a>
+                                    <a href="/admin/teams" className="text-gray-700 hover:text-blue-500">Manage Teams</a>
+                                    <a href="/admin/fixtures" className="text-gray-700 hover:text-blue-500">Manage Fixtures</a>
+                                    <a href="/admin/results" className="text-gray-700 hover:text-blue-500">Manage Results</a>
+                                </div>
+                            )}
+                        </div>
+                    )}
                     {/* )} */}
                     {!session && (
                         <div className='flex flex-col space-y-4 p-8 w-full text-center'>
