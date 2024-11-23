@@ -16,7 +16,7 @@ const getParticularRole = async (roleIds) => {
 
 // HOC to restrict access based on the user's role
 const withAdminAccess = (WrappedComponent) => {
-  return (props) => {
+  const WithAdminAccessComponent = (props) => {
     const { data: session, status } = useSession(); // Use session from next-auth
     const [isAdmin, setIsAdmin] = useState(false);
     const router = useRouter();
@@ -49,6 +49,11 @@ const withAdminAccess = (WrappedComponent) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  // Set the display name for the HOC
+  WithAdminAccessComponent.displayName = `withAdminAccess(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return WithAdminAccessComponent;
 };
 
 export default withAdminAccess;
