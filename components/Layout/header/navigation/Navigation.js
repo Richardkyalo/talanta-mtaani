@@ -1,17 +1,35 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { IoIosArrowDown } from 'react-icons/io';
+import { userRoleService } from '@/app/api/rbac/userRoleCreate';
+
+const getParticularRole = (roleId) => {
+    const role = userRoleService.getRoleById(roleId);
+    return role ? role.data.name : '';
+};
 
 const Navigation = () => {
+    const { data: session } = useSession();
+
     const pathname = usePathname(); // Get the current path
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    
+    console.log(session);
+
+    const roleIds= session?.role_ids || [];
 
     const isActive = (href) => {
         return pathname === href ? 'border-b-4 border-red-500 pb-2' : 'hover:border-b-4 hover:border-red-500 pb-2';
     };
 
     const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
+    const hasAdminRole = roleIds.some((roleId) => {
+        const roleName = getParticularRole(roleId);
+        return roleName === 'admin'; 
+    });
 
     return (
         <>
@@ -31,7 +49,7 @@ const Navigation = () => {
                         <a href="/ContactUs" className={`text-white ${isActive('/ContactUs')}`}>CONTACT US</a>
 
                         {/* Admin Dropdown */}
-                        {/* {session && session.user?.role === 'admin' && ( */}
+                        {hasAdminRole && (
                         <div className="relative">
                             <button
                                 onClick={toggleDropdown}
@@ -92,7 +110,7 @@ const Navigation = () => {
                             )}
                         </div>
 
-                        {/* )} */}
+                         )}
                     </div>
 
 

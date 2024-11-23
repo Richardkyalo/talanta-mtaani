@@ -5,6 +5,7 @@ import { CiEdit, CiSearch } from 'react-icons/ci';
 import { FaDownload } from 'react-icons/fa';
 import { userService } from '@/app/api/userService/userService';
 import { userRoleService } from "../../app/api/rbac/userRoleCreate";
+import withAdminAccess from "../admin/HOC/adminCheck"
 
 // Fetch all users
 const fetchUsers = async (page, limit) => {
@@ -29,6 +30,7 @@ const getAllRoles = async () => {
     return [];
   }
 };
+
 
 // Modal component for editing roles
 const EditRoleModal = ({ isOpen, onClose, user, onSubmit }) => {
@@ -116,7 +118,7 @@ const EditRoleModal = ({ isOpen, onClose, user, onSubmit }) => {
   );
 };
 
-export default function UsersTable() {
+const UsersTable= () => {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -241,3 +243,5 @@ export default function UsersTable() {
     </div>
   );
 }
+
+export default withAdminAccess(UsersTable);

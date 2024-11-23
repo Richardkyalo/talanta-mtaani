@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     // Simulate loading duration
-    const timer = setTimeout(() => setIsLoading(false), 5000); // 1-second delay
+    const timer = setTimeout(() => setIsLoading(false), 2000); // 1-second delay
 
     return () => clearTimeout(timer); // Cleanup timeout on unmount
   }, [pathname]); // Re-run effect when pathname changes

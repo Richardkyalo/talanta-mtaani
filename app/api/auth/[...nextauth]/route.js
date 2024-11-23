@@ -25,12 +25,16 @@ const authOptions = {
           });
 
           if (data && data.data && data.data.authToken) {
+            const permissionsData = data.data.user.permissions?.data || {};
+            const roleIds = Object.keys(permissionsData);
+        
             return {
-              id: data.data.user.id,
-              username: data.data.user.username,
-              token: data.data.authToken,
+                id: data.data.user.id,
+                username: data.data.user.username,
+                role_ids: roleIds, // Array of all role_ids
+                token: data.data.authToken,
             };
-          }
+        }
           return null;
         } catch (error) {
           console.error("Login error:", error);
@@ -50,6 +54,7 @@ const authOptions = {
       if (user) {
         token.id = user.id;
         token.username = user.username;
+        token.role_ids = user.role_ids;
         token.token = user.token;
       }
       return token;
@@ -57,6 +62,7 @@ const authOptions = {
     async session({ session, token }) {
       session.id = token.id;
       session.username = token.username;
+      session.role_ids = token.role_ids;
       session.token = token.token;
       return session;
     },

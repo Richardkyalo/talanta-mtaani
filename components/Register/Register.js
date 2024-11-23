@@ -116,7 +116,7 @@ const RegistrationPage = () => {
             if(responseForRole?.data?.data){
                 // console.log(response)
                 localStorage.setItem('user', JSON.stringify(response));
-                router.push('/'); 
+                router.push('/Login'); 
             }
             
         }

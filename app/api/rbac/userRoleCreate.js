@@ -36,6 +36,15 @@ class UserRoleService {
             throw error;
         }
     }
+    async getRoleById(id) {
+        try {
+            const response = await api.get(`${this.rbacEndpoint}/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in getRoleById:", error);
+            throw error;
+        }
+    }
     
 }
 
