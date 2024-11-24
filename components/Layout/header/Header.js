@@ -1,41 +1,64 @@
 "use client";
-import React, { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { IoIosLogIn } from "react-icons/io";
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, signOut } from "next-auth/react";
 import { CiLogout } from "react-icons/ci";
-import { userRoleService } from '../../../app/api/rbac/userRoleCreate';
+import { userRoleService } from "../../../app/api/rbac/userRoleCreate";
 
-
-
-const getParticularRole = (roleId) => {
-    const role = userRoleService.getRoleById(roleId);
-    return role ? role.data.name : '';
+const getRoleById = async (id) => {
+    try {
+        const response = await userRoleService.getRoleById(id);
+        return response;
+    } catch (error) {
+        console.error("Error in getRoleById:", error);
+        throw error;
+    }
 };
+
 const Header = () => {
-    const { data: session } = useSession();
-    const [open, setOpen] = useState(false);
-    const [adminDropdownOpen, setAdminDropdownOpen] = useState(false); // Dropdown state for Admin
-    const pathname = usePathname(); // Get the current path
+  const { data: session } = useSession();
+  const [open, setOpen] = useState(false);
+  const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const pathname = usePathname();
 
-    const toggle = () => {
-        setOpen(!open);
+  const toggle = () => setOpen(!open);
+  const toggleAdminDropdown = () => setAdminDropdownOpen(!adminDropdownOpen);
+
+  const roleIds = session?.role_ids || [];
+
+  // Fetch roles on mount or when `roleIds` changes
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const fetchedRoles = await Promise.all(
+          roleIds.map(async (roleId) => {
+            const response = await getRoleById(roleId);
+            console.log("Response from getRoleById:", response); // Ensure you see the correct role data here
+            return {
+              id: roleId,
+              name: response?.data?.data?.data?.name || "Unknown Role",
+            };
+          })
+        );
+        console.log("Fetched roles:", fetchedRoles); // Debug: Ensure this array has correct names
+        setRoles(fetchedRoles); // Update state with correct fetched roles
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
     };
+  
+    if (roleIds.length > 0) fetchRoles();
+  }, [roleIds]);
+  
 
-    const toggleAdminDropdown = () => {
-        setAdminDropdownOpen(!adminDropdownOpen);
-    };
-    const roleIds= session?.role_ids || [];
+  // Check if the user has the 'admin' role
+  const hasAdminRole = roles.some((role) => role.name === "admin");
 
+  const isActiveLink = (href) => (pathname === href ? "text-red-500" : "text-gray-700 hover:text-blue-500");
 
-    const isActiveLink = (href) => {
-        return pathname === href ? 'text-red-500' : 'text-gray-700 hover:text-blue-500';
-    };
-    const hasAdminRole = roleIds.some((roleId) => {
-        const roleName = getParticularRole(roleId);
-        return roleName === 'admin';
-    });
-
+  console.log(roleIds);
 
     return (
         <header className={`${open ? 'absolute inset-0' : 'bg-white'} font-bold shadow-md p-4`}>
@@ -160,9 +183,8 @@ const Header = () => {
                                 </div>
                             )}
                         </div>
-                    )}
-                    {/* )} */}
-                    {!session && (
+                     )}
+                    {!session ? (
                         <div className='flex flex-col space-y-4 p-8 w-full text-center'>
                             <a
                                 href='/Login'
@@ -170,6 +192,15 @@ const Header = () => {
                             >
                                 Login
                             </a>
+                        </div>
+                    ):(
+                        <div className='flex flex-col space-y-4 p-8 w-full text-center'>
+                            <button
+                                onClick={()=>signOut()}
+                                className="btn btn-sm w-full border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-500 hover:text-white"
+                            >
+                                Logout
+                            </button>
                         </div>
                     )}
 

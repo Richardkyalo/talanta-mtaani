@@ -8,6 +8,7 @@ import Header from './Layout/header/Header.js';
 import Footer from './Layout/footer/footer.js';
 import { MantineProvider } from '@mantine/core';
 import HashLoader from 'react-spinners/HashLoader'; // Import HashLoader
+// import InactivityHandler from "../app/hooks/resetSession/reset.js"
 
 const Layout = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true); // State to manage loading
@@ -26,6 +27,7 @@ const Layout = ({ children }) => {
 
   return (
     <SessionProvider>
+      {/* <InactivityHandler timeout={60*1000}/> */}
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <div>
           <Head>

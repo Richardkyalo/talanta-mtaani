@@ -32,6 +32,7 @@ const authOptions = {
                 id: data.data.user.id,
                 username: data.data.user.username,
                 role_ids: roleIds, // Array of all role_ids
+                refreshToken: data.data.refreshToken,
                 token: data.data.authToken,
             };
         }
@@ -55,6 +56,7 @@ const authOptions = {
         token.id = user.id;
         token.username = user.username;
         token.role_ids = user.role_ids;
+        token.refreshToken = user.refreshToken;
         token.token = user.token;
       }
       return token;
@@ -63,6 +65,7 @@ const authOptions = {
       session.id = token.id;
       session.username = token.username;
       session.role_ids = token.role_ids;
+      session.refreshToken = token.refreshToken;
       session.token = token.token;
       return session;
     },

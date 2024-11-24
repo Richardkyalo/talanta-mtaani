@@ -1,22 +1,28 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { IoIosArrowDown } from 'react-icons/io';
 import { userRoleService } from '@/app/api/rbac/userRoleCreate';
 
-const getParticularRole = (roleId) => {
-    const role = userRoleService.getRoleById(roleId);
-    return role ? role.data.name : '';
+const getRoleById = async (id) => {
+    try {
+        const response = await userRoleService.getRoleById(id);
+        return response;
+    } catch (error) {
+        console.error("Error in getRoleById:", error);
+        throw error;
+    }
 };
 
 const Navigation = () => {
     const { data: session } = useSession();
-
+    const [roles, setRoles] = useState([]);
     const pathname = usePathname(); // Get the current path
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
-    console.log(session);
+    // console.log(session);
 
     const roleIds= session?.role_ids || [];
 
@@ -26,10 +32,31 @@ const Navigation = () => {
 
     const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-    const hasAdminRole = roleIds.some((roleId) => {
-        const roleName = getParticularRole(roleId);
-        return roleName === 'admin'; 
-    });
+    // Fetch roles on mount or when `roleIds` changes
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const fetchedRoles = await Promise.all(
+          roleIds.map(async (roleId) => {
+            const response = await getRoleById(roleId);
+            console.log("Response from getRoleById:", response); // Ensure you see the correct role data here
+            return {
+              id: roleId,
+              name: response?.data?.data?.data?.name || "Unknown Role",
+            };
+          })
+        );
+        console.log("Fetched roles:", fetchedRoles); // Debug: Ensure this array has correct names
+        setRoles(fetchedRoles); // Update state with correct fetched roles
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
+  
+    if (roleIds.length > 0) fetchRoles();
+  }, [roleIds]);
+
+  const hasAdminRole = roles.some((role) => role.name === "admin");
 
     return (
         <>
