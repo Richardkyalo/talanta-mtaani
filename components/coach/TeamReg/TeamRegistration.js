@@ -40,7 +40,7 @@ const TeamRegistrationForm = () => {
     };
 
 
-    const { data, refetch } = useQuery({
+    const { data } = useQuery({
         queryKey: ['coaches'],
         queryFn: () => getCoachByID(),
         onSuccess: (checkcoach) => {
