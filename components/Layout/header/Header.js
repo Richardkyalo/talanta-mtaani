@@ -55,6 +55,7 @@ const Header = () => {
 
   // Check if the user has the 'admin' role
   const hasAdminRole = roles.some((role) => role.name === "admin");
+  const hasCoachRole = roles.some((role) => role.name === "coach");
 
   const isActiveLink = (href) => (pathname === href ? "text-red-500" : "text-gray-700 hover:text-blue-500");
 
@@ -152,7 +153,10 @@ const Header = () => {
                     <a href="/Table" className={isActiveLink('/Table')}>League Table</a>
                     <a href="/LiveScore" className={isActiveLink('/LiveScore')}>Live Score</a>
                     <a href="/PlayerStats" className={isActiveLink('/PlayerStats')}>Player Stats</a>
-                    <a href="/TeamReg" className={isActiveLink('/TeamReg')}>Team Registration</a>
+                    {hasCoachRole && (
+                       <a href="/TeamReg" className={isActiveLink('/TeamReg')}>Team Registration</a>
+                    )}
+                    
                     <a href="/FanZone" className={isActiveLink('/FanZone')}>Fan Zone</a>
                     <a href="/Highlights" className={isActiveLink('/Highlights')}>Highlights</a>
                     <a href="/blog" className={isActiveLink('/blog')}>Blog</a>

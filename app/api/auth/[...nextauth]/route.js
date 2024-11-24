@@ -31,6 +31,7 @@ const authOptions = {
             return {
                 id: data.data.user.id,
                 username: data.data.user.username,
+                email: data.data.user.email,
                 role_ids: roleIds, // Array of all role_ids
                 refreshToken: data.data.refreshToken,
                 token: data.data.authToken,
@@ -56,6 +57,7 @@ const authOptions = {
         token.id = user.id;
         token.username = user.username;
         token.role_ids = user.role_ids;
+        token.email = user.email;
         token.refreshToken = user.refreshToken;
         token.token = user.token;
       }
@@ -64,6 +66,7 @@ const authOptions = {
     async session({ session, token }) {
       session.id = token.id;
       session.username = token.username;
+      session.email = token.email;
       session.role_ids = token.role_ids;
       session.refreshToken = token.refreshToken;
       session.token = token.token;

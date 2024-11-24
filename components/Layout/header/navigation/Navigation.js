@@ -57,6 +57,7 @@ const Navigation = () => {
   }, [roleIds]);
 
   const hasAdminRole = roles.some((role) => role.name === "admin");
+  const hasCoachRole = roles.some((role) => role.name === "coach");
 
     return (
         <>
@@ -70,8 +71,11 @@ const Navigation = () => {
                         <a href="/" className={`text-white ${isActive('/')}`}>HOME</a>
                         <a href="/LiveScore" className={`text-white ${isActive('/LiveScore')}`}>LIVE SCORE</a>
                         <a href="/PlayerStats" className={`text-white ${isActive('/PlayerStats')}`}>PLAYER STATS</a>
-                        <a href="/TeamReg" className={`text-white ${isActive('/TeamReg')}`}>TEAM REGISTRATION</a>
-                        <a href="/FanZone" className={`text-white ${isActive('/FanZone')}`}>FAN ZONE</a>
+                        {hasCoachRole && 
+                       <a href="/TeamReg" className={`text-white ${isActive('/TeamReg')}`}>TEAM REGISTRATION</a>
+                       
+                        }
+                         <a href="/FanZone" className={`text-white ${isActive('/FanZone')}`}>FAN ZONE</a>
                         <a href="/blog" className={`text-white ${isActive('/blog')}`}>BLOG</a>
                         <a href="/ContactUs" className={`text-white ${isActive('/ContactUs')}`}>CONTACT US</a>
 
