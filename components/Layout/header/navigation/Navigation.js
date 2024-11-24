@@ -39,14 +39,14 @@ const Navigation = () => {
         const fetchedRoles = await Promise.all(
           roleIds.map(async (roleId) => {
             const response = await getRoleById(roleId);
-            console.log("Response from getRoleById:", response); // Ensure you see the correct role data here
+            // console.log("Response from getRoleById:", response); // Ensure you see the correct role data here
             return {
               id: roleId,
               name: response?.data?.data?.data?.name || "Unknown Role",
             };
           })
         );
-        console.log("Fetched roles:", fetchedRoles); // Debug: Ensure this array has correct names
+        // console.log("Fetched roles:", fetchedRoles); // Debug: Ensure this array has correct names
         setRoles(fetchedRoles); // Update state with correct fetched roles
       } catch (error) {
         console.error("Error fetching roles:", error);

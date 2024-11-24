@@ -35,14 +35,14 @@ const Header = () => {
         const fetchedRoles = await Promise.all(
           roleIds.map(async (roleId) => {
             const response = await getRoleById(roleId);
-            console.log("Response from getRoleById:", response); // Ensure you see the correct role data here
+            // console.log("Response from getRoleById:", response); // Ensure you see the correct role data here
             return {
               id: roleId,
               name: response?.data?.data?.data?.name || "Unknown Role",
             };
           })
         );
-        console.log("Fetched roles:", fetchedRoles); // Debug: Ensure this array has correct names
+        // console.log("Fetched roles:", fetchedRoles); // Debug: Ensure this array has correct names
         setRoles(fetchedRoles); // Update state with correct fetched roles
       } catch (error) {
         console.error("Error fetching roles:", error);
@@ -58,7 +58,7 @@ const Header = () => {
 
   const isActiveLink = (href) => (pathname === href ? "text-red-500" : "text-gray-700 hover:text-blue-500");
 
-  console.log(roleIds);
+//   console.log(roleIds);
 
     return (
         <header className={`${open ? 'absolute inset-0' : 'bg-white'} font-bold shadow-md p-4`}>
