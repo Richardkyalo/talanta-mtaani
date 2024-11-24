@@ -35,6 +35,15 @@ class UserService {
             throw error;
         }
     }
+    async updateUser(id, data) {
+        try {
+            const response = await api.put(`${this.userApi}/update/${id}`, data);
+            return response.data;
+        } catch (error) {
+            console.error("Error in updateUser:", error);
+            throw error;
+        }
+    }
 }
 
 export const userService = new UserService();

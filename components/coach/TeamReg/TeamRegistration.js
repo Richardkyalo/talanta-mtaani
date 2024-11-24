@@ -1,13 +1,34 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import withCoachAccess from "../HOC/coach";
+import { userService } from '@/app/api/userService/userService';
+import { CoachService } from '@/app/api/coach/coach'
+import { useQuery } from '@tanstack/react-query';
+
+const getCoachByID = async (id) => {
+    try {
+        const response = await CoachService.getCoachById(id);
+        console.log(response);
+        if (response?.data !== 'Failed to get coach by ID') {
+            // Successfully found a coach
+            return true;
+        }
+        // No response or response is null/undefined
+        return false;
+    } catch (error) {
+        console.error("Error in getCoachByID:", error);
+        return false; // Return false if an error occurs
+    }
+};
+
 
 const TeamRegistrationForm = () => {
     const { data: session } = useSession();
     const [teamName, setTeamName] = useState('');
     const [coachName, setCoachName] = useState('');
     const [coachPhone, setCoachPhone] = useState('');
+    const [coachExists, setCoachExists] = useState(false);
     const [coachEmail, setCoachEmail] = useState('');
     const [teamWard, setTeamWard] = useState('');
     const [teamCategory, setTeamCategory] = useState('');
@@ -18,21 +39,68 @@ const TeamRegistrationForm = () => {
         setTeamLogo(event.target.files[0]);
     };
 
-    const handleSubmit = (event) => {
+
+    const { data, refetch } = useQuery({
+        queryKey: ['coaches'],
+        queryFn: () => getCoachByID(),
+        onSuccess: (checkcoach) => {
+            setCoachExists(checkcoach);
+        },
+        onError: (error) => {
+            console.error('Error fetching coach:', error);
+        },
+    });
+
+    useEffect(() => {
+        if (data) {
+            setCoachExists(data);
+        }
+    }, [data]);
+    const handleSubmit = async (event) => {
         event.preventDefault();
         console.log(session);
-        console.log({
-            teamName,
-            teamWard,
-            coachName,
-            coachPhone,
-            coachEmail,
-            teamCategory,
-            teamLogo,
-        });
-        setIsModalOpen(false); // Close modal on submit
-    };
+        const dataToUpdateUserCoach = {
+          phone: coachPhone,
+          email: coachEmail,
+        };
+        const dataToCreateCoach = {
+          user_id: session.id,
+          name: coachName,
+        };
+        const dataToCreateTeam = {
+          name: teamName,
+          gender: teamCategory,
+          team_ward: teamWard,
+          coach_id: session.id,
+          team_logo: teamLogo,
+        };
+        try {
+          if (!coachExists) {
+            // Create coach if not exists
+            const coachResponse = await CoachService.createCoach(dataToCreateCoach);
+            if (coachResponse?.data === "Failed to create coach") {
+              throw new Error("Failed to create coach");
+            }
+            // Update user data
+            const userResponse = await userService.updateUser(session.id, dataToUpdateUserCoach);
+            if (userResponse?.data === "Error updating User") {
+              throw new Error("Error updating user");
+            }
+          }
+          // Create team (whether coach exists or not)
+          const teamResponse = await teamService.createTeam(dataToCreateTeam);
+          if (teamResponse?.data === "Failed to create team") {
+            throw new Error("Failed to create team");
+          }
+          console.log("Team created successfully");
+          setIsModalOpen(false); // Close modal on success
+        } catch (error) {
+          console.error("Error in handleSubmit:", error.message);
+        }
+      };
+      
 
+    console.log(coachExists);
     return (
         <section className="bg-gray-100 mx-auto max-w-screen-lg px-6 py-12">
             <div className="text-center mb-8">
@@ -121,7 +189,7 @@ const TeamRegistrationForm = () => {
                                     onChange={(e) => setTeamName(e.target.value)}
                                     placeholder="Enter team name"
                                     className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
-                                    
+
                                 />
                             </div>
                             {/* Team Ward */}
@@ -136,56 +204,61 @@ const TeamRegistrationForm = () => {
                                     onChange={(e) => setTeamWard(e.target.value)}
                                     placeholder="Enter team ward"
                                     className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
-                                    
+
                                 />
                             </div>
 
-                            {/* Coach Name */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="coachName">
-                                    Coach Name
-                                </label>
-                                <input
-                                    id="coachName"
-                                    type="text"
-                                    value={coachName}
-                                    onChange={(e) => setCoachName(e.target.value)}
-                                    placeholder="Enter coach's name"
-                                    className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
-                                    
-                                />
-                            </div>
-                            {/* Coach Phone number */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="coachPhone">
-                                    Coach Phone
-                                </label>
-                                <input
-                                    id="coachPhone"
-                                    type="tel"
-                                    value={coachPhone}
-                                    onChange={(e) => setCoachPhone(e.target.value)}
-                                    placeholder="Enter coach's phone number"
-                                    className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
-                                    
-                                />
-                            </div>
+                            {!coachExists && (
+                                <>
+                                    {/* Coach Name */}
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="coachName">
+                                            Coach Name
+                                        </label>
+                                        <input
+                                            id="coachName"
+                                            type="text"
+                                            value={coachName}
+                                            onChange={(e) => setCoachName(e.target.value)}
+                                            placeholder="Enter coach's name"
+                                            className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
 
-                            {/* Coach Email */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="coachEmail">
-                                    Coach Email
-                                </label>
-                                <input
-                                    id="coachEmail"
-                                    type="email"
-                                    value={coachEmail}
-                                    onChange={(e) => setCoachEmail(e.target.value)}
-                                    placeholder="Enter coach's email"
-                                    className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
-                                    
-                                />
-                            </div>
+                                        />
+                                    </div>
+                                    {/* Coach Phone number */}
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="coachPhone">
+                                            Coach Phone
+                                        </label>
+                                        <input
+                                            id="coachPhone"
+                                            type="tel"
+                                            value={coachPhone}
+                                            onChange={(e) => setCoachPhone(e.target.value)}
+                                            placeholder="Enter coach's phone number"
+                                            className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
+
+                                        />
+                                    </div>
+
+                                    {/* Coach Email */}
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="coachEmail">
+                                            Coach Email
+                                        </label>
+                                        <input
+                                            id="coachEmail"
+                                            type="email"
+                                            value={coachEmail}
+                                            onChange={(e) => setCoachEmail(e.target.value)}
+                                            placeholder="Enter coach's email"
+                                            className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
+
+                                        />
+                                    </div>
+                                </>
+                            )}
+
 
                             {/* Team Category */}
                             <div>
@@ -197,11 +270,11 @@ const TeamRegistrationForm = () => {
                                     value={teamCategory}
                                     onChange={(e) => setTeamCategory(e.target.value)}
                                     className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
-                                    
+
                                 >
                                     <option value="">Select a category</option>
-                                    <option value="men">Men's Team</option>
-                                    <option value="women">Women's Team</option>
+                                    <option value="men">Men&apos;s Team</option>
+                                    <option value="women">Women&apos;s Team</option>
                                 </select>
                             </div>
 
@@ -216,7 +289,7 @@ const TeamRegistrationForm = () => {
                                     accept="image/*"
                                     onChange={handleFileUpload}
                                     className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500"
-                                    
+
                                 />
                             </div>
 
