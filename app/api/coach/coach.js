@@ -27,7 +27,7 @@ class coachService {
   }
   async getCoachById(id) {
     try {
-      const response = await api.get(`${this.coachApi}/getbyid/${id}`);
+      const response = await api.get(`${this.coachApi}/get/by/userID/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error in getCoachById:", error);

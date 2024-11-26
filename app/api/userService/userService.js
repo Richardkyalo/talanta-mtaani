@@ -37,7 +37,7 @@ class UserService {
     }
     async updateUser(id, data) {
         try {
-            const response = await api.put(`${this.userApi}/update/${id}`, data);
+            const response = await api.put(`${this.userApi}/${id}`, data);
             return response.data;
         } catch (error) {
             console.error("Error in updateUser:", error);
