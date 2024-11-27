@@ -149,7 +149,7 @@ const TeamRegistrationForm = () => {
             console.error('Error fetching coach:', error);
         },
     });
-    const { data: pointofC, isLoading: isPointofCLoading } = useQuery({
+    const { data: pointofC } = useQuery({
         queryKey: ['pointofC', teamPointOfContactId],
         queryFn: () => getPointOfContactById(teamPointOfContactId),
         enabled: !!teamPointOfContactId, // Run query only if ID exists
