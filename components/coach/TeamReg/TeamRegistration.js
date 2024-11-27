@@ -182,7 +182,7 @@ const TeamRegistrationForm = () => {
     }, [data]);
 
     useEffect(() => {
-        if(pointofC){
+        if (pointofC) {
             setPointofCexist(pointofC);
         }
     }, [pointofC]);
@@ -234,7 +234,7 @@ const TeamRegistrationForm = () => {
                 }
             }
 
-            if(pointofCexist){
+            if (pointofCexist) {
                 setError("Point of contact already exists");
                 return
             }
@@ -328,39 +328,40 @@ const TeamRegistrationForm = () => {
                 {/* Players Table */}
                 <div className="bg-white shadow-lg rounded-lg p-6">
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">Players</h3>
+
                     <div className='max-h-80 overflow-y-auto border rounded-md'>
-                    <table className="w-full text-sm text-black text-left">
-                        <thead>
-                            <tr className="bg-gray-100">
-                                <th className="px-4 py-2">#</th>
-                                <th className="px-4 py-2">Name</th>
-                                <th className="px-4 py-2">Position</th>
-                                <th className="px-4 py-2">Age</th>
-                                <th className="px-4 py-2">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            { players?.data?.length > 0 && (
-                            players?.data?.map((player, index) => (
-                                <tr key={player.id} className="border-b">
-                                    <td className="px-4 py-2">{index + 1}</td>
-                                    <td className="px-4 py-2">{player.name}</td>
-                                    <td className="px-4 py-2 capitalize">{player.position}</td>
-                                    <td className="px-4 py-2">{calculateAge(player.date_of_birth)}</td>
-                                    <td className="px-4 py-2">
-                                        <button className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md">
-                                            <div className="flex flex-row gap-2 items-center">
-                                                <MdDeleteForever />
-                                                <span>Remove</span>
-                                            </div>
-                                        </button>
-                                    </td>
+                        <table className="w-full text-sm text-black text-left">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    <th className="px-4 py-2">#</th>
+                                    <th className="px-4 py-2">Name</th>
+                                    <th className="px-4 py-2">Position</th>
+                                    <th className="px-4 py-2">Age</th>
+                                    <th className="px-4 py-2">Actions</th>
                                 </tr>
-                            )))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {players?.data?.length > 0 && (
+                                    players?.data?.map((player, index) => (
+                                        <tr key={player.id} className="border-b">
+                                            <td className="px-4 py-2">{index + 1}</td>
+                                            <td className="px-4 py-2">{player.name}</td>
+                                            <td className="px-4 py-2 capitalize">{player.position}</td>
+                                            <td className="px-4 py-2">{calculateAge(player.date_of_birth)}</td>
+                                            <td className="px-4 py-2">
+                                                <button className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md">
+                                                    <div className="flex flex-row gap-2 items-center">
+                                                        <MdDeleteForever />
+                                                        <span>Remove</span>
+                                                    </div>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )))}
+                            </tbody>
+                        </table>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -369,7 +370,10 @@ const TeamRegistrationForm = () => {
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full transform transition-all duration-300 scale-100 opacity-100 max-h-[calc(100vh-2rem)] overflow-auto">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-800">Register Player</h2>
+                            <div className='flex flex-col'>
+                                <h2 className="text-2xl font-bold text-gray-800">Register Player</h2>
+                                {playerError && <p className="text-red-500 mb-4">{playerError}</p>}
+                            </div>
                             <button
                                 onClick={() => setIsPlayerModalOpen(false)}
                                 className="text-gray-500 hover:text-gray-700 text-xl font-bold focus:outline-none"
@@ -484,8 +488,10 @@ const TeamRegistrationForm = () => {
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full transform transition-all duration-300 scale-100 opacity-100 max-h-[calc(100vh-2rem)] overflow-auto">
                         <div className="flex justify-between items-center mb-6">
+                            <div className='flex flex-col'>
                             <h2 className="text-3xl font-semibold text-gray-800">Register Team</h2>
                             <p className='text-red-500'>{error}</p>
+                            </div>
                             <button
                                 onClick={() => setIsModalOpen(false)}
                                 className="text-gray-500 hover:text-gray-700 text-xl font-bold"
