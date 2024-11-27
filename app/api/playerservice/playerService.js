@@ -4,7 +4,7 @@ const api = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
 });
 class PlayerService {
-    playerApi = "api/player";
+    playerApi = "/api/player";
     async createPlayer(data) {
         try {
             const response = await api.post(`${this.playerApi}/create`, data);
@@ -30,6 +30,15 @@ class PlayerService {
             return response.data;
         } catch (error) {
             console.error("Error in getPlayerById:", error);
+            throw error;
+        }
+    }
+    async getPlayerByTeamId(id) {
+        try {
+            const response = await api.get(`${this.playerApi}/get/by/team/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in getPlayerByTeamId:", error);
             throw error;
         }
     }
