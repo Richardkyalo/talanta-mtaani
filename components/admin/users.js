@@ -122,6 +122,21 @@ const UsersTable= () => {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  // const [userNameToSearch, setUserNameToSearch] = useState('');
+
+  // const handleUserSearch = async (event) => {
+  //   event.preventDefault();
+  //   const userName= userNameToSearch;
+  //   const user = await userService.getUserByUserName(userName);
+  //   console
+  //   if (user.id) {
+  //     console.log("User found:", user); // Debugging
+  //     setUsers([user]);
+  //   } else {
+  //     // console.log("User not found");
+  //     setUsers([]);
+  //   }
+  // }
 
   const { data, refetch } = useQuery({
     queryKey: ['users'],
@@ -191,6 +206,9 @@ const UsersTable= () => {
             <input
               type="text"
               placeholder="Search users"
+              // value={userNameToSearch}
+              // onChange={(e) => setUserNameToSearch(e.target.value)}
+              // onBlur={(event) => handleUserSearch(event)}
               className="w-full border border-gray-300 text-black rounded-md pl-10 pr-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 outline-none"
             />
           </div>

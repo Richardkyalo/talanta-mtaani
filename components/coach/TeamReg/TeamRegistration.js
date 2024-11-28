@@ -9,6 +9,8 @@ import { pointofContact } from '../../../app/api/pointOfContact/pointOfContactSe
 import { teamService } from '../../../app/api/teamservice/teamService'
 import { playerService } from '../../../app/api/playerservice/playerService'
 import { MdDeleteForever } from "react-icons/md";
+import { registerUser } from '@/app/api/register/registerRoute';
+import { userRoleService } from '@/app/api/rbac/userRoleCreate';
 
 // import { error } from 'console';
 // import { userService } from '@/app/api/userService/userService';
@@ -74,9 +76,11 @@ const TeamRegistrationForm = () => {
     const [teamPointOfContactId, setTeamPointOfContactId] = useState('');
     const [pointOfContactUserExist, setPointOfContactUserExist] = useState(false);
     const [pointofCexist, setPointofCexist] = useState(false);
-    const [playerUsername, setPlayerUsername] = useState('');
-    const [playerId, setPlayerId] = useState('');
-    const [playerExist, setPlayerExist] = useState(false);
+    const [playerLevelOfEducation, setPlayerLevelOfEducation] = useState('');
+    // const [playerUsername, setPlayerUsername] = useState('');
+    // const [playerId, setPlayerId] = useState('');
+    const [playerPhoneNumber, setPlayerPhoneNumber] = useState('');
+    // const [playerExist, setPlayerExist] = useState(false);
     const [playerName, setPlayerName] = useState('');
     const [playerPosition, setPlayerPosition] = useState('');
     const [playerDateOfBirth, setPlayerDateOfBirth] = useState('');
@@ -105,19 +109,28 @@ const TeamRegistrationForm = () => {
             setPointOfContactUserExist(false);
         }
     };
-    const handlePlayerUsernameSearch = async (event) => {
-        event.preventDefault();
-        const usernameToSearch = playerUsername;
-        const user = await getUserByUserName(usernameToSearch);
-        if (user.id) {
-            // console.log("User found:", user); // Debugging
-            setPlayerId(user?.id);
-            setPlayerExist(true);
-        } else {
-            // console.log("User not found");
-            setPlayerExist(false);
-        }
-    };
+    // const handlePlayerUsernameSearch = async (event) => {
+    //     event.preventDefault();
+    //     const usernameToSearch = playerUsername;
+    //     const user = await getUserByUserName(usernameToSearch);
+    //     if (user.id) {
+    //         const playerCheck = await playerService.getPlayerById(user.id);
+    //         if (playerCheck?.data?.id) {
+    //             setPlayerError("This player already has a team");
+    //             return;
+    //         }
+    //         if (!playerCheck?.data?.id) {
+    //             setPlayerError("")
+
+    //         }
+    //         // console.log("User found:", user); // Debugging
+    //         setPlayerId(user?.id);
+    //         setPlayerExist(true);
+    //     } else {
+    //         // console.log("User not found");
+    //         setPlayerExist(false);
+    //     }
+    // };
 
     const { data: teamPlayers, refetch: teamPlayersRefetch } = useQuery({
         queryKey: ['players', team?.[0]?.id],
@@ -268,13 +281,51 @@ const TeamRegistrationForm = () => {
         }
     };
 
+
     const handlePlayerCreation = async (event) => {
         event.preventDefault();
+        const generateUniqueEmail = (playerName) => {
+            // Generate a random string using current timestamp and a random number
+            const randomPart = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
+
+            // Sanitize playerName to ensure it's a valid email format (remove spaces, special characters, etc.)
+            const sanitizedPlayerName = playerName.replace(/\s+/g, '').toLowerCase();
+
+            // Combine sanitized name, random part, and a domain
+            return `${sanitizedPlayerName}.${randomPart}@example.com`;
+        };
+        const defaultRoleId = "8164fc60-f0c5-4d51-bc38-681d2397507b";
+
+        const dataToregisterPlayerAsuser = {
+            username: playerName,
+            email: generateUniqueEmail(playerName),
+            phone: playerPhoneNumber,
+            password: playerPhoneNumber,
+
+        }
         try {
+            console.log("the data", dataToregisterPlayerAsuser)
+            const userResponse = await registerUser({ data: dataToregisterPlayerAsuser });
+            if (!userResponse?.id) {
+                setPlayerError("Failed to create player");
+                return;
+            }
+            const dataForRole = {
+                id: userResponse?.id,
+                role: defaultRoleId,
+                username: dataToregisterPlayerAsuser.username,
+                email: dataToregisterPlayerAsuser.email
+            }
+            const roleCreationResponse = await userRoleService.createRole(dataForRole);
+            console.log("fan role", roleCreationResponse)
+            if (!roleCreationResponse?.data?.data) {
+                setPlayerError("Failed to create role");
+            }
             const dataToCreatePlayer = {
-                id: playerId,
-                user_id: playerId,
+                id: userResponse?.id,
+                user_id: userResponse?.id,
                 name: playerName,
+                level_of_education: playerLevelOfEducation,
                 position: playerPosition,
                 date_of_birth: playerDateOfBirth,
                 team_id: team?.[0]?.id,
@@ -288,7 +339,7 @@ const TeamRegistrationForm = () => {
             console.log("Player created successfully");
             setIsPlayerModalOpen(false); // Close modal on success
         } catch (error) {
-            console.error("Error in handlePlayerCreation:", error.message);
+            console.error("Error in handlePlayerCreation:", error);
         }
     }
     const calculateAge = (dob) => {
@@ -299,6 +350,7 @@ const TeamRegistrationForm = () => {
 
     // console.log(coachExists)
     // console.log(pointofCexist)
+    console.log(players?.data)
     return (
         <section className="bg-gray-100 mx-auto max-w-screen-lg px-6 py-12">
             {team?.length === 0 && (
@@ -314,17 +366,18 @@ const TeamRegistrationForm = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                 {/* Team Card */}
-                <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-                    <img src="/path-to-team-logo.jpg" alt="Team Logo" className="w-24 h-24 mx-auto mb-4 rounded-full" />
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{team?.[0]?.name}</h2>
-                    <p className="text-sm text-gray-600">Category: {team?.[0]?.gender}</p>
-                    <button
-                        onClick={() => setIsPlayerModalOpen(true)}
-                        className="mt-4 px-4 py-2 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition duration-300">
-                        Add Player
-                    </button>
-                </div>
-
+                {team?.length > 0 && (
+                    <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+                        <img src="/path-to-team-logo.jpg" alt="Team Logo" className="w-24 h-24 mx-auto mb-4 rounded-full" />
+                        <h2 className="text-2xl font-bold text-gray-800 mb-2">{team?.[0]?.name}</h2>
+                        <p className="text-sm text-gray-600">Category: {team?.[0]?.gender}</p>
+                        <button
+                            onClick={() => setIsPlayerModalOpen(true)}
+                            className="mt-4 px-4 py-2 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition duration-300">
+                            Add Player
+                        </button>
+                    </div>
+                )}
                 {/* Players Table */}
                 <div className="bg-white shadow-lg rounded-lg p-6">
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">Players</h3>
@@ -337,6 +390,7 @@ const TeamRegistrationForm = () => {
                                     <th className="px-4 py-2">Name</th>
                                     <th className="px-4 py-2">Position</th>
                                     <th className="px-4 py-2">Age</th>
+                                    <th className="px-4 py-2">Level Of Education</th>
                                     <th className="px-4 py-2">Actions</th>
                                 </tr>
                             </thead>
@@ -348,6 +402,7 @@ const TeamRegistrationForm = () => {
                                             <td className="px-4 py-2">{player.name}</td>
                                             <td className="px-4 py-2 capitalize">{player.position}</td>
                                             <td className="px-4 py-2">{calculateAge(player.date_of_birth)}</td>
+                                            <td className='px-4 py-2'>{player.level_of_education}</td>
                                             <td className="px-4 py-2">
                                                 <button className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md">
                                                     <div className="flex flex-row gap-2 items-center">
@@ -384,97 +439,135 @@ const TeamRegistrationForm = () => {
 
                         <form onSubmit={handlePlayerCreation} className="space-y-6">
                             {/*player username */}
-                            <div>
+                            {/* <div>
                                 <label
                                     htmlFor="playerUsername"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    Search Player by Username
+                                    Name
                                 </label>
                                 <input
                                     id="playerUsername"
                                     type="text"
                                     value={playerUsername}
                                     onChange={(e) => setPlayerUsername(e.target.value)}
-                                    placeholder="Enter player username"
-                                    onBlur={handlePlayerUsernameSearch}
+                                    placeholder="Enter player name"
                                     required
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
                                 />
+                            </div> */}
+                            {/* {playerExist && ( */}
+                            <div>
+                                <label
+                                    htmlFor="playerName"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Full Name
+                                </label>
+                                <input
+                                    id="playerName"
+                                    type="text"
+                                    value={playerName}
+                                    onChange={(e) => setPlayerName(e.target.value)}
+                                    placeholder="Enter player name"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
+                                    required
+                                />
                             </div>
-                            {playerExist && (
-                                <>
-                                    <div>
-                                        <label
-                                            htmlFor="playerName"
-                                            className="block text-sm font-medium text-gray-700 mb-2"
-                                        >
-                                            Player Name
-                                        </label>
-                                        <input
-                                            id="playerName"
-                                            type="text"
-                                            value={playerName}
-                                            onChange={(e) => setPlayerName(e.target.value)}
-                                            placeholder="Enter player name"
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
-                                            required
-                                        />
-                                    </div>
+                            {/* player phone number */}
+                            <div>
+                                <label
+                                    htmlFor="playerPhoneNumber"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Player Phone Number
+                                </label>
+                                <input
+                                    id="playerPhoneNumber"
+                                    type="text"
+                                    value={playerPhoneNumber}
+                                    onChange={(e) => setPlayerPhoneNumber(e.target.value)}
+                                    placeholder="Enter player phone number"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
+                                    required
+                                />
+                            </div>
+                            {/* player level of education */}
+                            <div>
+                                <label
+                                    htmlFor="playerLevelOfEducation"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Player Level of Education
+                                </label>
+                                {/* select input for level of education */}
+                                <select
+                                    id="playerLevelOfEducation"
+                                    value={playerLevelOfEducation}
+                                    onChange={(e) => setPlayerLevelOfEducation(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
+                                    required
+                                >
+                                    <option value="">Select level of education</option>
+                                    <option value="primary">Primary</option>
+                                    <option value="secondary">Secondary</option>
+                                    <option value="college">Tertiary</option>
+                                    <option value="working">Working</option>
+                                </select>
+                            </div>
 
-                                    {/* Player Position */}
-                                    <div>
-                                        <label
-                                            htmlFor="playerPosition"
-                                            className="block text-sm font-medium text-gray-700 mb-2"
-                                        >
-                                            Player Position
-                                        </label>
-                                        <select
-                                            id="playerPosition"
-                                            value={playerPosition}
-                                            onChange={(e) => setPlayerPosition(e.target.value)}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
-                                            required
-                                        >
-                                            <option value="">Select position</option>
-                                            <option value="forward">Forward</option>
-                                            <option value="midfielder">Midfielder</option>
-                                            <option value="defender">Defender</option>
-                                            <option value="goalkeeper">Goalkeeper</option>
-                                        </select>
-                                    </div>
+                            {/* Player Position */}
+                            <div>
+                                <label
+                                    htmlFor="playerPosition"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Player Position
+                                </label>
+                                <select
+                                    id="playerPosition"
+                                    value={playerPosition}
+                                    onChange={(e) => setPlayerPosition(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
+                                    required
+                                >
+                                    <option value="">Select position</option>
+                                    <option value="forward">Forward</option>
+                                    <option value="midfielder">Midfielder</option>
+                                    <option value="defender">Defender</option>
+                                    <option value="goalkeeper">Goalkeeper</option>
+                                </select>
+                            </div>
 
-                                    {/* player date of birth */}
-                                    <div>
-                                        <label
-                                            htmlFor="playerDateOfBirth"
-                                            className="block text-sm font-medium text-gray-700 mb-2"
-                                        >
-                                            Player Date of Birth
-                                        </label>
-                                        <input
-                                            id="playerDateOfBirth"
-                                            type="date"
-                                            value={playerDateOfBirth}
-                                            onChange={(e) => setPlayerDateOfBirth(e.target.value)}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
-                                            required
-                                        />
-                                    </div>
+                            {/* player date of birth */}
+                            <div>
+                                <label
+                                    htmlFor="playerDateOfBirth"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Player Date of Birth
+                                </label>
+                                <input
+                                    id="playerDateOfBirth"
+                                    type="date"
+                                    value={playerDateOfBirth}
+                                    onChange={(e) => setPlayerDateOfBirth(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
+                                    required
+                                />
+                            </div>
 
 
-                                    {/* Submit Button */}
-                                    <div className="text-center">
-                                        <button
-                                            type="submit"
-                                            className="px-6 py-3 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition duration-300"
-                                        >
-                                            Register Player
-                                        </button>
-                                    </div>
-                                </>
-                            )}
+                            {/* Submit Button */}
+                            <div className="text-center">
+                                <button
+                                    type="submit"
+                                    className="px-6 py-3 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition duration-300"
+                                >
+                                    Register Player
+                                </button>
+                            </div>
+                            {/* // )} */}
                             {/* Player Name */}
 
                         </form>
@@ -489,8 +582,8 @@ const TeamRegistrationForm = () => {
                     <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full transform transition-all duration-300 scale-100 opacity-100 max-h-[calc(100vh-2rem)] overflow-auto">
                         <div className="flex justify-between items-center mb-6">
                             <div className='flex flex-col'>
-                            <h2 className="text-3xl font-semibold text-gray-800">Register Team</h2>
-                            <p className='text-red-500'>{error}</p>
+                                <h2 className="text-3xl font-semibold text-gray-800">Register Team</h2>
+                                <p className='text-red-500'>{error}</p>
                             </div>
                             <button
                                 onClick={() => setIsModalOpen(false)}
