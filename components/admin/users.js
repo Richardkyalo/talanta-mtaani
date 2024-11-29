@@ -118,7 +118,7 @@ const EditRoleModal = ({ isOpen, onClose, user, onSubmit }) => {
   );
 };
 
-const UsersTable= () => {
+const UsersTable = () => {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -172,7 +172,7 @@ const UsersTable= () => {
       userId: updatedUser.id
     };
     const response = await userRoleService.asignRole(data);
-    console.log("this is data",data);
+    console.log("this is data", data);
     if (response) {
       refetch();
       const updatedUsers = users.map((user) => {
@@ -214,7 +214,7 @@ const UsersTable= () => {
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200 scrollbar-thumb-rounded-full scrollbar-track-rounded-lg shadow-md">
         <table className="min-w-full border-collapse border border-gray-200 bg-white text-sm">
           <thead>
             <tr className="bg-gray-100 text-left text-gray-600">
