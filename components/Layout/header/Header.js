@@ -154,7 +154,7 @@ const Header = () => {
                     <a href="/LiveScore" className={isActiveLink('/LiveScore')}>Live Score</a>
                     <a href="/PlayerStats" className={isActiveLink('/PlayerStats')}>Player Stats</a>
                     {hasCoachRole && (
-                       <a href="/TeamReg" className={isActiveLink('/TeamReg')}>Team Registration</a>
+                       <a href="/TeamRegistration" className={isActiveLink('/TeamReg')}>Team Registration</a>
                     )}
                     
                     <a href="/FanZone" className={isActiveLink('/FanZone')}>Fan Zone</a>

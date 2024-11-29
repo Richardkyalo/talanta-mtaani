@@ -166,25 +166,45 @@ const UsersTable = () => {
   };
 
   const handleSaveRole = async (updatedUser) => {
-    // console.log("catch here", updatedUser);
     const data = {
       roleId: updatedUser.role,
-      userId: updatedUser.id
+      userId: updatedUser.id,
     };
-    const response = await userRoleService.asignRole(data);
-    console.log("this is data", data);
-    if (response) {
-      refetch();
-      const updatedUsers = users.map((user) => {
-        if (user.id === updatedUser.id) {
-          return updatedUser;
+
+    try {
+      const response = await userRoleService.asignRole(data);
+
+      if (response) {
+        if (data.roleId === "507c7756-2e5b-43d7-a828-50f865e4c4e1") {
+          const refereeData = {
+            id: updatedUser.id,
+            name: updatedUser.username,
+            user_id: updatedUser.id,
+            ref_stats_id: updatedUser.id,
+          };
+
+          const createReferee = await userService.createReferee(refereeData);
+          if (!createReferee?.data?.id) {
+            console.error("Failed to create referee");
+            return;
+          }
         }
-        return user;
-      });
-      setUsers(updatedUsers);
+
+        refetch();
+
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === updatedUser.id ? updatedUser : user
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error assigning role:", error);
+    } finally {
+      handleCloseModal();
     }
-    handleCloseModal();
   };
+
 
   return (
     <div className="p-4">

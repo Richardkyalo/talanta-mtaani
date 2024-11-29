@@ -6,6 +6,7 @@ const api = axios.create({
 
 class UserService {
     userApi = '/api/v1/user';
+    refereeApi ="/api/referee"
 
     async checkIfUserExists(email) {
         try {
@@ -41,6 +42,24 @@ class UserService {
             return response.data;
         } catch (error) {
             console.error("Error in updateUser:", error);
+            throw error;
+        }
+    }
+    async createReferee(data) {
+        try {
+            const response = await api.post(`${this.refereeApi}/create`, data);
+            return response.data;
+        } catch (error) {
+            console.error("Error in createReferee:", error);
+            throw error;
+        }
+    }
+    async getReferees() {
+        try {
+            const response = await api.get(`${this.refereeApi}/getAll`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in getReferees:", error);
             throw error;
         }
     }

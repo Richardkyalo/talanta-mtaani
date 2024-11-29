@@ -55,7 +55,7 @@ const Matches = () => {
     }
   }, [teamData]);
 
-  const { data: matchData, refetch:matchRefetch } = useQuery({
+  const { data: matchData, refetch: matchRefetch } = useQuery({
     queryKey: ["matches"],
     queryFn: () => getAllMatches(),
     onSuccess: (data) => { },
@@ -145,7 +145,7 @@ const Matches = () => {
         team2_first_11_ids: [],
         team1_sub_ids: [],
         team2_sub_ids: [],
-        result_id: "b4f39e6d-8e24-4d7e-bc56-afa4e2a376ec",
+        result_id: null,
         referee_ids: [],
       });
       console.log(response);
@@ -202,7 +202,7 @@ const Matches = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto max-h-screen overflow-y-auto">
         <table className="min-w-full border-collapse border border-gray-200 bg-white text-sm">
           <thead>
             <tr className="bg-gray-100 text-left text-gray-600">
@@ -221,25 +221,34 @@ const Matches = () => {
                 className={`${index % 2 === 0 ? 'bg-gray-50' : ''} hover:bg-gray-100 transition-all`}
               >
                 <td className="border border-gray-200 text-black px-4 py-2">{index + 1}</td>
-                <td className="border border-gray-200 text-black px-4 py-2">
+                <td className="border border-gray-200 text-black px-4 py-2 min-w-[200px]">
                   {getTeamNameById(match.team1_id)} vs {getTeamNameById(match.team2_id)}
                 </td>
-                <td className="border border-gray-200 text-black px-4 py-2">
-                  {match.date} - {match.time}
+                <td className="border border-gray-200 text-black px-4 py-2 min-w-[300px]">
+                  {new Date(match.date).toLocaleDateString(undefined, {
+                    weekday: "long", // e.g., Monday
+                    year: "numeric", // e.g., 2024
+                    month: "long", // e.g., December
+                    day: "numeric", // e.g., 5
+                  })} - {new Date(match.date).toLocaleTimeString(undefined, {
+                    hour: "2-digit", // e.g., 09
+                    minute: "2-digit", // e.g., 26
+                    hour12: true, // e.g., AM/PM format
+                  })}
                 </td>
+
                 <td className="border border-gray-200 text-black px-4 py-2">{match.match_pool}</td>
                 <td className="border border-gray-200 text-black px-4 py-2">
                   <span
-                    className={`px-2 py-1 text-xs rounded-full ${match.status === "Scheduled"
-                      ? "bg-green-100 text-green-700"
-                      : match.status === "In Progress"
-                        ? "bg-orange-100 text-orange-700"
-                        : "bg-red-100 text-red-700"
+                    className={`px-2 py-1 text-xs rounded-full ${new Date(match.date) > new Date() // Compare match date with current date
+                      ? "bg-green-100 text-green-700" // Scheduled
+                      : "bg-red-100 text-red-700" // Ended
                       }`}
                   >
-                    {match.status}
+                    {new Date(match.date) > new Date() ? "Scheduled" : "Ended"}
                   </span>
                 </td>
+
                 <td className="border border-gray-200 px-4 py-2">
                   <div className="flex items-center gap-4">
                     <button

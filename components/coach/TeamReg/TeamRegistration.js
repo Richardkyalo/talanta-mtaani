@@ -11,6 +11,7 @@ import { playerService } from '../../../app/api/playerservice/playerService'
 import { MdDeleteForever } from "react-icons/md";
 import { registerUser } from '@/app/api/register/registerRoute';
 import { userRoleService } from '@/app/api/rbac/userRoleCreate';
+import { matchService } from '@/app/api/matches/matches'
 
 // import { error } from 'console';
 // import { userService } from '@/app/api/userService/userService';
@@ -18,6 +19,10 @@ import { userRoleService } from '@/app/api/rbac/userRoleCreate';
 const getTeamByCoachId = async (id) => {
     const response = await teamService.getTeamByCoachId(id);
     console.log(response)
+    return response || [];
+}
+const getTodaysMatches = async () => {
+    const response = await matchService.getTodayMatches();
     return response || [];
 }
 const getPlayersByTeamId = async (id) => {
@@ -92,10 +97,26 @@ const TeamRegistrationForm = () => {
     const [team, setTeam] = useState();
     const [error, setError] = useState('');
     const [playerError, setPlayerError] = useState('');
+    const [todaysMatches, setTodaysMatches] = useState([]);
+
 
     const handleFileUpload = (event) => {
         setTeamLogo(event.target.files[0]);
     };
+
+
+    const {data: todaysMatchesData} = useQuery({
+        queryKey: ['todaysMatches'],
+        queryFn: getTodaysMatches,
+        onSuccess: (data) => {}
+    })
+
+    useEffect(() => {
+        if (todaysMatchesData) {
+            setTodaysMatches(todaysMatchesData);
+        }
+    }, [todaysMatchesData]);
+
     const handleUsernameSearch = async (event) => {
         event.preventDefault();
         const usernameToSearch = teamPointOfContact;
@@ -350,7 +371,8 @@ const TeamRegistrationForm = () => {
 
     // console.log(coachExists)
     // console.log(pointofCexist)
-    console.log(players?.data)
+    // console.log(players?.data)
+    console.log("todays match",todaysMatches)
     return (
         <section className="bg-gray-100 mx-auto max-w-screen-lg px-6 py-12">
             {team?.length === 0 && (
