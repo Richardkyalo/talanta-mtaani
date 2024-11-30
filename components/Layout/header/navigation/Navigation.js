@@ -123,14 +123,14 @@ const Navigation = () => {
                                                     Manage Teams
                                                 </a>
                                             </li>
-                                            <li>
+                                            {/* <li>
                                                 <a
                                                     href="/admin/fixtures"
                                                     className="block px-4 py-2 text-sm font-semibold text-white hover:bg-gray-100 hover:text-gray-900 transition-colors"
                                                 >
                                                     Manage Fixtures
                                                 </a>
-                                            </li>
+                                            </li> */}
                                             <li>
                                                 <a
                                                     href="/admin/results"

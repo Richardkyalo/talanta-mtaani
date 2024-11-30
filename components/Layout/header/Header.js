@@ -182,7 +182,7 @@ const Header = () => {
                                     <a href="/admin/users" className="text-gray-700 hover:text-blue-500">Manage Users</a>
                                     <a href="/admin/Matches" className="text-gray-700 hover:text-blue-500">Manage Matches</a>
                                     <a href="/admin/teams" className="text-gray-700 hover:text-blue-500">Manage Teams</a>
-                                    <a href="/admin/fixtures" className="text-gray-700 hover:text-blue-500">Manage Fixtures</a>
+                                    {/* <a href="/admin/fixtures" className="text-gray-700 hover:text-blue-500">Manage Fixtures</a> */}
                                     <a href="/admin/results" className="text-gray-700 hover:text-blue-500">Manage Results</a>
                                 </div>
                             )}
