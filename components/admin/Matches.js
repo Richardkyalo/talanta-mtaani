@@ -8,6 +8,7 @@ import withAdminAccess from "../admin/HOC/adminCheck";
 import { teamService } from "@/app/api/teamservice/teamService";
 import { useQuery } from "@tanstack/react-query";
 import { matchService } from "@/app/api/matches/matches";
+import { match } from "assert";
 
 const getAllTeams = async () => {
   try {
@@ -48,7 +49,7 @@ const Matches = () => {
     queryFn: () => getAllTeams(),
     onSuccess: (data) => {
       setTeams(data);
-     },
+    },
   });
 
   useEffect(() => {
@@ -62,7 +63,7 @@ const Matches = () => {
     queryFn: () => getAllMatches(),
     onSuccess: (data) => {
       setMatches(data);
-     },
+    },
   });
 
   useEffect(() => {
@@ -139,11 +140,14 @@ const Matches = () => {
     //     id: Date.now()
     //   },
     // ];
+
     try {
+      const localDateTime = new Date(`${date}T${time}:00`);
+      const utcDateTime = new Date(localDateTime.toISOString());
       const response = await matchService.createMatch({
         team1_id: team1Id,
         team2_id: team2Id,
-        date: new Date(`${date}T${time}Z`).toISOString(),
+        date: utcDateTime.toISOString(),
         match_pool: venue,
         team1_first_11_ids: [],
         team2_first_11_ids: [],
@@ -173,8 +177,13 @@ const Matches = () => {
       console.error("Error creating match:", error);
     }
   };
+  const matchTimeInNairobi = new Date(matches[10].date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
+  const currentTimeInNairobi = new Date().toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
 
-  console.log(matches);
+  console.log('Match Timestamp for match:', getTeamNameById(matches[10].team1_id), "vs", getTeamNameById(matches[10].team2_id), "is", matchTimeInNairobi);
+  console.log('Current Timestamp:', currentTimeInNairobi);
+
+
   return (
     <div className="p-4">
       {/* Header */}
@@ -229,28 +238,32 @@ const Matches = () => {
                   {getTeamNameById(match.team1_id)} vs {getTeamNameById(match.team2_id)}
                 </td>
                 <td className="border border-gray-200 text-black px-4 py-2 min-w-[300px]">
-                  {new Date(match.date).toLocaleDateString(undefined, {
+                  {new Date(match.date).toLocaleDateString('en-US', {
                     weekday: "long", // e.g., Monday
                     year: "numeric", // e.g., 2024
                     month: "long", // e.g., December
                     day: "numeric", // e.g., 5
-                  })} - {new Date(match.date).toLocaleTimeString(undefined, {
+                    timeZone: "Africa/Nairobi", // Set the correct timezone for display
+                  })} - {new Date(match.date).toLocaleTimeString('en-US', {
                     hour: "2-digit", // e.g., 09
                     minute: "2-digit", // e.g., 26
-                    hour12: true, // e.g., AM/PM format
+                    hour12: true, // e.g., 24-hour format
+                    timeZone: "Africa/Nairobi", // Set the correct timezone for display
                   })}
                 </td>
+
 
                 <td className="border border-gray-200 text-black px-4 py-2">{match.match_pool}</td>
                 <td className="border border-gray-200 text-black px-4 py-2">
                   <span
-                    className={`px-2 py-1 text-xs rounded-full ${new Date(match.date) > new Date() // Compare match date with current date
+                    className={`px-2 py-1 text-xs rounded-full ${new Date(match.date).getTime() > new Date().getTime() // Compare exact time, including date
                       ? "bg-green-100 text-green-700" // Scheduled
                       : "bg-red-100 text-red-700" // Ended
                       }`}
                   >
-                    {new Date(match.date) > new Date() ? "Scheduled" : "Ended"}
+                    {new Date(match.date).getTime() > new Date().getTime() ? "Scheduled" : "Ended"}
                   </span>
+
                 </td>
 
                 <td className="border border-gray-200 px-4 py-2">

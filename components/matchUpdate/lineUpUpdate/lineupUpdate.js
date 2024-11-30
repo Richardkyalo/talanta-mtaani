@@ -24,7 +24,8 @@ const getTeamPlayers = async (teamId) => {
 
 const getReferees = async () => {
   const response = await userService.getReferees();
-  return response?.rows || [];
+  console.log(response)
+  return response?.data?.rows || [];
 };
 
 const LineupUpdatePage = () => {
@@ -38,7 +39,7 @@ const LineupUpdatePage = () => {
   const [team2First11, setTeam2First11] = useState([]);
   const [team1Substitutes, setTeam1Substitutes] = useState([]);
   const [team2Substitutes, setTeam2Substitutes] = useState([]);
-  const [selectedReferee, setSelectedReferee] = useState(null);
+  const [selectedReferee, setSelectedReferee] = useState([]);
   const [showTeam1Players, setShowTeam1Players] = useState(false);
   const [showTeam2Players, setShowTeam2Players] = useState(false);
   const [showTeam1Substitutes, setShowTeam1Substitutes] = useState(false);
@@ -51,6 +52,18 @@ const LineupUpdatePage = () => {
       console.error("Error fetching matches:", error);
     },
   });
+  const { data: refereesData } = useQuery({
+    queryKey: ["referees"],
+    queryFn: getReferees,
+    onError: (error) => {
+      console.error("Error fetching referees:", error);
+    }
+  })
+  useEffect(() => {
+    if (refereesData) {
+      setReferees(refereesData);
+    }
+  }, [refereesData]);
 
   useEffect(() => {
     if (todaysMatches) {
@@ -67,10 +80,10 @@ const LineupUpdatePage = () => {
         );
       });
   
-      // Sort by the earliest match date
+      // Sort by the most recent approaching match (closest match time)
       const imminentMatch = filteredMatches.sort(
-        (a, b) => new Date(a.date) - new Date(b.date)
-      )[0]; // Pick the first (earliest) match from the filtered list
+        (a, b) => new Date(b.date) - new Date(a.date) // Sort descending to get the latest match
+      )[0]; // Pick the first match (most recent approaching one)
   
       setSelectedMatch(imminentMatch || null);
     }
@@ -92,25 +105,70 @@ const LineupUpdatePage = () => {
       getTeamPlayers(selectedMatch.team2_id).then(setTeam2Players);
 
       // Fetch referees
-      getReferees().then(setReferees);
     }
   }, [selectedMatch]);
 
   const handleAddToFirst11 = (team, playerId) => {
     if (team === "team1") {
+      if (team1First11.includes(playerId)) {
+        alert("Player is already in First 11.");
+        return;
+      }
+  
+      if (team1First11.length >= 11) {
+        alert("You can only select 11 players for the First 11.");
+        return;
+      }
+  
       setTeam1First11((prev) => [...prev, playerId]);
+      setTeam1Substitutes((prev) => prev.filter((id) => id !== playerId)); // Remove from substitutes
     } else {
+      if (team2First11.includes(playerId)) {
+        alert("Player is already in First 11.");
+        return;
+      }
+  
+      if (team2First11.length >= 11) {
+        alert("You can only select 11 players for the First 11.");
+        return;
+      }
+  
       setTeam2First11((prev) => [...prev, playerId]);
+      setTeam2Substitutes((prev) => prev.filter((id) => id !== playerId)); // Remove from substitutes
     }
   };
+  
 
   const handleAddSubstitute = (team, playerId) => {
     if (team === "team1") {
+      if (team1Substitutes.includes(playerId)) {
+        alert("Player is already a substitute.");
+        return;
+      }
+  
+      if (team1Substitutes.length >= 6) {
+        alert("You can only select up to 6 substitutes.");
+        return;
+      }
+  
       setTeam1Substitutes((prev) => [...prev, playerId]);
+      setTeam1First11((prev) => prev.filter((id) => id !== playerId)); // Remove from First 11
     } else {
+      if (team2Substitutes.includes(playerId)) {
+        alert("Player is already a substitute.");
+        return;
+      }
+  
+      if (team2Substitutes.length >= 6) {
+        alert("You can only select up to 6 substitutes.");
+        return;
+      }
+  
       setTeam2Substitutes((prev) => [...prev, playerId]);
+      setTeam2First11((prev) => prev.filter((id) => id !== playerId)); // Remove from First 11
     }
   };
+  
 
   // const handleRemoveSubstitute = (team, playerId) => {
   //   if (team === "team1") {
@@ -120,9 +178,18 @@ const LineupUpdatePage = () => {
   //   }
   // };
 
-  const handleSelectReferee = (referee) => {
-    setSelectedReferee(referee);
+  const handleSelectReferee = (refereeId) => {
+    setSelectedReferee((prev) => {
+      console.log("Previous selection:", prev); // Debug
+      const alreadySelected = prev.includes(refereeId);
+      const newSelection = alreadySelected
+        ? prev.filter((id) => id !== refereeId)
+        : [...prev, refereeId];
+      console.log("New selection:", newSelection); // Debug
+      return newSelection;
+    });
   };
+
 
   const handleSubmit = () => {
     // Send team lineups and substitutes to the backend
@@ -135,6 +202,9 @@ const LineupUpdatePage = () => {
     });
     // Here you would send the data to your backend
   };
+
+  // console.log(referees);
+  console.log(selectedMatch);
 
   if (!selectedMatch) {
     return (
@@ -156,122 +226,178 @@ const LineupUpdatePage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {/* Team 1 Section */}
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Team 1: {team1Name}</h2>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
-            onClick={() => setShowTeam1Players(!showTeam1Players)}
-          >
-            {showTeam1Players ? "Hide Players" : "Add First 11"}
-          </button>
-          {showTeam1Players && (
-            <div>
-              <h3 className="text-md text-gray-600 font-medium mb-2">Select First 11:</h3>
-              {team1Players.map((player) => (
-                <div key={player.id} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    id={`team1-first11-${player.id}`}
-                    value={player.id}
-                    onChange={() => handleAddToFirst11("team1", player.id)}
-                    className="mr-2"
-                  />
-                  <label htmlFor={`team1-first11-${player.id}`} className="text-gray-600">{player.name}</label>
+        <div className="bg-purple-50 shadow-lg rounded-2xl p-6 border border-purple-200">
+          <h2 className="text-2xl font-extrabold text-purple-600 mb-4 flex items-center gap-2">
+            <span className="bg-purple-100 p-2 rounded-full">
+              🏅
+            </span>
+            Team 1: {team1Name}
+          </h2>
+          <div className="flex justify-between items-start gap-6">
+            <div className="flex flex-col">
+              <button
+                className="bg-gradient-to-r btn-sm from-pink-400 to-purple-400 text-white px-5 py-2 rounded-lg shadow-lg hover:from-purple-500 hover:to-pink-500 transition-all duration-300 mb-4 flex items-center gap-2"
+                onClick={() => setShowTeam1Players(!showTeam1Players)}
+              >
+                {showTeam1Players ? "🎭 Hide Players" : "🎉 Add First 11"}
+              </button>
+              {showTeam1Players && (
+                <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100 max-h-96 overflow-y-auto">
+                  <h3 className="text-lg text-purple-600 font-medium mb-3">Select First 11:</h3>
+                  {team1Players.map((player) => (
+                    <div key={player.id} className="flex items-center mb-3">
+                      <input
+                        type="checkbox"
+                        id={`team1-first11-${player.id}`}
+                        value={player.id}
+                        onChange={() => handleAddToFirst11("team1", player.id)}
+                        className="mr-3 accent-purple-500 scale-125"
+                      />
+                      <label
+                        htmlFor={`team1-first11-${player.id}`}
+                        className="text-gray-700 hover:text-purple-600 transition-colors duration-200"
+                      >
+                        {player.name}
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-          <button
-            className="bg-yellow-500 text-white px-4 py-2 rounded-md mt-4"
-            onClick={() => setShowTeam1Substitutes(!showTeam1Substitutes)}
-          >
-            {showTeam1Substitutes ? "Hide Substitutes" : "Add Substitutes"}
-          </button>
-          {showTeam1Substitutes && (
-            <div>
-              <h3 className="text-md text-gray-600 font-medium mb-2">Select Substitutes:</h3>
-              {team1Players.map((player) => (
-                <div key={player.id} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    id={`team1-substitute-${player.id}`}
-                    value={player.id}
-                    onChange={() => handleAddSubstitute("team1", player.id)}
-                    className="mr-2"
-                  />
-                  <label htmlFor={`team1-substitute-${player.id}`} className="text-gray-600">{player.name}</label>
+            <div className="flex flex-col">
+              <button
+                className="btn-sm bg-gradient-to-r from-yellow-300 to-orange-400 text-white px-5 py-2 rounded-lg shadow-lg hover:from-yellow-400 hover:to-orange-500 transition-all duration-300 flex items-center gap-2"
+                onClick={() => setShowTeam1Substitutes(!showTeam1Substitutes)}
+              >
+                {showTeam1Substitutes ? "⚽ Hide Substitutes" : "🚀 Add Substitutes"}
+              </button>
+              {showTeam1Substitutes && (
+                <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100 mt-4 max-h-96 overflow-y-auto">
+                  <h3 className="text-lg text-yellow-600 font-medium mb-3">Select Substitutes:</h3>
+                  {team1Players.map((player) => (
+                    <div key={player.id} className="flex items-center mb-3">
+                      <input
+                        type="checkbox"
+                        id={`team1-substitute-${player.id}`}
+                        value={player.id}
+                        onChange={() => handleAddSubstitute("team1", player.id)}
+                        className="mr-3 accent-yellow-500 scale-125"
+                      />
+                      <label
+                        htmlFor={`team1-substitute-${player.id}`}
+                        className="text-gray-700 hover:text-yellow-600 transition-colors duration-200"
+                      >
+                        {player.name}
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
+          </div>
         </div>
 
+
+
         {/* Team 2 Section */}
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Team 2: {team2Name}</h2>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
-            onClick={() => setShowTeam2Players(!showTeam2Players)}
-          >
-            {showTeam2Players ? "Hide Players" : "Add First 11"}
-          </button>
-          {showTeam2Players && (
-            <div>
-              <h3 className="text-md text-gray-600 font-medium mb-2">Select First 11:</h3>
-              {team2Players.map((player) => (
-                <div key={player.id} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    id={`team2-first11-${player.id}`}
-                    value={player.id}
-                    onChange={() => handleAddToFirst11("team2", player.id)}
-                    className="mr-2"
-                  />
-                  <label htmlFor={`team2-first11-${player.id}`} className="text-gray-600">{player.name}</label>
+        <div className="bg-pink-50 shadow-lg rounded-xl p-6 border border-pink-200">
+          <h2 className="text-2xl font-bold text-pink-600 mb-4">
+            <span className="bg-purple-100 p-2 rounded-full">
+              🏅
+            </span>
+            Team 2: {team2Name}</h2>
+          <div className="flex justify-between items-start gap-6">
+            <div className="flex flex-col">
+              <button
+                className="btn-sm bg-gradient-to-r from-blue-400 to-pink-500 text-white px-4 py-2 rounded-lg shadow-md hover:from-blue-500 hover:to-pink-600 transition-all duration-200 mt-4"
+                onClick={() => setShowTeam2Players(!showTeam2Players)}
+              >
+                {showTeam2Players ? "🎭 Hide Players" : "🎉 Add First 11"}
+              </button>
+              {showTeam2Players && (
+                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100 max-h-96 overflow-y-auto mt-4">
+                  <h3 className="text-lg text-pink-600 font-medium mb-3">Select First 11:</h3>
+                  {team2Players.map((player) => (
+                    <div key={player.id} className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        id={`team2-first11-${player.id}`}
+                        value={player.id}
+                        onChange={() => handleAddToFirst11("team2", player.id)}
+                        className="mr-3 accent-pink-500"
+                      />
+                      <label
+                        htmlFor={`team2-first11-${player.id}`}
+                        className="text-gray-700 hover:text-pink-600 transition-colors duration-200"
+                      >
+                        {player.name}
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-          <button
-            className="bg-yellow-500 text-white px-4 py-2 rounded-md mt-4"
-            onClick={() => setShowTeam2Substitutes(!showTeam2Substitutes)}
-          >
-            {showTeam2Substitutes ? "Hide Substitutes" : "Add Substitutes"}
-          </button>
-          {showTeam2Substitutes && (
-            <div>
-              <h3 className="text-md text-gray-600 font-medium mb-2">Select Substitutes:</h3>
-              {team2Players.map((player) => (
-                <div key={player.id} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    id={`team2-substitute-${player.id}`}
-                    value={player.id}
-                    onChange={() => handleAddSubstitute("team2", player.id)}
-                    className="mr-2"
-                  />
-                  <label htmlFor={`team2-substitute-${player.id}`} className="text-gray-600">{player.name}</label>
+
+            <div className="flex flex-col">
+              <button
+                className="btn-sm bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-4 py-2 rounded-lg shadow-md hover:from-yellow-500 hover:to-yellow-600 transition-all duration-200 mt-4"
+                onClick={() => setShowTeam2Substitutes(!showTeam2Substitutes)}
+              >
+                {showTeam2Substitutes ? "⚽ Hide Substitutes" : "🚀 Add Substitutes"}
+              </button>
+              {showTeam2Substitutes && (
+                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-100 mt-4 max-h-96 overflow-y-auto mt-4">
+                  <h3 className="text-lg text-yellow-600 font-medium mb-3">Select Substitutes:</h3>
+                  {team2Players.map((player) => (
+                    <div key={player.id} className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        id={`team2-substitute-${player.id}`}
+                        value={player.id}
+                        onChange={() => handleAddSubstitute("team2", player.id)}
+                        className="mr-3 accent-yellow-500"
+                      />
+                      <label
+                        htmlFor={`team2-substitute-${player.id}`}
+                        className="text-gray-700 hover:text-yellow-600 transition-colors duration-200"
+                      >
+                        {player.name}
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
+          </div>
         </div>
+
 
         {/* Referee Section */}
         <div className="bg-white shadow-md rounded-lg p-6">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Add Referee</h2>
           <div>
             {referees.map((referee) => (
-              <button
-                key={referee.id}
-                className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 mb-2"
-                onClick={() => handleSelectReferee(referee)}
-              >
-                {referee.name}
-              </button>
+              <div key={referee.id} className="flex items-center mb-3">
+                <input
+                  type="checkbox"
+                  id={`referee-${referee.id}`}
+                  value={referee.id}
+                  checked={selectedReferee.includes(referee.id)} // Bind state
+                  onChange={() => handleSelectReferee(referee.id)}
+                  className="mr-3 accent-green-500 scale-125"
+                />
+
+                <label
+                  htmlFor={`referee-${referee.id}`}
+                  className="text-gray-700 hover:text-green-600 transition-colors duration-200"
+                >
+                  {referee.name}
+                </label>
+              </div>
             ))}
           </div>
         </div>
+
       </div>
 
       <button
