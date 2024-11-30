@@ -30,6 +30,7 @@ const getAllMatches = async () => {
     throw error;
   }
 }
+
 const Matches = () => {
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState("");
@@ -164,11 +165,15 @@ const Matches = () => {
         // If editing an existing match, update it
         const matchToUpdateData = {
           type: "normal",
+          data: [
+            {
+              team1_id: team1Id,
+              team2_id: team2Id,
+              date: combinedDateTime.toISOString(),
+              match_pool: venue,
+            },
+          ],
           match_id: editingMatch.id,
-          team1_id: team1Id,
-          team2_id: team2Id,
-          date: combinedDateTime.toISOString(),
-          match_pool: venue,
           flag: false,
         };
 
@@ -196,6 +201,18 @@ const Matches = () => {
     }
   };
   
+  const handleDeleteMatch = async (id) => {
+    try {
+      const response = await matchService.deleteMatch(id);
+      if (response?.message === "Match deleted") {
+        alert("Match deleted successfully");
+        matchRefetch(); // Refetch the matches
+      }
+    } catch (error) {
+      console.error("Error deleting match:", error);
+    }
+  };
+
   const resetForm = () => {
     setTeam1Name("");
     setTeam2Name("");
@@ -336,6 +353,7 @@ const Matches = () => {
                       </div>
                     </button>
                     <button
+                      onClick={() => handleEditMatch(match)}
                       className="hover:bg-green-500 border border-green-500 text-green-500 hover:text-white px-2 py-1 rounded"
                     >
                       <div className="flex items-center md:gap-2">
@@ -344,6 +362,7 @@ const Matches = () => {
                       </div>
                     </button>
                     <button
+                      onClick={() => handleDeleteMatch(match.id)}
                       className="hover:bg-red-500 border border-red-500 text-red-500 hover:text-white px-2 py-1 rounded"
                     >
                       <div className="flex items-center md:gap-2">

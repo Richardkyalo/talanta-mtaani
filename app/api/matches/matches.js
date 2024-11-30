@@ -61,5 +61,14 @@ class MatchService {
             throw error;
         }
     }
+    async deleteMatch(id) {
+        try {
+            const response = await api.delete(`${this.matchApi}/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in deleteMatch:", error);
+            throw error;
+        }
+    }
 }
  export const matchService = new MatchService();

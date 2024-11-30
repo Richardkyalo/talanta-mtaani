@@ -25,7 +25,7 @@ const getTeamPlayers = async (teamId) => {
 
 const getReferees = async () => {
   const response = await userService.getReferees();
-  console.log(response)
+  // console.log(response)
   return response?.data?.rows || [];
 };
 
@@ -94,7 +94,7 @@ const LineupUpdatePage = () => {
 }, [todaysMatches]);
 
 
-  console.log(getTodaysMatches())
+  // console.log(getTodaysMatches())
   // console.log("selectedMatch",selectedMatch,"selectedMatch");
   useEffect(() => {
     if (selectedMatch) {
@@ -191,33 +191,67 @@ const LineupUpdatePage = () => {
       const newSelection = alreadySelected
         ? prev.filter((id) => id !== refereeId)
         : [...prev, refereeId];
-      console.log("New selection:", newSelection); // Debug
+      // console.log("New selection:", newSelection); // Debug
       return newSelection;
     });
   };
 
 
-  const handleSubmit = () => {
-    // Send team lineups and substitutes to the backend
-    console.log({
-      team1First11,
-      team2First11,
-      team1Substitutes,
-      team2Substitutes,
-      selectedReferee,
-    });
-    Promise.all([
-      matchService.updateMatch(selectedMatch.team1_id, team1First11, { flag: true, type: "team1_first_11_ids" }),
-      matchService.updateMatch(selectedMatch.team1_id, team1Substitutes, { flag: true, type: "team1_sub_ids" }),
-      matchService.updateMatch(selectedMatch.team2_id, team2First11, { flag: true, type: "team2_first_11_ids" }),
-      matchService.updateMatch(selectedMatch.team2_id, team2Substitutes, { flag: true, type: "team2_sub_ids" }),
-      matchService.updateMatch(selectedMatch.id, selectedReferee, { flag: true, type: "referee_ids" }),
-    ])
-    
-    // Here you would send the data to your backend
+  const handleSubmit = async () => {
+    const matchId = selectedMatch.id;
+    console.log("Refs:", selectedReferee);
+  
+    const updates = [
+      {
+        type: "referee_ids",
+        flag: false,
+        data: [selectedReferee],
+        match_id: matchId
+      },
+      {
+        type: "team1_first_11_ids",
+        flag: false,
+        data: team1First11,
+        match_id: matchId
+      },
+      {
+        type: "team2_first_11_ids",
+        flag: false,
+        data: team2First11,
+        match_id: matchId
+      },
+      {
+        type: "team1_sub_ids",
+        flag: false,
+        data: team1Substitutes,
+        match_id: matchId
+      },
+      {
+        type: "team2_sub_ids",
+        flag: false,
+        data: team2Substitutes,
+        match_id: matchId
+      }
+    ];
+  
+    try {
+      const results = await Promise.allSettled(
+        updates.map((update) => matchService.updateMatch(update))
+      );
+  
+      results.forEach((result, index) => {
+        if (result.status === "fulfilled") {
+          console.log(`Update ${updates[index].type} succeeded.`);
+        } else {
+          console.error(`Update ${updates[index].type} failed:`, result.reason);
+        }
+      });
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
   };
-
-  // console.log(referees);
+  
+  console.log(selectedReferee);
   // console.log();
 
   if (!selectedMatch) {
