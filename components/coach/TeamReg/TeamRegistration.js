@@ -108,7 +108,9 @@ const TeamRegistrationForm = () => {
     const {data: todaysMatchesData} = useQuery({
         queryKey: ['todaysMatches'],
         queryFn: getTodaysMatches,
-        onSuccess: (data) => {}
+        onSuccess: (data) => {
+            setTodaysMatches(data);
+        }
     })
 
     useEffect(() => {

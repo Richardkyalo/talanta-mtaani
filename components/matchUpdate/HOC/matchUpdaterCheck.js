@@ -1,71 +1,69 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // Adjust this for Next.js 13 or 14
-import { userRoleService } from "../../../app/api/rbac/userRoleCreate";
+import { userRoleService } from '../../../app/api/rbac/userRoleCreate';
 
-// Function to check if the user has the 'admin' role
+// Function to check if the user has the 'matchUpdater' role
 const getParticularRole = async (roleIds) => {
-  // Check if roleIds is an array before proceeding
   if (!Array.isArray(roleIds)) {
     console.error('Expected roleIds to be an array, but got:', roleIds);
     return false;
   }
 
-  // Loop through the array of roleIds and check for 'admin' role
-  const roles = await Promise.all(roleIds.map(async (roleId) => {
-    try {
-      const role = await userRoleService.getRoleById(roleId);
-      return role?.data?.data?.data?.name || ''; // Extract role name, fallback to empty string if undefined
-    } catch (error) {
-      console.error('Error fetching role by ID:', roleId, error);
-      return ''; // Return empty if error occurs
-    }
-  }));
+  const roles = await Promise.all(
+    roleIds.map(async (roleId) => {
+      try {
+        const role = await userRoleService.getRoleById(roleId);
+        return role?.data?.data?.data?.name || ''; // Extract role name, fallback to empty string if undefined
+      } catch (error) {
+        console.error('Error fetching role by ID:', roleId, error);
+        return ''; // Return empty if error occurs
+      }
+    })
+  );
 
-  // Check if any of the fetched roles is 'admin'
   return roles.includes('matchUpdater');
 };
 
 // HOC to restrict access based on the user's role
 const withMatchUpdaterAccess = (WrappedComponent) => {
-  const withMatchUpdaterComponent = (props) => {
-    const { data: session, status } = useSession(); // Use session from next-auth
-    const [isAdmin, setIsAdmin] = useState(false);
+  const WithMatchUpdaterComponent = (props) => {
+    const { data: session, status } = useSession();
+    const [hasAccess, setHasAccess] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-      if (status === 'loading') return; // Wait for the session data to load
+      if (status === 'loading') return; // Wait for session to load
 
       if (session) {
         const roleIds = session?.role_ids || []; // Extract roleIds from session
 
         const checkRole = async () => {
-          const hasAdminRole = await getParticularRole(roleIds);
-          if (hasAdminRole) {
-            setIsAdmin(true);
+          const hasMatchUpdaterRole = await getParticularRole(roleIds);
+          if (hasMatchUpdaterRole) {
+            setHasAccess(true);
           } else {
-            router.push('/'); // Redirect if not an admin
+            router.push('/'); // Redirect if not authorized
           }
         };
 
         checkRole();
       } else {
-        // Redirect to login page if session doesn't exist
-        router.push('/');
+        router.push('/'); // Redirect to login if session is not available
       }
-    }, [session, status, router]); // Depend on session and status
+    }, [session, status, router]);
 
-    if (status === 'loading' || !isAdmin) {
-      return null; // Optionally, show a loading spinner or something while checking roles
+    if (status === 'loading' || !hasAccess) {
+      return null; // Optionally render a loading spinner or placeholder
     }
 
     return <WrappedComponent {...props} />;
   };
 
-  // Set the display name for the HOC
-  withMatchUpdaterComponent.displayName = `withMatchUpdaterAccess(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+  // Set the display name for debugging
+  WithMatchUpdaterComponent.displayName = `withMatchUpdaterAccess(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
 
-  return withMatchUpdaterComponent;
+  return WithMatchUpdaterComponent;
 };
 
 export default withMatchUpdaterAccess;

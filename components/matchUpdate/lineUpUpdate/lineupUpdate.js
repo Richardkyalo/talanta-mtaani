@@ -112,13 +112,13 @@ const LineupUpdatePage = () => {
     }
   };
 
-  const handleRemoveSubstitute = (team, playerId) => {
-    if (team === "team1") {
-      setTeam1Substitutes((prev) => prev.filter((id) => id !== playerId));
-    } else {
-      setTeam2Substitutes((prev) => prev.filter((id) => id !== playerId));
-    }
-  };
+  // const handleRemoveSubstitute = (team, playerId) => {
+  //   if (team === "team1") {
+  //     setTeam1Substitutes((prev) => prev.filter((id) => id !== playerId));
+  //   } else {
+  //     setTeam2Substitutes((prev) => prev.filter((id) => id !== playerId));
+  //   }
+  // };
 
   const handleSelectReferee = (referee) => {
     setSelectedReferee(referee);
@@ -173,7 +173,7 @@ const LineupUpdatePage = () => {
                     type="checkbox"
                     id={`team1-first11-${player.id}`}
                     value={player.id}
-                    onChange={(e) => handleAddToFirst11("team1", player.id)}
+                    onChange={() => handleAddToFirst11("team1", player.id)}
                     className="mr-2"
                   />
                   <label htmlFor={`team1-first11-${player.id}`} className="text-gray-600">{player.name}</label>
@@ -196,7 +196,7 @@ const LineupUpdatePage = () => {
                     type="checkbox"
                     id={`team1-substitute-${player.id}`}
                     value={player.id}
-                    onChange={(e) => handleAddSubstitute("team1", player.id)}
+                    onChange={() => handleAddSubstitute("team1", player.id)}
                     className="mr-2"
                   />
                   <label htmlFor={`team1-substitute-${player.id}`} className="text-gray-600">{player.name}</label>
@@ -224,7 +224,7 @@ const LineupUpdatePage = () => {
                     type="checkbox"
                     id={`team2-first11-${player.id}`}
                     value={player.id}
-                    onChange={(e) => handleAddToFirst11("team2", player.id)}
+                    onChange={() => handleAddToFirst11("team2", player.id)}
                     className="mr-2"
                   />
                   <label htmlFor={`team2-first11-${player.id}`} className="text-gray-600">{player.name}</label>
@@ -247,7 +247,7 @@ const LineupUpdatePage = () => {
                     type="checkbox"
                     id={`team2-substitute-${player.id}`}
                     value={player.id}
-                    onChange={(e) => handleAddSubstitute("team2", player.id)}
+                    onChange={() => handleAddSubstitute("team2", player.id)}
                     className="mr-2"
                   />
                   <label htmlFor={`team2-substitute-${player.id}`} className="text-gray-600">{player.name}</label>

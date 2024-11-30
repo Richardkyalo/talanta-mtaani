@@ -41,12 +41,14 @@ const Matches = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [venue, setVenue] = useState("");
-  const [status, setStatus] = useState("Scheduled");
+  // const [status, setStatus] = useState("Scheduled");
 
   const { data: teamData } = useQuery({
     queryKey: ["teams"],
     queryFn: () => getAllTeams(),
-    onSuccess: (data) => { },
+    onSuccess: (data) => {
+      setTeams(data);
+     },
   });
 
   useEffect(() => {
@@ -58,7 +60,9 @@ const Matches = () => {
   const { data: matchData, refetch: matchRefetch } = useQuery({
     queryKey: ["matches"],
     queryFn: () => getAllMatches(),
-    onSuccess: (data) => { },
+    onSuccess: (data) => {
+      setMatches(data);
+     },
   });
 
   useEffect(() => {
@@ -119,22 +123,22 @@ const Matches = () => {
       return;
     }
 
-    const updatedMatches = [
-      ...matches,
-      {
-        team1_id: team1Id,
-        team2_id: team2Id,
-        date: new Date(`${date}T${time}Z`).toISOString(),
-        match_pool: venue,
-        team1_first_11_ids: [],
-        team2_first_11_ids: [],
-        team1_sub_ids: [],
-        team2_sub_ids: [],
-        result_id: "",
-        referee_ids: [],
-        id: Date.now()
-      },
-    ];
+    // const updatedMatches = [
+    //   ...matches,
+    //   {
+    //     team1_id: team1Id,
+    //     team2_id: team2Id,
+    //     date: new Date(`${date}T${time}Z`).toISOString(),
+    //     match_pool: venue,
+    //     team1_first_11_ids: [],
+    //     team2_first_11_ids: [],
+    //     team1_sub_ids: [],
+    //     team2_sub_ids: [],
+    //     result_id: "",
+    //     referee_ids: [],
+    //     id: Date.now()
+    //   },
+    // ];
     try {
       const response = await matchService.createMatch({
         team1_id: team1Id,
@@ -162,7 +166,7 @@ const Matches = () => {
         setDate("");
         setTime("");
         setVenue("");
-        setStatus("Scheduled");
+        // setStatus("Scheduled");
         setIsModalOpen(false);
       }
     } catch (error) {
