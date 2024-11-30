@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { teamService } from "@/app/api/teamservice/teamService";
 import { playerService } from "@/app/api/playerservice/playerService";
 import { userService } from "../../../app/api/userService/userService";
+import { type } from "os";
 
 const getTodaysMatches = async () => {
   const response = await matchService.getTodayMatches();
@@ -66,30 +67,35 @@ const LineupUpdatePage = () => {
   }, [refereesData]);
 
   useEffect(() => {
-    if (todaysMatches) {
-      // Filter out past matches and updated matches
-      const filteredMatches = todaysMatches.filter((match) => {
-        const matchTime = new Date(match.date);
-        return (
-          matchTime > new Date() && // Ensure the match is in the future
-          match.team1_first_11_ids.length === 0 && // No first 11 for team 1
-          match.team2_first_11_ids.length === 0 && // No first 11 for team 2
-          match.team1_sub_ids.length === 0 && // No subs for team 1
-          match.team2_sub_ids.length === 0 && // No subs for team 2
-          match.referee_ids.length === 0 // No referees assigned
-        );
-      });
-  
-      // Sort by the most recent approaching match (closest match time)
-      const imminentMatch = filteredMatches.sort(
-        (a, b) => new Date(b.date) - new Date(a.date) // Sort descending to get the latest match
-      )[0]; // Pick the first match (most recent approaching one)
-  
-      setSelectedMatch(imminentMatch || null);
-    }
-  }, [todaysMatches]);
-  
+  if (todaysMatches) {
+    // Filter out past matches and updated matches
+    const filteredMatches = todaysMatches.filter((match) => {
+      const matchTime = new Date(match.date);
+      return (
+        matchTime > new Date() && // Ensure the match is in the future
+        match.team1_first_11_ids.length === 0 && // No first 11 for team 1
+        match.team2_first_11_ids.length === 0 && // No first 11 for team 2
+        match.team1_sub_ids.length === 0 && // No subs for team 1
+        match.team2_sub_ids.length === 0 && // No subs for team 2
+        match.referee_ids.length === 0 // No referees assigned
+      );
+    });
 
+    // Convert match times to Nairobi time (EAT) and sort in ascending order
+    const imminentMatch = filteredMatches
+      .sort((a, b) => {
+        const matchTimeA = new Date(a.date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
+        const matchTimeB = new Date(b.date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
+        return new Date(matchTimeA) - new Date(matchTimeB); // Sort in ascending order (earliest match first)
+      })[0]; // Pick the first match (most recent approaching one)
+
+    setSelectedMatch(imminentMatch || null);
+  }
+}, [todaysMatches]);
+
+
+  console.log(getTodaysMatches())
+  // console.log("selectedMatch",selectedMatch,"selectedMatch");
   useEffect(() => {
     if (selectedMatch) {
       // Fetch team names
@@ -200,11 +206,19 @@ const LineupUpdatePage = () => {
       team2Substitutes,
       selectedReferee,
     });
+    Promise.all([
+      matchService.updateMatch(selectedMatch.team1_id, team1First11, { flag: true, type: "team1_first_11_ids" }),
+      matchService.updateMatch(selectedMatch.team1_id, team1Substitutes, { flag: true, type: "team1_sub_ids" }),
+      matchService.updateMatch(selectedMatch.team2_id, team2First11, { flag: true, type: "team2_first_11_ids" }),
+      matchService.updateMatch(selectedMatch.team2_id, team2Substitutes, { flag: true, type: "team2_sub_ids" }),
+      matchService.updateMatch(selectedMatch.id, selectedReferee, { flag: true, type: "referee_ids" }),
+    ])
+    
     // Here you would send the data to your backend
   };
 
   // console.log(referees);
-  console.log(selectedMatch);
+  // console.log();
 
   if (!selectedMatch) {
     return (
@@ -221,7 +235,7 @@ const LineupUpdatePage = () => {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Update Lineup for Match</h1>
       <h2 className="text-xl font-semibold text-gray-700 mb-4">Match Pool: {selectedMatch.match_pool}</h2>
       <h3 className="text-lg font-medium text-gray-600 mb-4">
-        Match Time: {new Date(selectedMatch.date).toLocaleString('en-US', { timeZone: 'UTC' })}
+        Match Time: {new Date(selectedMatch.date).toLocaleString('en-US', { timeZone: 'africa/nairobi' })}
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
@@ -250,6 +264,7 @@ const LineupUpdatePage = () => {
                         type="checkbox"
                         id={`team1-first11-${player.id}`}
                         value={player.id}
+                        disabled={team1First11.length >= 11} 
                         onChange={() => handleAddToFirst11("team1", player.id)}
                         className="mr-3 accent-purple-500 scale-125"
                       />
@@ -281,6 +296,7 @@ const LineupUpdatePage = () => {
                         id={`team1-substitute-${player.id}`}
                         value={player.id}
                         onChange={() => handleAddSubstitute("team1", player.id)}
+                        disabled={team1Substitutes.length >= 6}
                         className="mr-3 accent-yellow-500 scale-125"
                       />
                       <label
@@ -324,6 +340,7 @@ const LineupUpdatePage = () => {
                         id={`team2-first11-${player.id}`}
                         value={player.id}
                         onChange={() => handleAddToFirst11("team2", player.id)}
+                        disabled={team2First11.length >= 11}
                         className="mr-3 accent-pink-500"
                       />
                       <label
@@ -355,6 +372,7 @@ const LineupUpdatePage = () => {
                         id={`team2-substitute-${player.id}`}
                         value={player.id}
                         onChange={() => handleAddSubstitute("team2", player.id)}
+                        disabled={team2Substitutes.length >= 6}
                         className="mr-3 accent-yellow-500"
                       />
                       <label

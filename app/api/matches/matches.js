@@ -52,5 +52,14 @@ class MatchService {
             throw error;
         }
     }
+    async updateMatch(data) {
+        try {
+            const response = await api.put(`${this.matchApi}/update`, data);
+            return response.data;
+        } catch (error) {
+            console.error("Error in updateMatch:", error);
+            throw error;
+        }
+    }
 }
  export const matchService = new MatchService();

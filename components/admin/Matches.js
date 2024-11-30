@@ -9,6 +9,8 @@ import { teamService } from "@/app/api/teamservice/teamService";
 import { useQuery } from "@tanstack/react-query";
 import { matchService } from "@/app/api/matches/matches";
 import { match } from "assert";
+// import { match } from "assert";
+
 
 const getAllTeams = async () => {
   try {
@@ -33,15 +35,16 @@ const Matches = () => {
   const [error, setError] = useState("");
   const [teams, setTeams] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [editingMatch, setEditingMatch] = useState(null);
   // State for individual form fields
   const [team1Name, setTeam1Name] = useState("");
   const [team2Name, setTeam2Name] = useState("");
-  const [team1Id, setTeam1Id] = useState(null);
-  const [team2Id, setTeam2Id] = useState(null);
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [venue, setVenue] = useState("");
+  const [team1Id, setTeam1Id] = useState('');  // If editing, use the existing team1_id
+  const [team2Id, setTeam2Id] = useState('');  // Same for team2
+  const [date, setDate] = useState('');  // Format date as a string if editing
+  const [time, setTime] = useState('');  // Same for time
+  const [venue, setVenue] = useState('');  // Same for venue
+  
   // const [status, setStatus] = useState("Scheduled");
 
   const { data: teamData } = useQuery({
@@ -116,72 +119,127 @@ const Matches = () => {
     return team ? team.name : "";
   };
 
-  const handleAddMatch = async (event) => {
+  const handleAddOrUpdateMatch = async (event) => {
     event.preventDefault();
-    console.log("Form submitted");
+    
+    // Ensure both teams are selected before proceeding
     if (!team1Id || !team2Id || !date || !time || !venue) {
       setError("Please fill out all fields!");
       return;
     }
-
-    // const updatedMatches = [
-    //   ...matches,
-    //   {
-    //     team1_id: team1Id,
-    //     team2_id: team2Id,
-    //     date: new Date(`${date}T${time}Z`).toISOString(),
-    //     match_pool: venue,
-    //     team1_first_11_ids: [],
-    //     team2_first_11_ids: [],
-    //     team1_sub_ids: [],
-    //     team2_sub_ids: [],
-    //     result_id: "",
-    //     referee_ids: [],
-    //     id: Date.now()
-    //   },
-    // ];
-
+  
+    // console.log("Form submitted");
+    // console.log('team1Id:', team1Id);
+    // console.log('team2Id:', team2Id);
+    // console.log('date:', date);
+    // console.log('time:', time);
+    // console.log('venue:', venue);
+    // console.log("editingMatch", editingMatch);
+  
+    // Combine date and time into a Date object
+    const combinedDateTime = new Date(`${date}T${time}:00`);
+  
+    // Validate the date and time
+    if (isNaN(combinedDateTime)) {
+      setError("Invalid date or time.");
+      return;
+    }
+  
+    // Create match data for update or new match
+    const matchData = {
+      team1_id: team1Id,
+      team2_id: team2Id,
+      date: combinedDateTime.toISOString(),
+      match_pool: venue,
+      team1_first_11_ids: [],
+      team2_first_11_ids: [],
+      team1_sub_ids: [],
+      team2_sub_ids: [],
+      result_id: null,
+      referee_ids: [],
+    };
+  
     try {
-      const localDateTime = new Date(`${date}T${time}:00`);
-      const utcDateTime = new Date(localDateTime.toISOString());
-      const response = await matchService.createMatch({
-        team1_id: team1Id,
-        team2_id: team2Id,
-        date: utcDateTime.toISOString(),
-        match_pool: venue,
-        team1_first_11_ids: [],
-        team2_first_11_ids: [],
-        team1_sub_ids: [],
-        team2_sub_ids: [],
-        result_id: null,
-        referee_ids: [],
-      });
-      console.log(response);
-      if (response?.id) {
-        setIsModalOpen(false);
-        // setMatches(response);
-        alert("Match created successfully")
-        matchRefetch()
-        // Reset form
-        setTeam1Name("");
-        setTeam2Name("");
-        setTeam1Id(null);
-        setTeam2Id(null);
-        setDate("");
-        setTime("");
-        setVenue("");
-        // setStatus("Scheduled");
-        setIsModalOpen(false);
+      if (editingMatch) {
+        // If editing an existing match, update it
+        const matchToUpdateData = {
+          type: "normal",
+          match_id: editingMatch.id,
+          team1_id: team1Id,
+          team2_id: team2Id,
+          date: combinedDateTime.toISOString(),
+          match_pool: venue,
+          flag: false,
+        };
+
+        console.log(matchToUpdateData, "matchToUpdateData")
+  
+        const response = await matchService.updateMatch(matchToUpdateData);
+        if (response?.id) {
+          alert("Match updated successfully");
+          matchRefetch(); // Refetch the matches
+        }
+      } else {
+        // If adding a new match, create it
+        const response = await matchService.createMatch(matchData);
+        if (response?.id) {
+          alert("Match created successfully");
+          matchRefetch(); // Refetch the matches
+        }
       }
+  
+      // Close the modal and reset form
+      setIsModalOpen(false);
+      resetForm();
     } catch (error) {
-      console.error("Error creating match:", error);
+      console.error("Error handling match:", error);
     }
   };
-  const matchTimeInNairobi = new Date(matches[10].date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
-  const currentTimeInNairobi = new Date().toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
+  
+  const resetForm = () => {
+    setTeam1Name("");
+    setTeam2Name("");
+    setTeam1Id(null);
+    setTeam2Id(null);
+    setDate("");
+    setTime("");
+    setVenue("");
+    setEditingMatch(null); // Clear the editing state
+    setError(""); // Clear any error messages
+  };
+  
+  const handleEditMatch = (match) => {
+    // Set the match data in the state
+    setEditingMatch(match);
+  
+    // Pre-fill the form fields
+    setTeam1Name(getTeamNameById(match.team1_id));
+    setTeam2Name(getTeamNameById(match.team2_id));
+    setDate(new Date(match.date).toLocaleDateString("en-CA")); // Convert to YYYY-MM-DD format
+    setTime(new Date(match.date).toLocaleTimeString("en-GB").slice(0, 5)); // Convert to HH:mm format
+    setVenue(match.match_pool);
+  
+    // Open the modal
+    setIsModalOpen(true);
+  };
+  useEffect(() => {
+    if (team1Name) {
+      handleTeam1Blur();
+    }
+  }, [team1Name]);
+  
+  useEffect(() => {
+    if (team2Name) {
+      handleTeam2Blur();
+    }
+  }, [team2Name]);
+  
 
-  console.log('Match Timestamp for match:', getTeamNameById(matches[10].team1_id), "vs", getTeamNameById(matches[10].team2_id), "is", matchTimeInNairobi);
-  console.log('Current Timestamp:', currentTimeInNairobi);
+  const handleCacelModal = () => {
+    setIsModalOpen(false);
+    resetForm();
+  };
+
 
 
   return (
@@ -269,6 +327,7 @@ const Matches = () => {
                 <td className="border border-gray-200 px-4 py-2">
                   <div className="flex items-center gap-4">
                     <button
+                      onClick={() => handleEditMatch(match)}
                       className="hover:bg-blue-500 border border-blue-500 text-blue-500 hover:text-white px-2 py-1 rounded"
                     >
                       <div className="flex items-center md:gap-2">
@@ -302,11 +361,12 @@ const Matches = () => {
       </div>
 
       {/* Modal */}
+
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg w-96">
-            <form onSubmit={handleAddMatch}>
-              <h2 className="text-lg text-black font-bold mb-4">Add Match</h2>
+            <form onSubmit={handleAddOrUpdateMatch}>
+              <h2 className="text-lg text-black font-bold mb-4">{editingMatch ? "Edit Match" : "Add Match"}</h2>
               {error && <p className="text-red-500 mb-4">{error}</p>}
               <div className="space-y-4">
                 <input
@@ -359,25 +419,23 @@ const Matches = () => {
               </div>
               <div className="flex justify-end gap-2 mt-4">
                 <button
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => handleCacelModal()}
                   className="px-4 py-2 text-red-500 hover:text-white hover:bg-red-500 border border-red-500 rounded-md"
                 >
                   Cancel
                 </button>
-                {!error && (
-                  <button
-                    // onClick={handleAddMatch}
-                    type="submit"
-                    className="px-4 py-2 text-green-500 hover:text-white border border-green-500 hover:bg-green-500 rounded-md"
-                  >
-                    Add Match
-                  </button>
-                )}
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-green-500 hover:text-white border border-green-500 hover:bg-green-500 rounded-md"
+                >
+                  {editingMatch ? "Update Match" : "Add Match"}
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
     </div>
   );
 };
