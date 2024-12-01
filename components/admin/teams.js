@@ -5,7 +5,7 @@ import { CiEdit, CiSearch } from 'react-icons/ci';
 import { FaDownload } from 'react-icons/fa';
 import { teamService } from '../../app/api/teamservice/teamService'
 import withAdminAccess from "../admin/HOC/adminCheck";
-import { MdDeleteForever } from "react-icons/md";
+// import { MdDeleteForever } from "react-icons/md";
 
 // Fetch all teams
 const fetchTeams = async () => {
