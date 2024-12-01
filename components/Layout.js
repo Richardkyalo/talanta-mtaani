@@ -25,6 +25,7 @@ const Layout = ({ children }) => {
     return () => clearTimeout(timer); // Cleanup timeout on unmount
   }, [pathname]); // Re-run effect when pathname changes
 
+  
   return (
     <SessionProvider>
       {/* <InactivityHandler timeout={60*1000}/> */}
