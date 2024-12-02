@@ -17,53 +17,55 @@ const getRoleById = async (id) => {
 };
 
 const Header = () => {
-  const { data: session } = useSession();
-  const [open, setOpen] = useState(false);
-  const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
-  const [roles, setRoles] = useState([]);
-  const pathname = usePathname();
+    const { data: session } = useSession();
+    const [open, setOpen] = useState(false);
+    const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
+    const [roles, setRoles] = useState([]);
+    const pathname = usePathname();
 
-  const toggle = () => setOpen(!open);
-  const toggleAdminDropdown = () => setAdminDropdownOpen(!adminDropdownOpen);
+    const toggle = () => setOpen(!open);
+    const toggleAdminDropdown = () => setAdminDropdownOpen(!adminDropdownOpen);
 
-  const roleIds = session?.role_ids || [];
+    const roleIds = session?.role_ids || [];
 
-  // Fetch roles on mount or when `roleIds` changes
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const fetchedRoles = await Promise.all(
-          roleIds.map(async (roleId) => {
-            const response = await getRoleById(roleId);
-            // console.log("Response from getRoleById:", response); // Ensure you see the correct role data here
-            return {
-              id: roleId,
-              name: response?.data?.data?.data?.name || "Unknown Role",
-            };
-          })
-        );
-        // console.log("Fetched roles:", fetchedRoles); // Debug: Ensure this array has correct names
-        setRoles(fetchedRoles); // Update state with correct fetched roles
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-      }
-    };
-  
-    if (roleIds.length > 0) fetchRoles();
-  }, [roleIds]);
-  
+    // Fetch roles on mount or when `roleIds` changes
+    useEffect(() => {
+        const fetchRoles = async () => {
+            try {
+                const fetchedRoles = await Promise.all(
+                    roleIds.map(async (roleId) => {
+                        const response = await getRoleById(roleId);
+                        // console.log("Response from getRoleById:", response); // Ensure you see the correct role data here
+                        return {
+                            id: roleId,
+                            name: response?.data?.data?.data?.name || "Unknown Role",
+                        };
+                    })
+                );
+                // console.log("Fetched roles:", fetchedRoles); // Debug: Ensure this array has correct names
+                setRoles(fetchedRoles); // Update state with correct fetched roles
+            } catch (error) {
+                console.error("Error fetching roles:", error);
+            }
+        };
 
-  // Check if the user has the 'admin' role
-  const hasAdminRole = roles.some((role) => role.name === "admin");
-  const hasCoachRole = roles.some((role) => role.name === "coach");
+        if (roleIds.length > 0) fetchRoles();
+    }, [roleIds]);
 
-  const isActiveLink = (href) => (pathname === href ? "text-red-500" : "text-gray-700 hover:text-blue-500");
 
-//   console.log(roleIds);
+    // Check if the user has the 'admin' role
+    const hasAdminRole = roles.some((role) => role.name === "admin");
+    const hasCoachRole = roles.some((role) => role.name === "coach");
+    const hasMatchUpdaterRole = roles.some((role) => role.name === "matchUpdater");
+
+
+    const isActiveLink = (href) => (pathname === href ? "text-red-500" : "text-gray-700 hover:text-blue-500");
+
+    //   console.log(roleIds);
 
     return (
-        <header className={`${open ? 'absolute inset-0' : 'bg-white'} font-bold shadow-md p-4`}>
-            <div className="container mx-auto flex justify-between items-center">
+        <header className={`${open ? 'absolute inset-0' : 'bg-white'} border-t-4 border-red-500 font-bold shadow-md p-4`}>
+            <div className="container  mx-auto flex justify-between items-center">
                 {/* Logo */}
                 {!open && (
                     <div className="flex items-center">
@@ -154,12 +156,15 @@ const Header = () => {
                     <a href="/LiveScore" className={isActiveLink('/LiveScore')}>Live Score</a>
                     <a href="/PlayerStats" className={isActiveLink('/PlayerStats')}>Player Stats</a>
                     {hasCoachRole && (
-                       <a href="/TeamRegistration" className={isActiveLink('/TeamReg')}>Team Registration</a>
+                        <a href="/TeamRegistration" className={isActiveLink('/TeamReg')}>Team Registration</a>
                     )}
-                    
+
                     <a href="/FanZone" className={isActiveLink('/FanZone')}>Fan Zone</a>
                     <a href="/Highlights" className={isActiveLink('/Highlights')}>Highlights</a>
                     <a href="/blog" className={isActiveLink('/blog')}>Blog</a>
+                    {hasMatchUpdaterRole &&
+                        <a href="/lineup" className={`${isActiveLink('/AboutUs')}`}>Lineup</a>
+                    }
                     <a href="/ContactUs" className={isActiveLink('/ContactUs')}>Contact Us</a>
 
                     {/* Admin Dropdown */}
@@ -187,7 +192,7 @@ const Header = () => {
                                 </div>
                             )}
                         </div>
-                     )}
+                    )}
                     {!session ? (
                         <div className='flex flex-col space-y-4 p-8 w-full text-center'>
                             <a
@@ -197,10 +202,10 @@ const Header = () => {
                                 Login
                             </a>
                         </div>
-                    ):(
+                    ) : (
                         <div className='flex flex-col space-y-4 p-8 w-full text-center'>
                             <button
-                                onClick={()=>signOut()}
+                                onClick={() => signOut()}
                                 className="btn btn-sm w-full border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-500 hover:text-white"
                             >
                                 Logout

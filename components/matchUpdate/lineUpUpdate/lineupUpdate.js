@@ -67,31 +67,31 @@ const LineupUpdatePage = () => {
   }, [refereesData]);
 
   useEffect(() => {
-  if (todaysMatches) {
-    // Filter out past matches and updated matches
-    const filteredMatches = todaysMatches.filter((match) => {
-      const matchTime = new Date(match.date);
-      return (
-        matchTime > new Date() && // Ensure the match is in the future
-        match.team1_first_11_ids.length === 0 && // No first 11 for team 1
-        match.team2_first_11_ids.length === 0 && // No first 11 for team 2
-        match.team1_sub_ids.length === 0 && // No subs for team 1
-        match.team2_sub_ids.length === 0 && // No subs for team 2
-        match.referee_ids.length === 0 // No referees assigned
-      );
-    });
+    if (todaysMatches) {
+      // Filter out past matches and updated matches
+      const filteredMatches = todaysMatches.filter((match) => {
+        const matchTime = new Date(match.date);
+        return (
+          matchTime > new Date() && // Ensure the match is in the future
+          match.team1_first_11_ids.length === 0 && // No first 11 for team 1
+          match.team2_first_11_ids.length === 0 && // No first 11 for team 2
+          match.team1_sub_ids.length === 0 && // No subs for team 1
+          match.team2_sub_ids.length === 0 && // No subs for team 2
+          match.referee_ids.length === 0 // No referees assigned
+        );
+      });
 
-    // Convert match times to Nairobi time (EAT) and sort in ascending order
-    const imminentMatch = filteredMatches
-      .sort((a, b) => {
-        const matchTimeA = new Date(a.date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
-        const matchTimeB = new Date(b.date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
-        return new Date(matchTimeA) - new Date(matchTimeB); // Sort in ascending order (earliest match first)
-      })[0]; // Pick the first match (most recent approaching one)
+      // Convert match times to Nairobi time (EAT) and sort in ascending order
+      const imminentMatch = filteredMatches
+        .sort((a, b) => {
+          const matchTimeA = new Date(a.date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
+          const matchTimeB = new Date(b.date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
+          return new Date(matchTimeA) - new Date(matchTimeB); // Sort in ascending order (earliest match first)
+        })[0]; // Pick the first match (most recent approaching one)
 
-    setSelectedMatch(imminentMatch || null);
-  }
-}, [todaysMatches]);
+      setSelectedMatch(imminentMatch || null);
+    }
+  }, [todaysMatches]);
 
 
   // console.log(getTodaysMatches())
@@ -120,12 +120,12 @@ const LineupUpdatePage = () => {
         alert("Player is already in First 11.");
         return;
       }
-  
+
       if (team1First11.length >= 11) {
         alert("You can only select 11 players for the First 11.");
         return;
       }
-  
+
       setTeam1First11((prev) => [...prev, playerId]);
       setTeam1Substitutes((prev) => prev.filter((id) => id !== playerId)); // Remove from substitutes
     } else {
@@ -133,17 +133,17 @@ const LineupUpdatePage = () => {
         alert("Player is already in First 11.");
         return;
       }
-  
+
       if (team2First11.length >= 11) {
         alert("You can only select 11 players for the First 11.");
         return;
       }
-  
+
       setTeam2First11((prev) => [...prev, playerId]);
       setTeam2Substitutes((prev) => prev.filter((id) => id !== playerId)); // Remove from substitutes
     }
   };
-  
+
 
   const handleAddSubstitute = (team, playerId) => {
     if (team === "team1") {
@@ -151,12 +151,12 @@ const LineupUpdatePage = () => {
         alert("Player is already a substitute.");
         return;
       }
-  
+
       if (team1Substitutes.length >= 6) {
         alert("You can only select up to 6 substitutes.");
         return;
       }
-  
+
       setTeam1Substitutes((prev) => [...prev, playerId]);
       setTeam1First11((prev) => prev.filter((id) => id !== playerId)); // Remove from First 11
     } else {
@@ -164,17 +164,17 @@ const LineupUpdatePage = () => {
         alert("Player is already a substitute.");
         return;
       }
-  
+
       if (team2Substitutes.length >= 6) {
         alert("You can only select up to 6 substitutes.");
         return;
       }
-  
+
       setTeam2Substitutes((prev) => [...prev, playerId]);
       setTeam2First11((prev) => prev.filter((id) => id !== playerId)); // Remove from First 11
     }
   };
-  
+
 
   // const handleRemoveSubstitute = (team, playerId) => {
   //   if (team === "team1") {
@@ -200,12 +200,12 @@ const LineupUpdatePage = () => {
   const handleSubmit = async () => {
     const matchId = selectedMatch.id;
     console.log("Refs:", selectedReferee);
-  
+
     const updates = [
       {
         type: "referee_ids",
         flag: false,
-        data: [selectedReferee],
+        data: selectedReferee,
         match_id: matchId
       },
       {
@@ -233,24 +233,25 @@ const LineupUpdatePage = () => {
         match_id: matchId
       }
     ];
-  
-    try {
-      const results = await Promise.allSettled(
-        updates.map((update) => matchService.updateMatch(update))
-      );
-  
-      results.forEach((result, index) => {
-        if (result.status === "fulfilled") {
-          console.log(`Update ${updates[index].type} succeeded.`);
-        } else {
-          console.error(`Update ${updates[index].type} failed:`, result.reason);
-        }
-      });
-    } catch (err) {
-      console.error("Unexpected error:", err);
+
+    console.log("Updates:", JSON.stringify(updates));
+
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    for (const update of updates) {
+      try {
+        console.log(`Update ${update.type} started...`, update);
+        const result = await matchService.updateMatch(update);
+        console.log(`Update ${update.type} succeeded:`, result);
+      } catch (err) {
+        console.error(`Update ${update.type} failed:`, err);
+      }
+      await delay(100); // Wait 100ms before sending the next request
     }
+
+
   };
-  
+
   console.log(selectedReferee);
   // console.log();
 
@@ -266,7 +267,7 @@ const LineupUpdatePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Update Lineup for Match</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Update Lineup for <span className="text-purple-600">{team1Name}</span> vs <span className="text-pink-600">{team2Name}</span> Match</h1>
       <h2 className="text-xl font-semibold text-gray-700 mb-4">Match Pool: {selectedMatch.match_pool}</h2>
       <h3 className="text-lg font-medium text-gray-600 mb-4">
         Match Time: {new Date(selectedMatch.date).toLocaleString('en-US', { timeZone: 'africa/nairobi' })}
@@ -298,7 +299,7 @@ const LineupUpdatePage = () => {
                         type="checkbox"
                         id={`team1-first11-${player.id}`}
                         value={player.id}
-                        disabled={team1First11.length >= 11} 
+                        disabled={team1First11.length >= 11}
                         onChange={() => handleAddToFirst11("team1", player.id)}
                         className="mr-3 accent-purple-500 scale-125"
                       />
