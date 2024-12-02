@@ -4,7 +4,7 @@ import { RiTwitterXFill } from 'react-icons/ri';
 const Footer = () => {
     return (
 
-        <footer className="bg-indigo-500 text-white py-8">
+        <footer className="bg-[#157ebc] text-white py-8">
             <div className="container mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 px-4">
                 {/* About Tournament Column */}
                 <div>
