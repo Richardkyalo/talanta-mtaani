@@ -7,24 +7,24 @@ export default function PostMatchResult() {
   const [team2, setTeam2] = useState("");
   const [team1RedCards, setTeam1RedCards] = useState(0);
   const [team2RedCards, setTeam2RedCards] = useState(0);
-  const [team1YellowCards, setTeam1YellowCards] = useState(0);
-  const [team2YellowCards, setTeam2YellowCards] = useState(0);
+  const [team1YellowCards] = useState(0);
+  const [team2YellowCards] = useState(0);
   const [team1Goals, setTeam1Goals] = useState(0);
   const [team2Goals, setTeam2Goals] = useState(0);
   const [team1Penalties, setTeam1Penalties] = useState(0);
   const [team2Penalties, setTeam2Penalties] = useState(0);
 
-  const [team1Players, setTeam1Players] = useState([
+  const [team1Players] = useState([
     "Player 1", "Player 2", "Player 3", "Player 4", "Player 5"
   ]);
-  const [team2Players, setTeam2Players] = useState([
+  const [team2Players] = useState([
     "Player 6", "Player 7", "Player 8", "Player 9", "Player 10"
   ]);
   
   const [team1RedCardPlayers, setTeam1RedCardPlayers] = useState([]);
   const [team2RedCardPlayers, setTeam2RedCardPlayers] = useState([]);
-  const [team1YellowCardPlayers, setTeam1YellowCardPlayers] = useState([]);
-  const [team2YellowCardPlayers, setTeam2YellowCardPlayers] = useState([]);
+  const [team1YellowCardPlayers] = useState([]);
+  const [team2YellowCardPlayers] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,25 +60,6 @@ export default function PostMatchResult() {
     }
   };
 
-  const handleYellowCardSelection = (team, player) => {
-    if (team === "team1") {
-      if (team1YellowCardPlayers.includes(player)) {
-        setTeam1YellowCardPlayers(team1YellowCardPlayers.filter(p => p !== player));
-      } else {
-        if (team1YellowCardPlayers.length < team1YellowCards) {
-          setTeam1YellowCardPlayers([...team1YellowCardPlayers, player]);
-        }
-      }
-    } else {
-      if (team2YellowCardPlayers.includes(player)) {
-        setTeam2YellowCardPlayers(team2YellowCardPlayers.filter(p => p !== player));
-      } else {
-        if (team2YellowCardPlayers.length < team2YellowCards) {
-          setTeam2YellowCardPlayers([...team2YellowCardPlayers, player]);
-        }
-      }
-    }
-  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
