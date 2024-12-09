@@ -80,8 +80,8 @@ const Header = () => {
                     <a href="/Teams" className={isActiveLink('/Teams')}>Teams</a>
                     <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
-                    <a href="/Table" className={isActiveLink('/Table')}>League Table</a>
-                    <a href="/Highlights" className={isActiveLink('/Highlights')}>Highlights</a>
+                    {/* <a href="/Table" className={isActiveLink('/Table')}>League Table</a> */}
+                    <a href="/Highlights" className={isActiveLink('/Highlights')}>Gallery</a>
                     {/* <a href="/Blog" className={isActiveLink('/Blog')}>Blog</a> */}
                     <a href="/ContactUs" className={isActiveLink('/ContactUs')}>Contact Us</a>
                 </nav>
@@ -152,7 +152,7 @@ const Header = () => {
                     <a href="/Teams" className={isActiveLink('/Teams')}>Teams</a>
                     <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
-                    <a href="/Table" className={isActiveLink('/Table')}>League Table</a>
+                    {/* <a href="/Table" className={isActiveLink('/Table')}>League Table</a> */}
                     <a href="/LiveScore" className={isActiveLink('/LiveScore')}>Live Score</a>
                     <a href="/PlayerStats" className={isActiveLink('/PlayerStats')}>Player Stats</a>
                     {hasCoachRole && (
@@ -160,7 +160,7 @@ const Header = () => {
                     )}
 
                     <a href="/FanZone" className={isActiveLink('/FanZone')}>Fan Zone</a>
-                    <a href="/Highlights" className={isActiveLink('/Highlights')}>Highlights</a>
+                    <a href="/Highlights" className={isActiveLink('/Highlights')}>Gallery</a>
                     <a href="/blog" className={isActiveLink('/blog')}>Blog</a>
                     {hasMatchUpdaterRole &&
                         <a href="/lineup" className={`${isActiveLink('/AboutUs')}`}>Lineup</a>
