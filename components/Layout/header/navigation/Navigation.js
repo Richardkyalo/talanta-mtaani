@@ -81,7 +81,7 @@ const Navigation = () => {
                             <a href="/lineup" className={`text-white ${isActive('/AboutUs')}`}>LINEUP</a>
                         }
                         <a href="/blog" className={`text-white ${isActive('/blog')}`}>BLOG</a>
-                        <a href="/PostResult" className={`text-white ${isActive('/ContactUs')}`}>RESULT POST</a>
+                        <a href="/PostResult" className={`text-white ${isActive('/PostResult')}`}>RESULT POST</a>
 
                         {/* Admin Dropdown */}
                         {hasAdminRole && (

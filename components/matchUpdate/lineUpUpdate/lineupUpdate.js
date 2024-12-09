@@ -69,7 +69,7 @@ const LineupUpdatePage = () => {
   useEffect(() => {
     if (todaysMatches) {
       // Filter out past matches and updated matches
-      const filteredMatches = todaysMatches.filter((match) => {
+      const filteredMatches = Array.isArray(todaysMatches) && todaysMatches.filter((match) => {
         const matchTime = new Date(match.date);
         return (
           matchTime > new Date() && // Ensure the match is in the future
@@ -82,8 +82,7 @@ const LineupUpdatePage = () => {
       });
 
       // Convert match times to Nairobi time (EAT) and sort in ascending order
-      const imminentMatch = filteredMatches
-        .sort((a, b) => {
+      const imminentMatch = Array.isArray(filteredMatches) && filteredMatches.sort((a, b) => {
           const matchTimeA = new Date(a.date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
           const matchTimeB = new Date(b.date).toLocaleString('en-US', { timeZone: 'Africa/Nairobi' });
           return new Date(matchTimeA) - new Date(matchTimeB); // Sort in ascending order (earliest match first)

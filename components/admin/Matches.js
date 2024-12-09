@@ -8,6 +8,8 @@ import withAdminAccess from "../admin/HOC/adminCheck";
 import { teamService } from "@/app/api/teamservice/teamService";
 import { useQuery } from "@tanstack/react-query";
 import { matchService } from "@/app/api/matches/matches";
+import { MdUpdate } from "react-icons/md";
+
 // import { match } from "assert";
 // import { match } from "assert";
 
@@ -371,7 +373,15 @@ const Matches = () => {
                         Cancel
                       </div>
                     </button>
-
+                    <button
+                      onClick={() => handleDeleteMatch(match.id)} 
+                      className="hover:bg-red-500 border border-red-500 text-red-500 hover:text-white px-2 py-1 rounded"
+                    >
+                      <div className="flex items-center md:gap-2">
+                        <MdUpdate />
+                        Update Result
+                      </div>
+                    </button>
                   </div>
                 </td>
               </tr>
