@@ -15,7 +15,7 @@ import { matchService } from "@/app/api/matches/matches";
 const getAllTeams = async () => {
   try {
     const response = await teamService.getAllTeams();
-    return response;
+    return response || [];
   } catch (error) {
     console.error("Error in getAllTeams:", error);
     throw error;
@@ -24,7 +24,7 @@ const getAllTeams = async () => {
 const getAllMatches = async () => {
   try {
     const response = await matchService.getAllMatches();
-    return response;
+    return response || [];
   } catch (error) {
     console.error("Error in getAllMatches:", error);
     throw error;
@@ -72,7 +72,7 @@ const Matches = () => {
 
   useEffect(() => {
     if (matchData) {
-      setMatches(matchData);
+      setMatches(matchData || []);
     }
   }, [matchData]);
 
@@ -303,7 +303,8 @@ const Matches = () => {
             </tr>
           </thead>
           <tbody>
-            {matches.map((match, index) => (
+            { Array.isArray(matches) && 
+            matches.map((match, index) => (
               <tr
                 key={match.id}
                 className={`${index % 2 === 0 ? 'bg-gray-50' : ''} hover:bg-gray-100 transition-all`}

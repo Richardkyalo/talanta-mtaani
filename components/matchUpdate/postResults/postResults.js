@@ -82,7 +82,7 @@ export default function PostMatchResult() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Post Match Result</h1>
+      <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">Post Match Result</h1>
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Team Selection */}
         <div className="flex justify-between space-x-6">
@@ -110,7 +110,7 @@ export default function PostMatchResult() {
 
         {/* Red Cards */}
         <div>
-          <h2 className="text-xl font-semibold mb-2">Red Cards</h2>
+          <h2 className="text-xl font-semibold text-gray-600 mb-2">Red Cards</h2>
           <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700">Team 1 Red Cards</label>
@@ -168,13 +168,13 @@ export default function PostMatchResult() {
 
         {/* Yellow Cards */}
         <div>
-          <h2 className="text-xl font-semibold mb-2">Yellow Cards</h2>
+          <h2 className="text-xl font-semibold text-gray-600 mb-2">Yellow Cards</h2>
           {/* Similar structure for yellow cards */}
         </div>
 
         {/* Goals and Penalties */}
         <div>
-          <h2 className="text-xl font-semibold mb-2">Goals and Penalties</h2>
+          <h2 className="text-xl font-semibold text-gray-600 mb-2">Goals and Penalties</h2>
           <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700">Team 1 Goals</label>
