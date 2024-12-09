@@ -14,20 +14,29 @@ export default function Highlights() {
     async function fetchHighlights() {
       try {
         const response = await fetch("/api/previousnonpublishedhighlights");
+  
         if (!response.ok) {
-          throw new Error("Failed to fetch highlights");
+          throw new Error(`Failed to fetch highlights. Status: ${response.status}`);
         }
+  
         const data = await response.json();
-        setHighlights(data);
+  
+        if (data && data.images && data.videos) {
+          setHighlights(data);
+        } else {
+          throw new Error("Invalid data structure received from API.");
+        }
       } catch (err) {
-        setError(err.message);
+        setError(err instanceof Error ? err.message : "Unknown error occurred");
+        console.error("Error fetching highlights:", err);
       } finally {
         setLoading(false);
       }
     }
-
+  
     fetchHighlights();
   }, []);
+  
 
   const openImage = (image) => {
     setSelectedImage(image); // Set the selected image
@@ -45,12 +54,15 @@ export default function Highlights() {
     return <div className="text-center mt-10 text-red-600 text-lg">Error: {error}</div>;
   }
 
-  // Group highlights by year
+  // Group highlights by year (images only for now)
   const groupedImages = highlights.images.reduce((acc, item) => {
     if (!acc[item.year]) acc[item.year] = [];
     acc[item.year].push(item);
     return acc;
   }, {});
+
+  // Log the grouped images to check their structure
+//   console.log("Grouped images:", groupedImages);
 
   return (
     <div className="max-w-7xl mx-auto p-6">
@@ -58,22 +70,26 @@ export default function Highlights() {
 
       <div className="mb-10">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Images</h2>
-        {Object.keys(groupedImages).map((year) => (
-          <div key={year} className="mb-8">
-            <h3 className="text-xl font-medium text-gray-700 mb-3">{year}</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {groupedImages[year].map((image) => (
-                <img
-                  key={image.url}
-                  src={image.url}
-                  alt={image.file}
-                  className="w-full h-40 object-cover rounded-lg shadow hover:scale-105 transition-transform cursor-pointer"
-                  onClick={() => openImage(image)} // Open modal on click
-                />
-              ))}
+        {Object.keys(groupedImages).length === 0 ? (
+          <div className="text-center text-lg text-gray-600">No images available.</div>
+        ) : (
+          Object.keys(groupedImages).map((year) => (
+            <div key={year} className="mb-8">
+              <h3 className="text-xl font-medium text-gray-700 mb-3">{year}</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {groupedImages[year].map((image) => (
+                  <img
+                    key={image.url}
+                    src={image.url}
+                    alt={image.file}
+                    className="w-full h-40 object-cover rounded-lg shadow hover:scale-105 transition-transform cursor-pointer"
+                    onClick={() => openImage(image)} // Open modal on click
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {selectedImage && (
