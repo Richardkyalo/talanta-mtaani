@@ -33,15 +33,12 @@ export default function PostMatchResult({ matchData }: { matchData?: MatchData }
   const [team2RedCardPlayers, setTeam2RedCardPlayers] = useState<string[]>([]);
   const [team1YellowCardPlayers, setTeam1YellowCardPlayers] = useState<string[]>([]);
   const [team2YellowCardPlayers, setTeam2YellowCardPlayers] = useState<string[]>([]);
-
-  const [team1Name, setTeam1Name] = useState("");
-  const [team2Name, setTeam2Name] = useState("");
-
-  
+  const [team1Name, setTeam1Name] = useState('');
+  const [team2Name, setTeam2Name] = useState('');
 
   const searchParams = useSearchParams();
   const data = searchParams.get('data');
-  const match = data ? JSON.parse(decodeURIComponent(data)) : matchData; // Use matchData prop if available
+  const match = data ? JSON.parse(decodeURIComponent(data)) : matchData;
 
   useEffect(() => {
     if (!match) {
@@ -49,56 +46,40 @@ export default function PostMatchResult({ matchData }: { matchData?: MatchData }
       return;
     }
 
-    const fetchPlayers = async (playerIds: string[]): Promise<Player[]> => {
+    const fetchTeamsAndPlayers = async () => {
       try {
-        // console.log('Fetching players for IDs:', playerIds);
-    
-        // Use Promise.all to fetch players concurrently for all IDs
-        const responses = await Promise.all(
-          playerIds.map((id) => playerService.getPlayerById(id))
-        );
-    
-        // Extract data from all responses
-        const players = responses
-          .map((response) => response.data)
-          .filter((data) => data); // Ensure we filter out any invalid responses
-    
-        // console.log('Fetched player data:', players);
-    
-        // If players array is not empty, return the data
-        if (players.length > 0) {
-          return players;
-        } else {
-          console.error('Failed to fetch players or no valid data returned');
-          return [];
-        }
+        // Fetch team names
+        const [team1, team2] = await Promise.all([
+          getTeamById(match.team1_id),
+          getTeamById(match.team2_id),
+        ]);
+        setTeam1Name(team1.name || '');
+        setTeam2Name(team2.name || '');
+
+        // Fetch players
+        const fetchPlayers = async (playerIds: string[]): Promise<Player[]> => {
+          const responses = await Promise.all(
+            playerIds.map((id) => playerService.getPlayerById(id))
+          );
+          return responses.map((response) => response.data).filter(Boolean);
+        };
+
+        const team1PlayerIds = [...match.team1_first_11_ids];
+        const team2PlayerIds = [...match.team2_first_11_ids];
+
+        const [team1Players, team2Players] = await Promise.all([
+          fetchPlayers(team1PlayerIds),
+          fetchPlayers(team2PlayerIds),
+        ]);
+
+        setTeam1Players(team1Players);
+        setTeam2Players(team2Players);
       } catch (error) {
-        console.error('Error fetching players:', error);
-        return [];
+        console.error('Error fetching data:', error);
       }
     };
-    
 
-    const fetchTeamPlayers = async () => {
-      try {
-        // Concatenate the first 11 players and substitutes for each team
-        const team1PlayerIds = [...match.team1_first_11_ids, ...match.team1_sub_ids];
-        const team2PlayerIds = [...match.team2_first_11_ids, ...match.team2_sub_ids];
-    
-        // Fetch players concurrently for both teams
-        const team1 = await fetchPlayers(team1PlayerIds);
-        const team2 = await fetchPlayers(team2PlayerIds);
-    
-        // Update the state with the fetched players
-        setTeam1Players(team1);
-        setTeam2Players(team2);
-      } catch (error) {
-        console.error('Error fetching team players:', error);
-      }
-    };
-    
-
-    fetchTeamPlayers();
+    fetchTeamsAndPlayers();
   }, [match]);
 
   const togglePlayerSelection = (
@@ -118,17 +99,17 @@ export default function PostMatchResult({ matchData }: { matchData?: MatchData }
         ? category === 'goals'
           ? team1GoalScorers
           : category === 'penalties'
-            ? team1PenaltyScorers
-            : category === 'red'
-              ? team1RedCardPlayers
-              : team1YellowCardPlayers
+          ? team1PenaltyScorers
+          : category === 'red'
+          ? team1RedCardPlayers
+          : team1YellowCardPlayers
         : category === 'goals'
-          ? team2GoalScorers
-          : category === 'penalties'
-            ? team2PenaltyScorers
-            : category === 'red'
-              ? team2RedCardPlayers
-              : team2YellowCardPlayers;
+        ? team2GoalScorers
+        : category === 'penalties'
+        ? team2PenaltyScorers
+        : category === 'red'
+        ? team2RedCardPlayers
+        : team2YellowCardPlayers;
 
     if (selectedPlayers.includes(playerId)) {
       setFunctionMap[category](selectedPlayers.filter((id) => id !== playerId));
@@ -137,74 +118,31 @@ export default function PostMatchResult({ matchData }: { matchData?: MatchData }
     }
   };
 
-  // console.log(match)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const resultData = [
-      {
-        type: 'team1_penalties',
-        matchStat_id: match?.id,
-        data: team1PenaltyScorers,
-        flag: false,
-      },
-      {
-        type: 'team2_penalties',
-        matchStat_id: match?.id,
-        data: team2PenaltyScorers,
-        flag: false,
-      },  
-      {
-        type: 'team1_id_goals',
-        matchStat_id: match?.id,
-        data: team1GoalScorers,
-        flag: false,
-      },
-      {
-        type: 'team2_id_goals',
-        matchStat_id: match?.id,
-        data: team2GoalScorers,
-        flag: false,  
-      },
-      {
-        type: 'team1_yellow_cards',
-        matchStat_id: match?.id,
-        data: team1YellowCardPlayers,
-        flag: false,
-      },
-      {
-        type: 'team2_yellow_cards',
-        matchStat_id: match?.id,
-        data: team2YellowCardPlayers,
-        flag: false,
-      },
-      {
-        type: 'team1_red_cards',
-        matchStat_id: match?.id,
-        data: team1RedCardPlayers,
-        flag: false,
-      },
-      {
-        type: 'team2_red_cards',
-        matchStat_id: match?.id,
-        data: team2RedCardPlayers,
-        flag: false,
-      }
+      { type: 'team1_penalties', matchStat_id: match?.id, data: team1PenaltyScorers, flag: false },
+      { type: 'team2_penalties', matchStat_id: match?.id, data: team2PenaltyScorers, flag: false },
+      { type: 'team1_id_goals', matchStat_id: match?.id, data: team1GoalScorers, flag: false },
+      { type: 'team2_id_goals', matchStat_id: match?.id, data: team2GoalScorers, flag: false },
+      { type: 'team1_yellow_cards', matchStat_id: match?.id, data: team1YellowCardPlayers, flag: false },
+      { type: 'team2_yellow_cards', matchStat_id: match?.id, data: team2YellowCardPlayers, flag: false },
+      { type: 'team1_red_cards', matchStat_id: match?.id, data: team1RedCardPlayers, flag: false },
+      { type: 'team2_red_cards', matchStat_id: match?.id, data: team2RedCardPlayers, flag: false },
     ];
-  
-    const delay = (ms: number | undefined) => new Promise((resolve) => setTimeout(resolve, ms));
-  
+
+    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
     try {
       for (const update of resultData) {
         console.log(`Update ${update.type} started...`, update);
         await matchService.updateMatchStat(update);
         console.log(`Update ${update.type} succeeded`);
-        await delay(100); // Wait 100ms before sending the next request
+        await delay(100);
       }
-      // Display success alert
-      alert("Match result successfully updated!");
-  
-      // Reset selections
+
+      alert('Match result successfully updated!');
       setTeam1GoalScorers([]);
       setTeam2GoalScorers([]);
       setTeam1PenaltyScorers([]);
@@ -214,11 +152,10 @@ export default function PostMatchResult({ matchData }: { matchData?: MatchData }
       setTeam1YellowCardPlayers([]);
       setTeam2YellowCardPlayers([]);
     } catch (err) {
-      console.error("Error updating match results:", err);
-      alert("An error occurred while updating the match results. Please try again.");
+      console.error('Error updating match results:', err);
+      alert('An error occurred while updating the match results. Please try again.');
     }
   };
-  
 
   if (!match) {
     return <div>Invalid match data</div>;
