@@ -15,14 +15,9 @@ interface Player {
   name: string;
 }
 
-interface MatchData {
-  team1_id: string;
-  team2_id: string;
-  team1_first_11_ids: string[];
-  team2_first_11_ids: string[];
-}
 
-export default function PostMatchResult({ matchData }: { matchData?: MatchData }) {
+
+export default function PostMatchResult() {
   const [team1Players, setTeam1Players] = useState<Player[]>([]);
   const [team2Players, setTeam2Players] = useState<Player[]>([]);
   const [team1GoalScorers, setTeam1GoalScorers] = useState<string[]>([]);
@@ -38,7 +33,7 @@ export default function PostMatchResult({ matchData }: { matchData?: MatchData }
 
   const searchParams = useSearchParams();
   const data = searchParams.get('data');
-  const match = data ? JSON.parse(decodeURIComponent(data)) : matchData;
+  const match = data ? JSON.parse(decodeURIComponent(data)) : {};
 
   useEffect(() => {
     if (!match) {
