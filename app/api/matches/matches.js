@@ -44,6 +44,15 @@ class MatchService {
             throw error;
         }
     }
+    async getMatchesByDate (date) {
+        try {
+            const response = await api.post(`${this.matchApi}/getMatches/By/specific/date`, date);
+            return response.data;
+        } catch (error) {
+            console.error("Error in getMatchesByDate:", error);
+            throw error;
+        }
+    }
     async getPoolMatches() {
         try {
             const response = await api.get(`${this.matchApi}/getPoolMatches/`);
