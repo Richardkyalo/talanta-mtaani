@@ -161,19 +161,19 @@ export default function PostMatchResult({ matchData }: { matchData?: MatchData }
     return <div>Invalid match data</div>;
   }
 
-  useEffect (() => {
-    const fetchTeams = async () => {
-      try {
-        const team1 = await getTeamById(match?.team1_id || '');
-        const team2 = await getTeamById(match?.team2_id || '');
-        setTeam1Name(team1.name);
-        setTeam2Name(team2.name);
-      } catch (error) {
-        console.error('Error fetching teams:', error);
-      }
-    };
-    fetchTeams();
-  }, [match?.team1_id, match?.team2_id]);
+  // useEffect (() => {
+  //   const fetchTeams = async () => {
+  //     try {
+  //       const team1 = await getTeamById(match?.team1_id || '');
+  //       const team2 = await getTeamById(match?.team2_id || '');
+  //       setTeam1Name(team1.name);
+  //       setTeam2Name(team2.name);
+  //     } catch (error) {
+  //       console.error('Error fetching teams:', error);
+  //     }
+  //   };
+  //   fetchTeams();
+  // }, [match?.team1_id, match?.team2_id]);
 
 
   return (
