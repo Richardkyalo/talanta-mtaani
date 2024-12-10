@@ -7,6 +7,7 @@ const api = axios.create({
 class MatchService {
 
     matchApi = "/api/match";
+    matchStatApi = "/api/v1/matchStats";
     async createMatch(data) {
         try {
             const response = await api.post(`${this.matchApi}/create`, data);
@@ -67,6 +68,24 @@ class MatchService {
             return response.data;
         } catch (error) {
             console.error("Error in deleteMatch:", error);
+            throw error;
+        }
+    }
+    async createMatchStats(data) {
+        try {
+            const response = await api.post(`${this.matchStatApi}/create`, data);
+            return response.data;
+        } catch (error) {
+            console.error("Error in createMatchStats:", error);
+            throw error;
+        }
+    }
+    async updateMatchStat (data) {
+        try {
+            const response = await api.put(`${this.matchStatApi}/update`, data);
+            return response.data;
+        } catch (error) {
+            console.error("Error in updateMatchStat:", error);
             throw error;
         }
     }

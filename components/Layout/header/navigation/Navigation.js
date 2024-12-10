@@ -78,7 +78,7 @@ const Navigation = () => {
                         }
                         <a href="/FanZone" className={`text-white ${isActive('/FanZone')}`}>FAN ZONE</a>
                         {hasMatchUpdaterRole &&
-                            <a href="/lineup" className={`text-white ${isActive('/AboutUs')}`}>LINEUP</a>
+                            <a href="/lineup" className={`text-white ${isActive('/lineup')}`}>LINEUP</a>
                         }
                         <a href="/blog" className={`text-white ${isActive('/blog')}`}>BLOG</a>
                         <a href="/PostResult" className={`text-white ${isActive('/PostResult')}`}>RESULT POST</a>

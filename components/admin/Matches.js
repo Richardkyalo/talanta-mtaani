@@ -9,6 +9,10 @@ import { teamService } from "@/app/api/teamservice/teamService";
 import { useQuery } from "@tanstack/react-query";
 import { matchService } from "@/app/api/matches/matches";
 import { MdUpdate } from "react-icons/md";
+// import PostMatchResult from "../matchUpdate/postResults/postResults"
+// import { IoMdDoneAll } from "react-icons/io";
+import { playerService } from "@/app/api/playerservice/playerService";
+import { useRouter } from "next/navigation";
 
 // import { match } from "assert";
 // import { match } from "assert";
@@ -33,6 +37,16 @@ const getAllMatches = async () => {
   }
 }
 
+const getPlayerById = async (id) => {
+  try {
+    const response = await playerService.getPlayerById(id);
+    return response || [];
+  } catch (error) {
+    console.error("Error in getPlayerById:", error);
+    throw error;
+  }
+}
+
 const Matches = () => {
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState("");
@@ -40,6 +54,10 @@ const Matches = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMatch, setEditingMatch] = useState(null);
   // State for individual form fields
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [matchToDelete, setMatchToDelete] = useState(null);
+
+  const router = useRouter();
   const [team1Name, setTeam1Name] = useState("");
   const [team2Name, setTeam2Name] = useState("");
   const [team1Id, setTeam1Id] = useState('');  // If editing, use the existing team1_id
@@ -47,8 +65,85 @@ const Matches = () => {
   const [date, setDate] = useState('');  // Format date as a string if editing
   const [time, setTime] = useState('');  // Same for time
   const [venue, setVenue] = useState('');  // Same for venue
-  
-  // const [status, setStatus] = useState("Scheduled");
+
+  // const [isResultModalOpen, setIsResultModalOpen] = useState(false);
+  // const [selectedMatch, setSelectedMatch] = useState(null);
+  // // const [status, setStatus] = useState("Scheduled");
+  // const [isFormVisible, setIsFormVisible] = useState(false); // New state to toggle form visibility
+
+  // const [team1, setTeam1] = useState("");
+  // const [team2, setTeam2] = useState("");
+  // const [team1RedCards, setTeam1RedCards] = useState('');
+  // const [team2RedCards, setTeam2RedCards] = useState(0);
+  // const [team1YellowCards, setTeam1YellowCards] = useState(0);
+  // const [team2YellowCards, setTeam2YellowCards] = useState(0);
+  // const [team1Goals, setTeam1Goals] = useState('');
+  // const [team2Goals, setTeam2Goals] = useState(0);
+  // const [team1Penalties, setTeam1Penalties] = useState(0);
+  // const [team2Penalties, setTeam2Penalties] = useState(0);
+
+  // const [team1Players] = useState([
+  //   "Player 1", "Player 2", "Player 3", "Player 4", "Player 5",
+  //   "Player 11", "Player 12", "Player 13", "Player 14", "Player 15"
+  // ]);
+  // const [team2Players] = useState([
+  //   "Player 6", "Player 7", "Player 8", "Player 9", "Player 10",
+  //   "Player 16", "Player 17", "Player 18", "Player 19", "Player 110"
+  // // ]);
+
+  // const [team1RedCardPlayers, setTeam1RedCardPlayers] = useState([]);
+  // const [team2RedCardPlayers, setTeam2RedCardPlayers] = useState([]);
+  // const [team1YellowCardPlayers, setTeam1YellowCardPlayers] = useState([]);
+  // const [team2YellowCardPlayers, setTeam2YellowCardPlayers] = useState([]);
+  // const [team1GoalScorers, setTeam1GoalScorers] = useState([])
+  // const [team2GoalScorers, setTeam2GoalScorers] = useState([])
+  // const [team1PenaltyScorers, setTeam1PenaltyScorers] = useState([])
+  // const [team2PenaltyScorers, setTeam2PenaltyScorers] = useState([])
+
+  // const [team1NameToEditResult, setTeam1NameToEditResult] = useState('');
+  // const [team2NameToEditResult, setTeam2NameToEditResult] = useState('');
+
+  const [team1Players] = useState([]);
+  const [team2Players] = useState([]);
+
+  const [setTeam1PlayersData] = useState([]);
+  const [ setTeam2PlayersData] = useState([]);
+
+  const fetchPlayerNames = async (playerIds) => {
+    try {
+      if (!playerIds.length) return []; // Early return if no IDs provided
+      const playerData = await Promise.all(playerIds.map((id) => getPlayerById(id)));
+      return playerData.map((response) => ({
+        id: response?.id,
+        name: response?.data.name || "Unknown Player", // Fallback if name is missing
+      }));
+    } catch (error) {
+      console.error("Error fetching player names:", error);
+      return [];
+    }
+  };
+
+
+  useEffect(() => {
+    const loadPlayers = async () => {
+      try {
+        if (team1Players.length) {
+          const team1 = await fetchPlayerNames(team1Players);
+          setTeam1PlayersData(team1);
+        }
+        if (team2Players.length) {
+          const team2 = await fetchPlayerNames(team2Players);
+          setTeam2PlayersData(team2);
+        }
+      } catch (error) {
+        console.error("Error loading players:", error);
+      }
+    };
+
+    loadPlayers();
+  }, [team1Players, team2Players]);
+
+
 
   const { data: teamData } = useQuery({
     queryKey: ["teams"],
@@ -124,13 +219,13 @@ const Matches = () => {
 
   const handleAddOrUpdateMatch = async (event) => {
     event.preventDefault();
-    
+
     // Ensure both teams are selected before proceeding
     if (!team1Id || !team2Id || !date || !time || !venue) {
       setError("Please fill out all fields!");
       return;
     }
-  
+
     // console.log("Form submitted");
     // console.log('team1Id:', team1Id);
     // console.log('team2Id:', team2Id);
@@ -138,16 +233,16 @@ const Matches = () => {
     // console.log('time:', time);
     // console.log('venue:', venue);
     // console.log("editingMatch", editingMatch);
-  
+
     // Combine date and time into a Date object
     const combinedDateTime = new Date(`${date}T${time}:00`);
-  
+
     // Validate the date and time
     if (isNaN(combinedDateTime)) {
       setError("Invalid date or time.");
       return;
     }
-  
+
     // Create match data for update or new match
     const matchData = {
       team1_id: team1Id,
@@ -161,7 +256,7 @@ const Matches = () => {
       result_id: null,
       referee_ids: [],
     };
-  
+
     try {
       if (editingMatch) {
         // If editing an existing match, update it
@@ -180,7 +275,7 @@ const Matches = () => {
         };
 
         console.log(matchToUpdateData, "matchToUpdateData")
-  
+
         const response = await matchService.updateMatch(matchToUpdateData);
         if (response?.id) {
           alert("Match updated successfully");
@@ -190,11 +285,19 @@ const Matches = () => {
         // If adding a new match, create it
         const response = await matchService.createMatch(matchData);
         if (response?.id) {
-          alert("Match created successfully");
-          matchRefetch(); // Refetch the matches
+          const matchStatData = {
+            match_id: response.id,
+            id: response.id,
+          }
+          const result = await matchService.createMatchStats(matchStatData)
+          if (result.id) {
+            alert("Match created successfully");
+            matchRefetch(); // Refetch the matches
+          }
+
         }
       }
-  
+
       // Close the modal and reset form
       setIsModalOpen(false);
       resetForm();
@@ -202,12 +305,25 @@ const Matches = () => {
       console.error("Error handling match:", error);
     }
   };
-  
+
+  const handleEditUpdateMatchResult = (match) => {
+    const query = encodeURIComponent(JSON.stringify(match));
+    router.push(`../PostResult/${match.id}?data=${query}`);
+  };
+
+
+  const handleConfirmDelete = (id) => {
+    setMatchToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+
   const handleDeleteMatch = async (id) => {
     try {
       const response = await matchService.deleteMatch(id);
       if (response?.message === "Match deleted") {
         alert("Match deleted successfully");
+        setIsDeleteModalOpen(false);
         matchRefetch(); // Refetch the matches
       }
     } catch (error) {
@@ -226,18 +342,18 @@ const Matches = () => {
     setEditingMatch(null); // Clear the editing state
     setError(""); // Clear any error messages
   };
-  
+
   const handleEditMatch = (match) => {
     // Set the match data in the state
     setEditingMatch(match);
-  
+
     // Pre-fill the form fields
     setTeam1Name(getTeamNameById(match.team1_id));
     setTeam2Name(getTeamNameById(match.team2_id));
     setDate(new Date(match.date).toLocaleDateString("en-CA")); // Convert to YYYY-MM-DD format
     setTime(new Date(match.date).toLocaleTimeString("en-GB").slice(0, 5)); // Convert to HH:mm format
     setVenue(match.match_pool);
-  
+
     // Open the modal
     setIsModalOpen(true);
   };
@@ -246,13 +362,13 @@ const Matches = () => {
       handleTeam1Blur();
     }
   }, [team1Name]);
-  
+
   useEffect(() => {
     if (team2Name) {
       handleTeam2Blur();
     }
   }, [team2Name]);
-  
+
 
   const handleCacelModal = () => {
     setIsModalOpen(false);
@@ -260,9 +376,12 @@ const Matches = () => {
   };
 
 
+  console.log(team1Players, "team1Players")
+  console.log(team2Players, "team2Players")
 
   return (
     <div className="p-4">
+
       {/* Header */}
       <div className="mb-4 text-center md:text-right flex flex-row justify-between gap-4 items-center">
         <div className="flex flex-row gap-4 items-center">
@@ -305,90 +424,122 @@ const Matches = () => {
             </tr>
           </thead>
           <tbody>
-            { Array.isArray(matches) && 
-            matches.map((match, index) => (
-              <tr
-                key={match.id}
-                className={`${index % 2 === 0 ? 'bg-gray-50' : ''} hover:bg-gray-100 transition-all`}
-              >
-                <td className="border border-gray-200 text-black px-4 py-2">{index + 1}</td>
-                <td className="border border-gray-200 text-black px-4 py-2 min-w-[200px]">
-                  {getTeamNameById(match.team1_id)} vs {getTeamNameById(match.team2_id)}
-                </td>
-                <td className="border border-gray-200 text-black px-4 py-2 min-w-[300px]">
-                  {new Date(match.date).toLocaleDateString('en-US', {
-                    weekday: "long", // e.g., Monday
-                    year: "numeric", // e.g., 2024
-                    month: "long", // e.g., December
-                    day: "numeric", // e.g., 5
-                    timeZone: "Africa/Nairobi", // Set the correct timezone for display
-                  })} - {new Date(match.date).toLocaleTimeString('en-US', {
-                    hour: "2-digit", // e.g., 09
-                    minute: "2-digit", // e.g., 26
-                    hour12: true, // e.g., 24-hour format
-                    timeZone: "Africa/Nairobi", // Set the correct timezone for display
-                  })}
-                </td>
+            {Array.isArray(matches) &&
+              matches.map((match, index) => (
+                <tr
+                  key={match.id}
+                  className={`${index % 2 === 0 ? 'bg-gray-50' : ''} hover:bg-gray-100 transition-all`}
+                >
+                  <td className="border border-gray-200 text-black px-4 py-2">{index + 1}</td>
+                  <td className="border border-gray-200 text-black px-4 py-2 min-w-[200px]">
+                    {getTeamNameById(match.team1_id)} vs {getTeamNameById(match.team2_id)}
+                  </td>
+                  <td className="border border-gray-200 text-black px-4 py-2 min-w-[300px]">
+                    {new Date(match.date).toLocaleDateString('en-US', {
+                      weekday: "long", // e.g., Monday
+                      year: "numeric", // e.g., 2024
+                      month: "long", // e.g., December
+                      day: "numeric", // e.g., 5
+                      timeZone: "Africa/Nairobi", // Set the correct timezone for display
+                    })} - {new Date(match.date).toLocaleTimeString('en-US', {
+                      hour: "2-digit", // e.g., 09
+                      minute: "2-digit", // e.g., 26
+                      hour12: true, // e.g., 24-hour format
+                      timeZone: "Africa/Nairobi", // Set the correct timezone for display
+                    })}
+                  </td>
 
 
-                <td className="border border-gray-200 text-black px-4 py-2">{match.match_pool}</td>
-                <td className="border border-gray-200 text-black px-4 py-2">
-                  <span
-                    className={`px-2 py-1 text-xs rounded-full ${new Date(match.date).getTime() > new Date().getTime() // Compare exact time, including date
-                      ? "bg-green-100 text-green-700" // Scheduled
-                      : "bg-red-100 text-red-700" // Ended
-                      }`}
-                  >
-                    {new Date(match.date).getTime() > new Date().getTime() ? "Scheduled" : "Ended"}
-                  </span>
+                  <td className="border border-gray-200 text-black px-4 py-2">{match.match_pool}</td>
+                  <td className="border border-gray-200 text-black px-4 py-2">
+                    <span
+                      className={`px-2 py-1 text-xs rounded-full ${new Date(match.date).getTime() > new Date().getTime() // Compare exact time, including date
+                        ? "bg-green-100 text-green-700" // Scheduled
+                        : "bg-red-100 text-red-700" // Ended
+                        }`}
+                    >
+                      {new Date(match.date).getTime() > new Date().getTime() ? "Scheduled" : "Ended"}
+                    </span>
 
-                </td>
+                  </td>
 
-                <td className="border border-gray-200 px-4 py-2">
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={() => handleEditMatch(match)}
-                      className="hover:bg-blue-500 border border-blue-500 text-blue-500 hover:text-white px-2 py-1 rounded"
-                    >
-                      <div className="flex items-center md:gap-2">
-                        <CiEdit />
-                        Edit
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleEditMatch(match)}
-                      className="hover:bg-green-500 border border-green-500 text-green-500 hover:text-white px-2 py-1 rounded"
-                    >
-                      <div className="flex items-center md:gap-2">
-                        <MdPostAdd />
-                        Postpone
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleDeleteMatch(match.id)}
-                      className="hover:bg-red-500 border border-red-500 text-red-500 hover:text-white px-2 py-1 rounded"
-                    >
-                      <div className="flex items-center md:gap-2">
-                        <MdCancel />
-                        Cancel
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleDeleteMatch(match.id)} 
-                      className="hover:bg-red-500 border border-red-500 text-red-500 hover:text-white px-2 py-1 rounded"
-                    >
-                      <div className="flex items-center md:gap-2">
-                        <MdUpdate />
-                        Update Result
-                      </div>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  <td className="border border-gray-200 px-4 py-2">
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => handleEditMatch(match)}
+                        className="hover:bg-blue-500 border border-blue-500 text-blue-500 hover:text-white px-2 py-1 rounded"
+                      >
+                        <div className="flex items-center md:gap-2">
+                          <CiEdit />
+                          Edit
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => handleEditMatch(match)}
+                        className="hover:bg-green-500 border border-green-500 text-green-500 hover:text-white px-2 py-1 rounded"
+                      >
+                        <div className="flex items-center md:gap-2">
+                          <MdPostAdd />
+                          Postpone
+                        </div>
+                      </button>
+                      {match.team1_first_11_ids.length > 0 && match.team2_first_11_ids.length > 0 &&
+                        <button
+                          onClick={() => handleEditUpdateMatchResult(match)}
+                          className="hover:bg-yellow-500 min-w-[150px] border border-yellow-500 text-yellow-500 hover:text-white px-2 py-1 rounded"
+                        >
+                          <div className="flex items-center md:gap-2">
+                            <MdUpdate />
+                            Update Result
+                          </div>
+                        </button>
+                      }
+                      <button
+                        onClick={() => handleConfirmDelete(match.id)}
+                        className="hover:bg-red-500 border border-red-500 text-red-500 hover:text-white px-2 py-1 rounded"
+                      >
+                        <div className="flex items-center md:gap-2">
+                          <MdCancel />
+                          Cancel
+                        </div>
+                      </button>
+
+
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
+
+
       </div>
+
+      
+      {/* delete modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-lg text-black font-bold mb-4">Confirm Deletion</h2>
+            <p className="text-gray-700 text-sm mb-4">Are you sure you want to delete this match?</p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 text-gray-500 hover:text-white hover:bg-gray-500 border border-gray-500 rounded-md text-sm"
+              >
+                No
+              </button>
+              <button
+                onClick={() => handleDeleteMatch(matchToDelete)}
+                className="px-4 py-2 text-red-500 hover:text-white border border-red-500 hover:bg-red-500 rounded-md text-sm"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {/* Modal */}
 
