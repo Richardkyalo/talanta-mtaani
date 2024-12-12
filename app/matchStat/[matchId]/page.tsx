@@ -6,11 +6,6 @@ import React, {
   useState,
   useEffect,
   useMemo,
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  Key,
 } from 'react';
 
 interface Referee {
