@@ -185,7 +185,7 @@ const Results = () => {
     return (
         <section className="bg-gray-100 mx-auto px-4 py-8">
             {/* Header Section */}
-            <div className="py-8 bg-gradient-to-r from-blue-400 to-purple-600 text-white rounded-lg mb-6">
+            <div className="py-8 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-lg mb-6">
                 <h1 className="text-5xl mx-4 font-bold mb-4">Results</h1>
                 <div className="flex flex-row ml-4 gap-4">
                     <button

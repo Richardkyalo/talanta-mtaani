@@ -33,6 +33,7 @@ const MatchStatPage = () => {
         return <div>Loading...</div>;
     }
 
+    console.log("match", match);
     return (
         <div className="bg-gray-50 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
@@ -54,7 +55,7 @@ const MatchStatPage = () => {
                         <div className="mt-4">
                             <div className="text-gray-500">Goal Scorers:</div>
                             <ol className="list-disc list-inside text-gray-700">
-                                {match.team1goalscorerNames.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
+                                {match?.team1goalscorerNames?.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
                                     <li key={index}>{scorer}</li>
                                 ))}
                             </ol>
@@ -63,7 +64,7 @@ const MatchStatPage = () => {
                             <div className="text-amber-400">
                                 <p>Yellow Cards: {match.team1TotalYellowCards}</p>
                                 <ol className='list-disc list-inside'>
-                                    {match.team1yellowcardNames.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
+                                    {match?.team1yellowcardNames?.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
                                         <li key={index}>{scorer}</li>
                                     ))}
                                 </ol>
@@ -73,7 +74,7 @@ const MatchStatPage = () => {
                             <div className="text-rose-600">
                                 <p>Red Cards: {match.team1TotalRedCards}</p>
                                 <ol className='list-disc list-inside'>
-                                    {match.team1redcardNames.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
+                                    {match?.team1redcardNames?.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
                                         <li key={index}>{scorer}</li>
                                     ))}
                                 </ol>
@@ -90,7 +91,7 @@ const MatchStatPage = () => {
                         <div className="mt-4">
                             <div className="text-gray-500">Goal Scorers:</div>
                             <ul className="list-disc list-inside text-gray-700">
-                                {match.team2goalscorerNames.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
+                                {match?.team2goalscorerNames?.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
                                     <li key={index}>{scorer}</li>
                                 ))}
                             </ul>
@@ -99,7 +100,7 @@ const MatchStatPage = () => {
                             <div className="text-amber-400">
                                 Yellow Cards: {match.team2TotalYellowCards}
                                 <ol className='list-disc list-inside'>
-                                    {match.team2yellowcardNames.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
+                                    {match?.team2yellowcardNames?.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
                                         <li key={index}>{scorer}</li>
                                     ))}
                                 </ol>
@@ -107,7 +108,7 @@ const MatchStatPage = () => {
                             <div className="text-rose-600">
                                 <p>Red Cards: {match.team2TotalRedCards}</p>
                                 <ol className='list-disc list-inside'>
-                                    {match.team2redcardNames.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
+                                    {match?.team2redcardNames?.map((scorer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
                                         <li key={index}>{scorer}</li>
                                     ))}
                                 </ol>
@@ -122,7 +123,7 @@ const MatchStatPage = () => {
                     <div className="text-gray-600 text-sm">
                         <span className="font-semibold">Referees:</span> 
                         <ol className='list-disc list-inside'>
-                        {referees.map((referee: any) => (
+                        {referees?.map((referee: any) => (
                             <li key={referee.data.id}>{referee.data.name}</li>
                         ))}
                              </ol>
