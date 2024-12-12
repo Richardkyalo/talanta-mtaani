@@ -63,6 +63,15 @@ class UserService {
             throw error;
         }
     }
+    async getRefereeById(id) {
+        try {
+            const response = await api.get(`${this.refereeApi}/getById/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in getRefereeById:", error);
+            throw error;
+        }
+    }
 }
 
 export const userService = new UserService();

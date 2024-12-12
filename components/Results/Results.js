@@ -4,6 +4,7 @@ import { matchService } from '@/app/api/matches/matches';
 import { teamService } from '@/app/api/teamservice/teamService';
 import { playerService } from '@/app/api/playerservice/playerService';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 const getAllMatchStats = async () => {
     try {
@@ -57,6 +58,7 @@ const Results = () => {
     const [matchStats, setMatchStats] = useState([]);
     const [matchDetails, setMatchDetails] = useState([]);
     const [isMen, setIsMen] = useState(true);
+    const router= useRouter();
 
     const { data: fetchStats } = useQuery({
         queryKey: ['matchStats'],
@@ -172,6 +174,11 @@ const Results = () => {
 
     const displayedResults = isMen ? menResults : womenResults;
 
+    const handleMatchStatDisplay =(match)=>{
+        const query=encodeURIComponent(JSON.stringify(match));
+        router.push(`../matchStat/${match.id}?data=${query}`);
+    }
+
 
     console.log("mens", menResults)
 
@@ -217,7 +224,9 @@ const Results = () => {
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {resultGroup.matches.map((match, idx) => (
-                                        <tr key={idx}>
+                                        <tr key={idx}
+                                        onClick={()=>handleMatchStatDisplay(match)}
+                                        >
                                             <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
                                                 <img
                                                     src={match.homeLogo || 'image/1.jpg'}
