@@ -87,12 +87,16 @@ const Fixtures = () => {
                         Women
                     </button>
                     {/* Date Picker */}
+                    <div className="flex flex-col gap-2 items-center">
+                    <label className="text-xs text-black">Select Date To View Fixtures</label>
                     <input
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
                         className="bg-gray-200 text-gray-800 py-2 px-4 rounded-full text-xs"
                     />
+                    </div>
+                    
                 </div>
             </div>
 

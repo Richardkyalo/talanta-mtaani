@@ -98,5 +98,14 @@ class MatchService {
             throw error;
         }
     }
+    async getAllMatchStats() {
+        try {
+            const response = await api.get(`${this.matchStatApi}/getAll`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in getAllMatchStats:", error);
+            throw error;
+        }
+    }   
 }
  export const matchService = new MatchService();
