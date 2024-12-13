@@ -1,14 +1,10 @@
 "use client";
-import { Key, useState, useEffect, useMemo } from 'react';
+import {  useState, useEffect, useMemo } from 'react';
 import { playerService } from '@/app/api/playerservice/playerService';
 import { userService } from '@/app/api/userService/userService';
 import { useSearchParams } from 'next/navigation';
 
-interface MatchDetailsProps {
-  params: {
-    matchId: string;
-  };
-}
+
 
 interface Referee {
   id: string;
@@ -30,7 +26,7 @@ const getRefereeById = async (id: string): Promise<Referee> => {
   return response?.data || { id: '', name: '' };
 };
 
-export default function MatchDetails({ params }: MatchDetailsProps) {
+export default function MatchDetails() {
   const searchParams = useSearchParams();
   const data = searchParams.get('data');
 
