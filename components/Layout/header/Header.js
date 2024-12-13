@@ -77,9 +77,7 @@ const Header = () => {
                 {/* Desktop Menu */}
                 <nav className="hidden md:flex space-x-4">
                     <a href="/AboutUs" className={isActiveLink('/AboutUs')}>About Us</a>
-                    <a href="/Teams" className={isActiveLink('/Teams')}>Teams</a>
                     <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
-                    <a href="/Results" className={isActiveLink('/Results')}>Results</a>
                     {/* <a href="/Table" className={isActiveLink('/Table')}>League Table</a> */}
                     <a href="/Highlights" className={isActiveLink('/Highlights')}>Gallery</a>
                     {/* <a href="/Blog" className={isActiveLink('/Blog')}>Blog</a> */}
@@ -153,13 +151,13 @@ const Header = () => {
                     <a href="/Fixtures" className={isActiveLink('/Fixtures')}>Fixtures</a>
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
                     {/* <a href="/Table" className={isActiveLink('/Table')}>League Table</a> */}
-                    <a href="/LiveScore" className={isActiveLink('/LiveScore')}>Live Score</a>
+                    {/* <a href="/LiveScore" className={isActiveLink('/LiveScore')}>Live Score</a> */}
                     <a href="/PlayerStats" className={isActiveLink('/PlayerStats')}>Player Stats</a>
                     {hasCoachRole && (
                         <a href="/TeamRegistration" className={isActiveLink('/TeamReg')}>Team Registration</a>
                     )}
 
-                    <a href="/FanZone" className={isActiveLink('/FanZone')}>Fan Zone</a>
+                    {/* <a href="/FanZone" className={isActiveLink('/FanZone')}>Fan Zone</a> */}
                     <a href="/Highlights" className={isActiveLink('/Highlights')}>Gallery</a>
                     <a href="/blog" className={isActiveLink('/blog')}>Blog</a>
                     {hasMatchUpdaterRole &&

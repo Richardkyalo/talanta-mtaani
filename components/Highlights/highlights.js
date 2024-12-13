@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { FaDownload } from "react-icons/fa";
+// import { FaDownload } from "react-icons/fa";
 import { IoClose } from "react-icons/io5"; // Import Close Icon
 
 export default function Highlights() {
@@ -113,13 +113,13 @@ export default function Highlights() {
             </div>
 
             {/* Download Button */}
-            <a
+            {/* <a
               href={selectedImage.url}
               download={selectedImage.file}
               className="absolute bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition"
             >
               <FaDownload size={20} />
-            </a>
+            </a> */}
           </div>
         </div>
       )}

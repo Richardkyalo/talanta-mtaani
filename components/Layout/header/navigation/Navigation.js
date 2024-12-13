@@ -70,13 +70,15 @@ const Navigation = () => {
                     {/* Menu Items */}
                     <div className="flex space-x-8">
                         <a href="/" className={`text-white ${isActive('/')}`}>HOME</a>
-                        <a href="/LiveScore" className={`text-white ${isActive('/LiveScore')}`}>LIVE SCORE</a>
+                        <a href="/Results" className={isActive('/Results')}>RESULTS</a>
+                        {/* <a href="/LiveScore" className={`text-white ${isActive('/LiveScore')}`}>LIVE SCORE</a> */}
                         <a href="/PlayerStats" className={`text-white ${isActive('/PlayerStats')}`}>PLAYER STATS</a>
                         {hasCoachRole &&
                             <a href="/TeamRegistration" className={`text-white ${isActive('/TeamReg')}`}>TEAM REGISTRATION</a>
 
                         }
-                        <a href="/FanZone" className={`text-white ${isActive('/FanZone')}`}>FAN ZONE</a>
+                    <a href="/Teams" className={isActive('/Teams')}>TEAMS</a>
+                    {/* <a href="/FanZone" className={`text-white ${isActive('/FanZone')}`}>FAN ZONE</a> */}
                         {hasMatchUpdaterRole &&
                             <a href="/lineup" className={`text-white ${isActive('/lineup')}`}>LINEUP</a>
                         }
