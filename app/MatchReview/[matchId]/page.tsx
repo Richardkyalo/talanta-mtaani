@@ -92,11 +92,11 @@ export default function MatchDetails({ params }: MatchDetailsProps) {
     <div className="bg-gray-100 min-h-screen py-10">
       <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
-          Match Details
+          {match.home} vs {match.away} Match Details
         </h1>
 
         {/* Match Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-700">Location</h2>
             <p className="text-gray-600">{match.location}</p>
@@ -114,7 +114,7 @@ export default function MatchDetails({ params }: MatchDetailsProps) {
         <hr className="my-6" />
 
         {/* Teams */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-8">
           {/* Home Team */}
           <div>
             <h2 className="text-xl font-semibold text-gray-700 mb-4">
