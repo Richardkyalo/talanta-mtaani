@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { matchService } from "@/app/api/matches/matches";
 import { teamService } from "@/app/api/teamservice/teamService"; // Assuming you have a team service.
+import { useRouter } from "next/navigation";
 
 const getMatchesByDate = async (date) => {
     const response = await matchService.getMatchesByDate(date);
@@ -20,6 +21,8 @@ const Fixtures = () => {
     const [womenFixtures, setWomenFixtures] = useState([]);
     const [isMen, setIsMen] = useState(true);
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
+
+    const router = useRouter();
 
     const fetchAndCategorizeMatches = async (date) => {
         const dateToRetrieve = {
@@ -39,6 +42,11 @@ const Fixtures = () => {
                 time: new Date(match.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
                 home: team1.name,
                 away: team2.name,
+                first11Home: match.team1_first_11_ids,
+                first11Away: match.team2_first_11_ids,
+                subsHome: match.team1_sub_ids,
+                subsAway: match.team2_sub_ids,
+                referees:match.referee_ids,
                 location: match.match_pool,
                 homeLogo: team1.logo || "/image/1.jpg",
                 awayLogo: team2.logo || "/image/1.jpg",
@@ -61,16 +69,23 @@ const Fixtures = () => {
 
     const displayedFixtures = isMen ? menFixtures : womenFixtures;
 
-    console.log(selectedDate, "selectedDate")
-    console.log(getMatchesByDate(selectedDate), "date")
+    const handleMatchReview = (match) => {
+        if(match.first11Home.length === 0 || match.first11Away.length === 0 || match.subsHome.length === 0 || match.subsAway.length === 0 || match.referees.length === 0){
+            alert("First 11, Subs and Referee are not Yet Uploaded for this match");
+            return
+        }
+        const query =encodeURIComponent(JSON.stringify(match));
+        router.push(`../MatchReview/${match.home}${match.away}?data=${query}`);
+    };
 
     return (
         <section className="bg-gray-100 mx-auto px-4 py-8">
             {/* Header Section */}
             <div className="py-8 bg-gradient-to-r from-blue-400 to-purple-600 text-white rounded-lg mb-6">
                 <h1 className="text-5xl mx-4 font-bold mb-4">Fixtures</h1>
-                <div className="flex flex-row ml-4 gap-4 items-center">
+                <div className="flex flex-row ml-4 justify-between items-center">
                     {/* Men’s Fixtures Button */}
+                    <div className="flex flex-row gap-4">
                     <button
                         onClick={() => setIsMen(true)}
                         className={`$\{isMen ? 'bg-red-600' : 'bg-gray-400'
@@ -86,8 +101,10 @@ const Fixtures = () => {
                     >
                         Women
                     </button>
+                    </div>
+                    
                     {/* Date Picker */}
-                    <div className="flex flex-col gap-2 items-center">
+                    <div className="flex flex-row px-4 gap-4 items-center">
                     <label className="text-xs text-black">Select Date To View Fixtures</label>
                     <input
                         type="date"
@@ -114,7 +131,7 @@ const Fixtures = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {fixtureGroup.matches.map((match, idx) => (
                                     <div key={idx} className="bg-gray-50 rounded-lg p-4 shadow-md flex flex-col justify-between">
-                                        <div className="flex items-center justify-between mb-2">
+                                        <div onClick={()=>handleMatchReview(match)} className="flex items-center justify-between mb-2">
                                             <span className="text-xs text-gray-500">{match.time}</span>
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex items-center gap-2">
