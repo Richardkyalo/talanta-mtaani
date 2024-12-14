@@ -99,6 +99,8 @@ const TeamRegistrationForm = () => {
     const [playerError, setPlayerError] = useState('');
     const [todaysMatches, setTodaysMatches] = useState([]);
 
+    const [selectedPlayerId, setSelectedPlayerId] = useState(null);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const handleFileUpload = (event) => {
         setTeamLogo(event.target.files[0]);
@@ -371,6 +373,21 @@ const TeamRegistrationForm = () => {
         return currentYear - birthYear;
     };
 
+    const handleRemovePlayer = async (playerId) => {
+        setDeleteModalOpen(true);
+        setSelectedPlayerId(playerId);
+    }
+
+    const handleDeletePlayer = async () => {
+        try {
+            await playerService.deletePlayer(selectedPlayerId);
+            alert("Player deleted successfully");
+            teamPlayersRefetch();
+            setDeleteModalOpen(false);
+        } catch (error) {
+            console.error("Error in handleDeletePlayer:", error);
+        }
+    }
     // console.log(coachExists)
     // console.log(pointofCexist)
     // console.log(players?.data)
@@ -428,7 +445,9 @@ const TeamRegistrationForm = () => {
                                             <td className="px-4 py-2">{calculateAge(player.date_of_birth)}</td>
                                             <td className='px-4 py-2'>{player.level_of_education}</td>
                                             <td className="px-4 py-2">
-                                                <button className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md">
+                                                <button 
+                                                onClick={()=>handleRemovePlayer(player.id)}
+                                                className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md">
                                                     <div className="flex flex-row gap-2 items-center">
                                                         <MdDeleteForever />
                                                         <span>Remove</span>
@@ -443,6 +462,40 @@ const TeamRegistrationForm = () => {
 
                 </div>
             </div>
+            {/* modal for player deletion */}
+            {deleteModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full transform transition-all duration-300 scale-100 opacity-100 max-h-[calc(100vh-2rem)] overflow-auto">
+                        <div className="flex justify-between items-center mb-6">
+                            <div className='flex flex-col'>
+                                <h2 className="text-2xl font-bold text-gray-800">Delete Player</h2>
+                                {/* {playerError && <p className="text-red-500 mb-4">{playerError}</p>} */}
+                            </div>
+                            <button
+                                onClick={() => setDeleteModalOpen(false)}
+                                className="text-gray-500 hover:text-gray-700 text-xl font-bold focus:outline-none"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <p className="text-gray-800">Are you sure you want to delete this player?</p>
+                        <div className="flex justify-end mt-6">
+                            <button
+                                onClick={() => setDeleteModalOpen(false)}
+                                className="mr-4 px-4 py-2 bg-gray-400 text-white text-xs rounded-lg hover:bg-gray-500 transition duration-300"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => handleDeletePlayer(selectedPlayerId)}
+                                className="px-4 py-2 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700 transition duration-300"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Modal for player registration */}
             {isPlayerModalOpen && (

@@ -42,5 +42,14 @@ class PlayerService {
             throw error;
         }
     }
+    async deletePlayer(id) {
+        try {
+            const response = await api.delete(`${this.playerApi}/delete/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in deletePlayer:", error);
+            throw error;
+        }
+    }
 }
 export const playerService = new PlayerService();

@@ -164,14 +164,20 @@ const Results = () => {
     const womenMatches = matchDetails.filter((match) => match.team1gender === 'women');
 
 
-    const menResults = Object.entries(groupMatchesByDate(menMatches)).map(([date, matches]) => ({
-        date,
-        matches,
-    }));
-    const womenResults = Object.entries(groupMatchesByDate(womenMatches)).map(([date, matches]) => ({
-        date,
-        matches,
-    }));
+    const menResults = Object.entries(groupMatchesByDate(menMatches))
+        .sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA)) // Sort dates descending
+        .map(([date, matches]) => ({
+            date,
+            matches,
+        }));
+
+    const womenResults = Object.entries(groupMatchesByDate(womenMatches))
+        .sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA)) // Sort dates descending
+        .map(([date, matches]) => ({
+            date,
+            matches,
+        }));
+
 
     const displayedResults = isMen ? menResults : womenResults;
 
@@ -183,7 +189,7 @@ const Results = () => {
     if (!matchDetails.length) {
         return <div className='text-center min-h-screen md:mt-48 py-4 text-sm text-gray-500'>
             <p>
-            <BeatLoader color="blue" size={20} />
+                <BeatLoader color="blue" size={20} />
             </p>
         </div>;
     }
