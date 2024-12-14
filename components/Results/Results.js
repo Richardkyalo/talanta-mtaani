@@ -5,6 +5,7 @@ import { teamService } from '@/app/api/teamservice/teamService';
 import { playerService } from '@/app/api/playerservice/playerService';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import BeatLoader from 'react-spinners/BeatLoader';
 
 const getAllMatchStats = async () => {
     try {
@@ -58,7 +59,7 @@ const Results = () => {
     const [matchStats, setMatchStats] = useState([]);
     const [matchDetails, setMatchDetails] = useState([]);
     const [isMen, setIsMen] = useState(true);
-    const router= useRouter();
+    const router = useRouter();
 
     const { data: fetchStats } = useQuery({
         queryKey: ['matchStats'],
@@ -174,11 +175,18 @@ const Results = () => {
 
     const displayedResults = isMen ? menResults : womenResults;
 
-    const handleMatchStatDisplay =(match)=>{
-        const query=encodeURIComponent(JSON.stringify(match));
+    const handleMatchStatDisplay = (match) => {
+        const query = encodeURIComponent(JSON.stringify(match));
         router.push(`../matchStat/${match.id}?data=${query}`);
     }
 
+    if (!matchDetails.length) {
+        return <div className='text-center min-h-screen md:mt-48 py-4 text-sm text-gray-500'>
+            <p>
+            <BeatLoader color="blue" size={20} />
+            </p>
+        </div>;
+    }
 
     console.log("mens", menResults)
 
@@ -223,35 +231,52 @@ const Results = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {resultGroup.matches.map((match, idx) => (
-                                        <tr key={idx}
-                                        onClick={()=>handleMatchStatDisplay(match)}
-                                        >
-                                            <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
-                                                <img
-                                                    src={match.homeLogo || 'image/1.jpg'}
-                                                    alt={match.team1Name}
-                                                    className="w-8 h-8 rounded-full"
-                                                />
-                                                <span className="text-sm font-medium text-gray-900">{match.team1Name}</span>
-                                            </td>
-                                            <td className="px-6 py-4 text-center text-sm text-gray-500">
-                                                {`${match.team1TotalGoals} - ${match.team2TotalGoals}`}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right flex justify-end items-center gap-2">
-                                                <span className="text-sm font-medium text-gray-900">{match.team2Name}</span>
-                                                <img
-                                                    src={match.awayLogo || 'image/1.jpg'}
-                                                    alt={match.team2Name}
-                                                    className="w-8 h-8 rounded-full"
-                                                />
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                                {match.match_pool}
+                                    {resultGroup.matches.every(
+                                        (match) => 'team1goalscorerNames' in match
+                                    ) ? (
+                                        resultGroup.matches.map((match, idx) => (
+                                            <tr
+                                                key={idx}
+                                                onClick={() => handleMatchStatDisplay(match)}
+                                            >
+                                                <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
+                                                    <img
+                                                        src={match.homeLogo || 'image/1.jpg'}
+                                                        alt={match.team1Name}
+                                                        className="w-8 h-8 rounded-full"
+                                                    />
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                        {match.team1Name}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-center text-sm text-gray-500">
+                                                    {`${match.team1TotalGoals} - ${match.team2TotalGoals}`}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-right flex justify-end items-center gap-2">
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                        {match.team2Name}
+                                                    </span>
+                                                    <img
+                                                        src={match.awayLogo || 'image/1.jpg'}
+                                                        alt={match.team2Name}
+                                                        className="w-8 h-8 rounded-full"
+                                                    />
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                                    {match.match_pool}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="text-center py-4 text-sm text-gray-500">
+                                                Loading...
                                             </td>
                                         </tr>
-                                    ))}
+                                    )}
                                 </tbody>
+
+
                             </table>
                         </div>
                     </div>

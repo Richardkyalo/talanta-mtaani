@@ -45,6 +45,7 @@ const MatchStatPage = () => {
     return <div>Loading...</div>;
   }
 
+  console.log("match",match)
   return (
     <div className="bg-gray-50 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
@@ -75,6 +76,15 @@ const MatchStatPage = () => {
                   <li key={index}>{scorer}</li>
                 ))}
               </ol>
+            </div>
+            <div className='mt-4'>
+              <div className="text-gray-500">Penalty Scorers:</div>
+              <ol className="list-disc list-inside text-gray-700">
+                {match.team1penaltyScorerNames?.map((scorer: string, index: number) => (
+                  <li key={index}>{scorer}</li>
+                ))}
+              </ol>
+
             </div>
             <div className="mt-4">
               <div className="text-amber-400">
@@ -109,6 +119,14 @@ const MatchStatPage = () => {
               <div className="text-gray-500">Goal Scorers:</div>
               <ol className="list-disc list-inside text-gray-700">
                 {match.team2goalscorerNames?.map((scorer: string, index: number) => (
+                  <li key={index}>{scorer}</li>
+                ))}
+              </ol>
+            </div>
+            <div className='mt-4'>
+              <div className="text-gray-500">Penalty Scorers:</div>
+              <ol className="list-disc list-inside text-gray-700">
+                {match.team2penaltyScorerNames?.map((scorer: string, index: number) => (
                   <li key={index}>{scorer}</li>
                 ))}
               </ol>
