@@ -80,7 +80,7 @@ const MatchStatPage = () => {
             <div className='mt-4'>
               <div className="text-gray-500">Penalty Scorers:</div>
               <ol className="list-disc list-inside text-gray-700">
-                {match.team1penaltyScorerNames?.map((scorer: string, index: number) => (
+                {match.team1penaltyscorerNames?.map((scorer: string, index: number) => (
                   <li key={index}>{scorer}</li>
                 ))}
               </ol>
@@ -126,7 +126,7 @@ const MatchStatPage = () => {
             <div className='mt-4'>
               <div className="text-gray-500">Penalty Scorers:</div>
               <ol className="list-disc list-inside text-gray-700">
-                {match.team2penaltyScorerNames?.map((scorer: string, index: number) => (
+                {match.team2penaltyscorerNames?.map((scorer: string, index: number) => (
                   <li key={index}>{scorer}</li>
                 ))}
               </ol>
