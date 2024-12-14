@@ -247,6 +247,9 @@ const LineupUpdatePage = () => {
       }
       await delay(100); // Wait 100ms before sending the next request
     }
+    // alert("Match result successfully updated!");
+    alert("Match lineup successfully updated!");
+    window.location.reload();
 
 
   };
