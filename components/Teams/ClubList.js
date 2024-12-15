@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { FaSearch, FaArrowRight } from "react-icons/fa";
 import { teamService } from "@/app/api/teamservice/teamService";
 import { useRouter } from "next/navigation";
-import { encode } from "punycode";
+// import { encode } from "punycode";
 
 const ClubList = () => {
     const [clubs, setClubs] = useState([]);
