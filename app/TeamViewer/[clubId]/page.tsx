@@ -189,7 +189,7 @@ const TeamViewer = () => {
           <div className="bg-gray-100 shadow-md rounded-lg p-6 mt-6">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Team Statistics</h2>
             {teamStats && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
                   <h3 className="text-lg font-bold text-gray-700">Matches Played</h3>
                   <p className="text-gray-500 text-sm mt-2">{getStatValue(teamStats.matches_played)}</p>
@@ -213,6 +213,14 @@ const TeamViewer = () => {
                 <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
                   <h3 className="text-lg font-bold text-gray-700">Goals Conceded</h3>
                   <p className="text-gray-500 text-sm mt-2">{getStatValue(teamStats.goals_conceded)}</p>
+                </div>
+                <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
+                  <h3 className="text-lg font-bold text-gray-700">Goal Difference</h3>
+                  <p className="text-gray-500 text-sm mt-2">{getStatValue(teamStats.goals_scored)-getStatValue(teamStats.goals_conceded)}</p>
+                </div>
+                <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
+                  <h3 className="text-lg font-bold text-gray-700">Points</h3>
+                  <p className="text-gray-500 text-sm mt-2">{getStatValue(teamStats.wins)*3+getStatValue(teamStats.draws)}</p>
                 </div>
               </div>
             )}
