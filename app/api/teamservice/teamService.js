@@ -52,6 +52,15 @@ class TeamService {
             throw error;
         }
     }   
+    async deleteTeam(id) {
+        try {
+            const response = await api.delete(`${this.teamApi}/delete/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in deleteTeam:", error);
+            throw error;
+        }
+    }
 }
 
 export const teamService = new TeamService();

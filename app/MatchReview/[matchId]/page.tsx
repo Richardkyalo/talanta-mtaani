@@ -88,7 +88,7 @@ export default function MatchDetails() {
     <div className="bg-gray-100 min-h-screen py-10">
       <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
-          {match.home} vs {match.away} Match Details
+          {match.home} vs {match.away} Match Details and Line Ups
         </h1>
 
         {/* Match Overview */}

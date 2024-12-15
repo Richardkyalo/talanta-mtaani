@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { teamService } from "@/app/api/teamservice/teamService";
 import { playerService } from "@/app/api/playerservice/playerService";
 import { userService } from "../../../app/api/userService/userService";
+import { playerStatServiceInstance } from "../../../app/api/playerStat/playerStat";
 // import { type } from "os";
 
 const getTodaysMatches = async () => {
@@ -246,6 +247,17 @@ const LineupUpdatePage = () => {
         console.error(`Update ${update.type} failed:`, err);
       }
       await delay(100); // Wait 100ms before sending the next request
+    }
+
+    // update player stat for matches played
+    for (const player of [...team1First11, ...team2First11, ...team1Substitutes, ...team2Substitutes]) {
+      await playerStatServiceInstance.updatePlayerStat({
+        type: "match_played",
+        flag: false,
+        data: [matchId],
+        player_stat_id: player
+      })
+      await delay(100);
     }
     // alert("Match result successfully updated!");
     alert("Match lineup successfully updated!");

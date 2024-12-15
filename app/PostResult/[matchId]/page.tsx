@@ -4,6 +4,8 @@ import { playerService } from '@/app/api/playerservice/playerService';
 import { useSearchParams } from 'next/navigation';
 import { teamService } from '@/app/api/teamservice/teamService';
 import { matchService } from '@/app/api/matches/matches';
+import { teamStatisticService } from '@/app/api/teamStat/teamstat'
+import { playerStatServiceInstance } from '@/app/api/playerStat/playerStat';
 
 const getTeamById = async (id: string) => {
   const response = await teamService.getTeamById(id);
@@ -94,17 +96,17 @@ export default function PostMatchResult() {
         ? category === 'goals'
           ? team1GoalScorers
           : category === 'penalties'
-          ? team1PenaltyScorers
-          : category === 'red'
-          ? team1RedCardPlayers
-          : team1YellowCardPlayers
+            ? team1PenaltyScorers
+            : category === 'red'
+              ? team1RedCardPlayers
+              : team1YellowCardPlayers
         : category === 'goals'
-        ? team2GoalScorers
-        : category === 'penalties'
-        ? team2PenaltyScorers
-        : category === 'red'
-        ? team2RedCardPlayers
-        : team2YellowCardPlayers;
+          ? team2GoalScorers
+          : category === 'penalties'
+            ? team2PenaltyScorers
+            : category === 'red'
+              ? team2RedCardPlayers
+              : team2YellowCardPlayers;
 
     if (selectedPlayers.includes(playerId)) {
       setFunctionMap[category](selectedPlayers.filter((id) => id !== playerId));
@@ -116,27 +118,115 @@ export default function PostMatchResult() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const resultData = [
-      { type: 'team1_penalties', matchStat_id: match?.id, data: team1PenaltyScorers, flag: false },
-      { type: 'team2_penalties', matchStat_id: match?.id, data: team2PenaltyScorers, flag: false },
-      { type: 'team1_id_goals', matchStat_id: match?.id, data: team1GoalScorers, flag: false },
-      { type: 'team2_id_goals', matchStat_id: match?.id, data: team2GoalScorers, flag: false },
-      { type: 'team1_yellow_cards', matchStat_id: match?.id, data: team1YellowCardPlayers, flag: false },
-      { type: 'team2_yellow_cards', matchStat_id: match?.id, data: team2YellowCardPlayers, flag: false },
-      { type: 'team1_red_cards', matchStat_id: match?.id, data: team1RedCardPlayers, flag: false },
-      { type: 'team2_red_cards', matchStat_id: match?.id, data: team2RedCardPlayers, flag: false },
-    ];
-
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+    const prepareUpdate = (type: string, teamId: number | undefined, data: any[], flag = false) => ({
+      type,
+      flag,
+      team_stat_id: teamId,
+      data,
+    });
+
     try {
+      // Prepare match statistics updates
+      const matchStatId = match?.id;
+      const resultData = [
+        { type: 'team1_penalties', data: team1PenaltyScorers },
+        { type: 'team2_penalties', data: team2PenaltyScorers },
+        { type: 'team1_id_goals', data: team1GoalScorers },
+        { type: 'team2_id_goals', data: team2GoalScorers },
+        { type: 'team1_yellow_cards', data: team1YellowCardPlayers },
+        { type: 'team2_yellow_cards', data: team2YellowCardPlayers },
+        { type: 'team1_red_cards', data: team1RedCardPlayers },
+        { type: 'team2_red_cards', data: team2RedCardPlayers },
+      ].map((item) => ({ ...item, matchStat_id: matchStatId, flag: false }));
+
+      // Update match statistics
       for (const update of resultData) {
-        console.log(`Update ${update.type} started...`, update);
+        console.log(`Updating ${update.type}...`, update);
         await matchService.updateMatchStat(update);
-        console.log(`Update ${update.type} succeeded`);
+        console.log(`${update.type} updated successfully`);
         await delay(100);
       }
 
+      // Prepare team statistics updates
+      const teamStatUpdates = [
+        prepareUpdate('goals_scored', match?.team1_id, [...team1GoalScorers, ...team1PenaltyScorers]),
+        prepareUpdate('goals_conceded', match?.team1_id, [...team2GoalScorers, ...team2PenaltyScorers]),
+        prepareUpdate('goals_scored', match?.team2_id, [...team2GoalScorers, ...team2PenaltyScorers]),
+        prepareUpdate('goals_conceded', match?.team2_id, [...team1GoalScorers, ...team1PenaltyScorers]),
+        prepareUpdate('matches_played', match?.team1_id, [matchStatId]),
+        prepareUpdate('matches_played', match?.team2_id, [matchStatId]),
+      ];
+
+      for (const update of teamStatUpdates) {
+        console.log(`Updating ${update.type}...`, update);
+        await teamStatisticService.updateTeamStat(update);
+        console.log(`${update.type} updated successfully`);
+        await delay(100);
+      }
+
+      // Determine match outcome
+      const matchStats = await matchService.getMatchStatById(matchStatId);
+      if (matchStats?.id) {
+        const team1TotalGoals = (matchStats.team1_id_goals?.length || 0) + (matchStats.team1_penalties?.length || 0);
+        const team2TotalGoals = (matchStats.team2_id_goals?.length || 0) + (matchStats.team2_penalties?.length || 0);
+
+        let outcomeUpdates = [];
+        if (team1TotalGoals > team2TotalGoals) {
+          outcomeUpdates = [
+            prepareUpdate('wins', match?.team1_id, [matchStatId]),
+            prepareUpdate('losses', match?.team2_id, [matchStatId]),
+          ];
+        } else if (team2TotalGoals > team1TotalGoals) {
+          outcomeUpdates = [
+            prepareUpdate('wins', match?.team2_id, [matchStatId]),
+            prepareUpdate('losses', match?.team1_id, [matchStatId]),
+          ];
+        } else {
+          outcomeUpdates = [
+            prepareUpdate('draws', match?.team1_id, [matchStatId]),
+            prepareUpdate('draws', match?.team2_id, [matchStatId]),
+          ];
+        }
+
+        for (const update of outcomeUpdates) {
+          console.log(`Updating ${update.type}...`, update);
+          await teamStatisticService.updateTeamStat(update);
+          console.log(`${update.type} updated successfully`);
+          await delay(100);
+        }
+      }
+      // update player stats for goals
+      for (const scorer of [...team1GoalScorers, ...team2GoalScorers, ...team1PenaltyScorers, ...team2PenaltyScorers]) {
+        await playerStatServiceInstance.updatePlayerStat(
+          {
+            type: 'goals', data: [matchStatId], player_stat_id: scorer, flag: false
+          }
+        );
+        await delay(100);
+      }
+      // update player stats for yellow cards
+      for (const player of [...team1YellowCardPlayers, ...team2YellowCardPlayers]) {
+        await playerStatServiceInstance.updatePlayerStat(
+          {
+            type: 'yellow_cards', data: [matchStatId], player_stat_id: player, flag: false
+          }
+        );
+        await delay(100);
+      }
+
+      // update player stats for red cards
+      for (const player of [...team1RedCardPlayers, ...team2RedCardPlayers]) {
+        await playerStatServiceInstance.updatePlayerStat(
+          {
+            type: 'red_cards', data: [matchStatId], player_stat_id: player, flag: false
+          }
+        );
+        await delay(100);
+      }
+
+      // Reset state
       alert('Match result successfully updated!');
       setTeam1GoalScorers([]);
       setTeam2GoalScorers([]);
@@ -151,6 +241,7 @@ export default function PostMatchResult() {
       alert('An error occurred while updating the match results. Please try again.');
     }
   };
+
 
   if (!match) {
     return <div>Invalid match data</div>;
@@ -185,39 +276,39 @@ export default function PostMatchResult() {
                 <div key={index}>
                   <h3 className="font-medium text-purple-600 text-lg">Team {index + 1}</h3>
                   {Array.isArray(players) &&
-                  players.map((player) => (
-                    <div key={player.id} className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        checked={
-                          (index === 0
-                            ? category === 'goals'
-                              ? team1GoalScorers
-                              : category === 'penalties'
-                                ? team1PenaltyScorers
-                                : category === 'red'
-                                  ? team1RedCardPlayers
-                                  : team1YellowCardPlayers
-                            : category === 'goals'
-                              ? team2GoalScorers
-                              : category === 'penalties'
-                                ? team2PenaltyScorers
-                                : category === 'red'
-                                  ? team2RedCardPlayers
-                                  : team2YellowCardPlayers
-                          ).includes(player.id)
-                        }
-                        onChange={() =>
-                          togglePlayerSelection(
-                            index === 0 ? 'team1' : 'team2',
-                            category as 'goals' | 'penalties' | 'red' | 'yellow',
-                            player.id
-                          )
-                        }
-                      />
-                      <label className='text-gray-600'>{player.name}</label>
-                    </div>
-                  ))}
+                    players.map((player) => (
+                      <div key={player.id} className="flex items-center space-x-3">
+                        <input
+                          type="checkbox"
+                          checked={
+                            (index === 0
+                              ? category === 'goals'
+                                ? team1GoalScorers
+                                : category === 'penalties'
+                                  ? team1PenaltyScorers
+                                  : category === 'red'
+                                    ? team1RedCardPlayers
+                                    : team1YellowCardPlayers
+                              : category === 'goals'
+                                ? team2GoalScorers
+                                : category === 'penalties'
+                                  ? team2PenaltyScorers
+                                  : category === 'red'
+                                    ? team2RedCardPlayers
+                                    : team2YellowCardPlayers
+                            ).includes(player.id)
+                          }
+                          onChange={() =>
+                            togglePlayerSelection(
+                              index === 0 ? 'team1' : 'team2',
+                              category as 'goals' | 'penalties' | 'red' | 'yellow',
+                              player.id
+                            )
+                          }
+                        />
+                        <label className='text-gray-600'>{player.name}</label>
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>

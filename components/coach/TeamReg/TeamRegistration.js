@@ -12,6 +12,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { registerUser } from '@/app/api/register/registerRoute';
 import { userRoleService } from '@/app/api/rbac/userRoleCreate';
 import { matchService } from '@/app/api/matches/matches'
+import { playerStatServiceInstance } from '@/app/api/playerStat/playerStat'
+import { teamStatisticService } from '@/app/api/teamStat/teamstat'
 
 // import { error } from 'console';
 // import { userService } from '@/app/api/userService/userService';
@@ -107,7 +109,7 @@ const TeamRegistrationForm = () => {
     };
 
 
-    const {data: todaysMatchesData} = useQuery({
+    const { data: todaysMatchesData } = useQuery({
         queryKey: ['todaysMatches'],
         queryFn: getTodaysMatches,
         onSuccess: (data) => {
@@ -298,7 +300,18 @@ const TeamRegistrationForm = () => {
                 setError("Failed to create team");
                 return;
             }
-            console.log("Team created successfully");
+            const dataToCreateTeamStat = {
+                team_id: teamResponse.id,
+                id: teamResponse.id,
+            }
+
+            const teamStatResponse = await teamStatisticService.createTeamStat(dataToCreateTeamStat);
+            if (!teamStatResponse?.id) {
+                setError("Failed to create team stat")
+                return
+            }
+
+            alert("Team created successfully");
             myTeamRefetch();
             setIsModalOpen(false); // Close modal on success
         } catch (error) {
@@ -335,6 +348,15 @@ const TeamRegistrationForm = () => {
                 setPlayerError("Failed to create player");
                 return;
             }
+            const dataToCreatePlayeStat = {
+                player_id: userResponse?.id,
+                id: userResponse?.id,
+            }
+            const playerStatResponse = await playerStatServiceInstance.createPlayerStat(dataToCreatePlayeStat);
+            if (!playerStatResponse?.id) {
+                setPlayerError("Failed to create player stat");
+                return;
+            }
             const dataForRole = {
                 id: userResponse?.id,
                 role: defaultRoleId,
@@ -362,6 +384,14 @@ const TeamRegistrationForm = () => {
             }
             teamPlayersRefetch();
             console.log("Player created successfully");
+            // reset form
+            setPlayerName("");
+            setPlayerPhoneNumber("");
+            setPlayerLevelOfEducation("");
+            setPlayerPosition("");
+            setPlayerDateOfBirth("");
+            setPlayerError("");
+
             setIsPlayerModalOpen(false); // Close modal on success
         } catch (error) {
             console.error("Error in handlePlayerCreation:", error);
@@ -388,10 +418,19 @@ const TeamRegistrationForm = () => {
             console.error("Error in handleDeletePlayer:", error);
         }
     }
+    const handleCloseplayerModal = () => {
+        setIsPlayerModalOpen(false);
+        setPlayerName("");
+        setPlayerPhoneNumber("");
+        setPlayerLevelOfEducation("");
+        setPlayerPosition("");
+        setPlayerDateOfBirth("");
+        setPlayerError("");
+    }
     // console.log(coachExists)
     // console.log(pointofCexist)
     // console.log(players?.data)
-    console.log("todays match",todaysMatches)
+    console.log("todays match", todaysMatches)
     return (
         <section className="bg-gray-100 mx-auto max-w-screen-lg px-6 py-12">
             {team?.length === 0 && (
@@ -409,7 +448,7 @@ const TeamRegistrationForm = () => {
                 {/* Team Card */}
                 {team?.length > 0 && (
                     <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-                        <img src="/path-to-team-logo.jpg" alt="Team Logo" className="w-24 h-24 mx-auto mb-4 rounded-full" />
+                        <img src="/image/1.jpg" alt="Team Logo" className="w-24 h-24 mx-auto mb-4 rounded-full" />
                         <h2 className="text-2xl font-bold text-gray-800 mb-2">{team?.[0]?.name}</h2>
                         <p className="text-sm text-gray-600">Category: {team?.[0]?.gender}</p>
                         <button
@@ -445,9 +484,9 @@ const TeamRegistrationForm = () => {
                                             <td className="px-4 py-2">{calculateAge(player.date_of_birth)}</td>
                                             <td className='px-4 py-2'>{player.level_of_education}</td>
                                             <td className="px-4 py-2">
-                                                <button 
-                                                onClick={()=>handleRemovePlayer(player.id)}
-                                                className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md">
+                                                <button
+                                                    onClick={() => handleRemovePlayer(player.id)}
+                                                    className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md">
                                                     <div className="flex flex-row gap-2 items-center">
                                                         <MdDeleteForever />
                                                         <span>Remove</span>
@@ -507,7 +546,7 @@ const TeamRegistrationForm = () => {
                                 {playerError && <p className="text-red-500 mb-4">{playerError}</p>}
                             </div>
                             <button
-                                onClick={() => setIsPlayerModalOpen(false)}
+                                onClick={() => handleCloseplayerModal()}
                                 className="text-gray-500 hover:text-gray-700 text-xl font-bold focus:outline-none"
                             >
                                 &times;
@@ -588,7 +627,7 @@ const TeamRegistrationForm = () => {
                                     <option value="">Select level of education</option>
                                     <option value="primary">Primary</option>
                                     <option value="secondary">Secondary</option>
-                                    <option value="college">Tertiary</option>
+                                    <option value="college">College</option>
                                     <option value="working">Working</option>
                                 </select>
                             </div>
@@ -608,11 +647,25 @@ const TeamRegistrationForm = () => {
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 text-black"
                                     required
                                 >
-                                    <option value="">Select position</option>
-                                    <option value="forward">Forward</option>
-                                    <option value="midfielder">Midfielder</option>
-                                    <option value="defender">Defender</option>
-                                    <option value="goalkeeper">Goalkeeper</option>
+                                        <option value="">Select position</option>
+                                        <option value="goalkeeper">Goalkeeper</option>
+                                        <option value="center-back">Center Back</option>
+                                        <option value="left-back">Left Back</option>
+                                        <option value="right-back">Right Back</option>
+                                        <option value="left-wing-back">Left Wing Back</option>
+                                        <option value="right-wing-back">Right Wing Back</option>
+                                        <option value="defensive-midfielder">Defensive Midfielder</option>
+                                        <option value="central-midfielder">Central Midfielder</option>
+                                        <option value="attacking-midfielder">Attacking Midfielder</option>
+                                        <option value="left-midfielder">Left Midfielder</option>
+                                        <option value="right-midfielder">Right Midfielder</option>
+                                        <option value="striker">Striker</option>
+                                        <option value="center-forward">Center Forward</option>
+                                        <option value="left-wing">Left Wing</option>
+                                        <option value="right-wing">Right Wing</option>
+                                        <option value="second-striker">Second Striker</option>
+                                        <option value="false-9">False 9</option>
+
                                 </select>
                             </div>
 

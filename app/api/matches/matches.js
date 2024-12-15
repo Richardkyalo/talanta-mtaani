@@ -106,6 +106,15 @@ class MatchService {
             console.error("Error in getAllMatchStats:", error);
             throw error;
         }
+    }
+    async getMatchStatById(id) {
+        try {
+            const response = await api.get(`${this.matchStatApi}/getById/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error in getMatchStatById:", error);
+            throw error;
+        }
     }   
 }
  export const matchService = new MatchService();

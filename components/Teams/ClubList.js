@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { FaSearch, FaArrowRight } from "react-icons/fa";
 import { teamService } from "@/app/api/teamservice/teamService";
+import { useRouter } from "next/navigation";
+import { encode } from "punycode";
 
 const ClubList = () => {
     const [clubs, setClubs] = useState([]);
@@ -10,6 +12,8 @@ const ClubList = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const router = useRouter();
 
     // Fetch clubs data from backend
     const fetchClubs = async () => {
@@ -41,6 +45,11 @@ const ClubList = () => {
             ((isMenSelected && club.gender === "men") ||
                 (!isMenSelected && club.gender === "women"))
     );
+
+    const handleTeamViewer = (club) => {
+        const query=encodeURIComponent(JSON.stringify(club));
+        router.push(`../TeamViewer/${club.id}?data=${query}`);
+    };
 
     return (
         <section className="container bg-gray-100 mx-auto px-4 py-8">
@@ -86,7 +95,7 @@ const ClubList = () => {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     {filteredClubs.length > 0 ? (
                         filteredClubs.map((club, index) => (
-                            <div
+                            <div onClick={()=>handleTeamViewer(club)}
                                 key={index}
                                 className="bg-white border-b border-red-500 shadow-lg rounded-lg p-6 flex flex-col items-center"
                             >

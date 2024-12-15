@@ -5,7 +5,7 @@ import { CiEdit, CiSearch } from 'react-icons/ci';
 import { FaDownload } from 'react-icons/fa';
 import { teamService } from '../../app/api/teamservice/teamService'
 import withAdminAccess from "../admin/HOC/adminCheck";
-// import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 
 // Fetch all teams
 const fetchTeams = async () => {
@@ -99,6 +99,8 @@ const TeamsTable = () => {
     const [teams, setTeams] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTeam, setSelectedTeam] = useState(null);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [selectedTeamId, setSelectedTeamId] = useState(null);
 
     const { data, refetch } = useQuery({
         queryKey: ['teams'],
@@ -147,17 +149,26 @@ const TeamsTable = () => {
         }
     };
 
-    // const handleDeleteTeam = async (teamId) => {
-    //     try {
-    //         const response = await teamService.deleteTeam(teamId);
-    //         if (response) {
-    //             refetch();
-    //             setTeams((prevTeams) => prevTeams.filter((team) => team.id !== teamId));
-    //         }
-    //     } catch (error) {
-    //         console.error('Error deleting team:', error);
-    //     }
-    // };
+    const handleDeleteTeam = async (teamId) => {
+        setDeleteModalOpen(true);
+        setSelectedTeamId(teamId);
+    };
+    const handleDeleteteam = async () => {
+        try {
+            const response = await teamService.deleteTeam(selectedTeamId);
+            if (response?.message==="Team deleted successfully") {
+                refetch();
+                setTeams((prevTeams) =>
+                    prevTeams.filter((team) => team.id !== selectedTeamId)
+                );
+                alert("Team deleted successfully");
+            }
+        } catch (error) {
+            console.error('Error deleting team:', error);
+        } finally {
+            setDeleteModalOpen(false);
+        }
+    };
 
     return (
         <div className="p-4">
@@ -214,12 +225,12 @@ const TeamsTable = () => {
                                             <CiEdit className="mr-2" />
                                             Edit
                                         </button>
-                                        {/* <button
+                                        <button
                                         onClick={() => handleDeleteTeam(team.id)}
                                          className="hover:bg-red-500 flex flex-row text-red-500 hover:text-white text-xs py-2 px-4 border border-red-500 rounded-md">
                                             <MdDeleteForever className="mr-2" />
                                             Delete
-                                        </button> */}
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -227,6 +238,30 @@ const TeamsTable = () => {
                     </tbody>
                 </table>
             </div>
+            {/* delete modal */}
+            {deleteModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-lg text-black font-bold mb-4">Confirm Deletion</h2>
+            <p className="text-gray-700 text-sm mb-4">Are you sure you want to delete this match?</p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                className="px-4 py-2 text-gray-500 hover:text-white hover:bg-gray-500 border border-gray-500 rounded-md text-sm"
+              >
+                No
+              </button>
+              <button
+                onClick={() => handleDeleteteam(selectedTeamId)}
+                className="px-4 py-2 text-red-500 hover:text-white border border-red-500 hover:bg-red-500 rounded-md text-sm"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
         </div>
     );
 };
