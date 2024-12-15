@@ -120,7 +120,7 @@ export default function PostMatchResult() {
 
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    const prepareUpdate = (type: string, teamId: number | undefined, data: any[], flag = false) => ({
+    const prepareUpdate = (type: string, teamId: number | undefined, data: string[], flag = false) => ({
       type,
       flag,
       team_stat_id: teamId,
