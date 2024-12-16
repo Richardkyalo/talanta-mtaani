@@ -152,7 +152,7 @@ const Header = () => {
                     <a href="/Results" className={isActiveLink('/Results')}>Results</a>
                     {/* <a href="/Table" className={isActiveLink('/Table')}>League Table</a> */}
                     {/* <a href="/LiveScore" className={isActiveLink('/LiveScore')}>Live Score</a> */}
-                    <a href="/PlayerStats" className={isActiveLink('/PlayerStats')}>Player Stats</a>
+                    {/* <a href="/PlayerStats" className={isActiveLink('/PlayerStats')}>Player Stats</a> */}
                     {hasCoachRole && (
                         <a href="/TeamRegistration" className={isActiveLink('/TeamReg')}>Team Registration</a>
                     )}

@@ -250,9 +250,10 @@ const LineupUpdatePage = () => {
     }
 
     // update player stat for matches played
+    // tell david not to allow duplicate of matchid 
     for (const player of [...team1First11, ...team2First11, ...team1Substitutes, ...team2Substitutes]) {
       await playerStatServiceInstance.updatePlayerStat({
-        type: "match_played",
+        type: "matches_played",
         flag: false,
         data: [matchId],
         player_stat_id: player

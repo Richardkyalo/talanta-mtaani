@@ -120,6 +120,12 @@ export default function PostMatchResult() {
 
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+    const prepareDeletion = (type: string, teamId: number | undefined, data: string[], flag = true) => ({
+      type,
+      flag,
+      team_stat_id: teamId,
+      data,
+    })
     const prepareUpdate = (type: string, teamId: number | undefined, data: string[], flag = false) => ({
       type,
       flag,
@@ -150,6 +156,7 @@ export default function PostMatchResult() {
       }
 
       // Prepare team statistics updates
+      // tell david to allow duplicarion of goals_scored, goals_conceded, but not matches_played
       const teamStatUpdates = [
         prepareUpdate('goals_scored', match?.team1_id, [...team1GoalScorers, ...team1PenaltyScorers]),
         prepareUpdate('goals_conceded', match?.team1_id, [...team2GoalScorers, ...team2PenaltyScorers]),
@@ -172,18 +179,28 @@ export default function PostMatchResult() {
         const team1TotalGoals = (matchStats.team1_id_goals?.length || 0) + (matchStats.team1_penalties?.length || 0);
         const team2TotalGoals = (matchStats.team2_id_goals?.length || 0) + (matchStats.team2_penalties?.length || 0);
 
-        let outcomeUpdates = [];
+        // first delete any existing draws, wins and losses for the two teams
+        await teamStatisticService.updateTeamStat(prepareDeletion('draws', match?.team1_id, [matchStatId]));
+        await teamStatisticService.updateTeamStat(prepareDeletion('draws', match?.team2_id, [matchStatId]));
+        await teamStatisticService.updateTeamStat(prepareDeletion('wins', match?.team1_id, [matchStatId]));
+        await teamStatisticService.updateTeamStat(prepareDeletion('wins', match?.team2_id, [matchStatId]));
+        await teamStatisticService.updateTeamStat(prepareDeletion('losses', match?.team1_id, [matchStatId]));
+        await teamStatisticService.updateTeamStat(prepareDeletion('losses', match?.team2_id, [matchStatId]));
+
+        let outcomeUpdates: { type: string; flag: boolean; team_stat_id: number | undefined; data: string[]; }[] = [];
         if (team1TotalGoals > team2TotalGoals) {
           outcomeUpdates = [
             prepareUpdate('wins', match?.team1_id, [matchStatId]),
             prepareUpdate('losses', match?.team2_id, [matchStatId]),
           ];
-        } else if (team2TotalGoals > team1TotalGoals) {
+        } 
+        if (team2TotalGoals > team1TotalGoals) {
           outcomeUpdates = [
             prepareUpdate('wins', match?.team2_id, [matchStatId]),
             prepareUpdate('losses', match?.team1_id, [matchStatId]),
           ];
-        } else {
+        } 
+        if(team1TotalGoals === team2TotalGoals){
           outcomeUpdates = [
             prepareUpdate('draws', match?.team1_id, [matchStatId]),
             prepareUpdate('draws', match?.team2_id, [matchStatId]),
@@ -198,6 +215,7 @@ export default function PostMatchResult() {
         }
       }
       // update player stats for goals
+      // tell david to allow duplicarion of matchid goals, matchid yellow cards, matchid red cards
       for (const scorer of [...team1GoalScorers, ...team2GoalScorers, ...team1PenaltyScorers, ...team2PenaltyScorers]) {
         await playerStatServiceInstance.updatePlayerStat(
           {

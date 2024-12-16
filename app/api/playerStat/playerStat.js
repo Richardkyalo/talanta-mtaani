@@ -26,7 +26,7 @@ class playerStatService {
     }
     async getPlayerStatById(id) {
         try {
-            const response = await api.get(`${this.playerStatApi}/getbyid/${id}`);
+            const response = await api.get(`${this.playerStatApi}/getByPlayerId/${id}`);
             return response.data;
         } catch (error) {
             console.error("Error in getPlayerStatById:", error);

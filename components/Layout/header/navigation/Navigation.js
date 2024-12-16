@@ -72,7 +72,7 @@ const Navigation = () => {
                         <a href="/" className={`text-white ${isActive('/')}`}>HOME</a>
                         <a href="/Results" className={isActive('/Results')}>RESULTS</a>
                         {/* <a href="/LiveScore" className={`text-white ${isActive('/LiveScore')}`}>LIVE SCORE</a> */}
-                        <a href="/PlayerStats" className={`text-white ${isActive('/PlayerStats')}`}>PLAYER STATS</a>
+                        {/* <a href="/PlayerStats" className={`text-white ${isActive('/PlayerStats')}`}>PLAYER STATS</a> */}
                         {hasCoachRole &&
                             <a href="/TeamRegistration" className={`text-white ${isActive('/TeamRegistration')}`}>TEAM REGISTRATION</a>
 

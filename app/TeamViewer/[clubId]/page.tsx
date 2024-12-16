@@ -145,6 +145,11 @@ const TeamViewer = () => {
     return Array.isArray(stat) && stat.length > 0 ? stat.length : 0;
   };
 
+  const handlePlayerView=async(player:Player)=>{
+    const query = encodeURIComponent(JSON.stringify(player));
+    router.push(`../playerViewer/${player.id}?data=${query}`);
+  }
+
   if (!teamInfo) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -234,6 +239,7 @@ const TeamViewer = () => {
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {players.map((player, index) => (
                 <li
+                onClick={()=>handlePlayerView(player)}
                   key={index}
                   className="p-4 bg-gray-100 rounded-lg shadow-md flex items-center justify-between"
                 >
