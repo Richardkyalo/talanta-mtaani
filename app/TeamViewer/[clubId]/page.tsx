@@ -243,8 +243,12 @@ const TeamViewer = () => {
                   key={index}
                   className="p-4 bg-gray-100 rounded-lg shadow-md flex items-center justify-between"
                 >
-                  <span className="text-gray-800 font-medium">{player.name}</span>
-                  <span className="text-gray-500 text-sm">{player.position}</span>
+                  <span className="text-gray-800 font-medium">
+                  {player?.name?.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                  </span>
+                  <span className="text-gray-500 text-sm">
+                  {player?.position?.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                  </span>
                 </li>
               ))}
             </ul>
